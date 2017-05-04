@@ -42,9 +42,11 @@ class  Cobro {
     String creadoPor
 
     String modificadoPor
+    
 
     String sw2
 
+    static hasOne = [cheque: CobroCheque, deposito: CobroDeposito, transferencia: CobroTransferencia]
 
     static constraints = {
         tipo inList:['CAM','MOS','CRE','CHE','JUR']
@@ -52,6 +54,10 @@ class  Cobro {
         sw2 nullable:true, unique:true
         creadoPor nullable:true
         modificadoPor nullable:true
+        cheque nullable:true
+        deposito nullable:true
+        transferencia nullable:true
+
     }
 
     static mapping={

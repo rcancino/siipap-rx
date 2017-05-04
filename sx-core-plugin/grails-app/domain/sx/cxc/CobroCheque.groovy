@@ -1,9 +1,10 @@
 package sx.cxc
 
 import sx.tesoreria.Banco
+import sx.tesoreria.Ficha
 
 
-class CobroCheque extends  Cobro{
+class CobroCheque {
 
     String id
 
@@ -21,10 +22,15 @@ class CobroCheque extends  Cobro{
 
     Date vencimiento
 
-    static constraints = {
+    Ficha ficha
 
+    static belongsTo = [cobro: Cobro]
+
+    static constraints = {
         emisor nullable:true
         vencimiento nullable:true
+        ficha nullable:true
+
     }
 
     static mapping={

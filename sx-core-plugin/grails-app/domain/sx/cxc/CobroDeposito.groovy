@@ -4,7 +4,7 @@ import sx.tesoreria.Banco
 import sx.tesoreria.CuentaDeBanco
 import sx.tesoreria.MovimientoDeCuenta
 
-class CobroDeposito extends Cobro{
+class CobroDeposito {
 
     Banco bancoOrigen
 
@@ -23,6 +23,8 @@ class CobroDeposito extends Cobro{
     BigDecimal totalTarjeta = 0.0
 
     MovimientoDeCuenta ingreso
+
+    static belongsTo = [cobro: Cobro]
 
     static constraints = {
         ingreso nullable:true
