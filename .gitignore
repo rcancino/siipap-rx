@@ -44,6 +44,14 @@ spring-*/src/main/java/META-INF/MANIFEST.MF
 
 # IDEA artifacts and output dirs
 
+**/.idea
+.idea/*
+
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
 *.iml
 *.ipr
 *.war
@@ -54,9 +62,12 @@ atlassian-ide-plugin.xml
 .gradle
 
 
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/gradle.xml
-.idea/libraries
+# .idea/workspace.xml
+# .idea/tasks.xml
+# .idea/gradle.xml
+# .idea/libraries
+# **/.idea/workspace.xm
 
-*.sublime-workspace
+######  END OF INDEA ########
+
+**/.sublime-workspace
