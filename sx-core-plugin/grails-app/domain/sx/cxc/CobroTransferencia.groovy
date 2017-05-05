@@ -4,7 +4,7 @@ import sx.tesoreria.Banco
 import sx.tesoreria.CuentaDeBanco
 import sx.tesoreria.MovimientoDeCuenta
 
-class CobroTransferencia extends Cobro{
+class CobroTransferencia {
 
     Banco bancoOrigen
 
@@ -17,6 +17,8 @@ class CobroTransferencia extends Cobro{
     Date fechaDeposito
 
     MovimientoDeCuenta ingreso
+
+    static belongsTo = [cobro: Cobro]
 
     static constraints = {
         ingreso nullable:true
