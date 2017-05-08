@@ -72,6 +72,7 @@ class Cliente {
 		pais nullable: true
 		dateCreated nullable:true
 		lastUpdated nullable:true
+        sucursal nullable: true
 
 	}
 
