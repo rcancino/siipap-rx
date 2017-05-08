@@ -1,9 +1,11 @@
 package sx.server.integracion
 
 import grails.web.databinding.DataBinder
+import groovy.sql.Sql
 import org.springframework.stereotype.Component
 import sx.core.Cliente
 import sx.core.Direccion
+import sx.core.Sucursal
 
 
 /**
@@ -12,6 +14,7 @@ import sx.core.Direccion
 @Component
 class ImportadorDeClientes implements  Importador{
 
+
     def importar(){
         logger.info('Importando clientes' + new Date().format('dd/MM/yyyy HH:mm:ss'))
 
@@ -19,7 +22,7 @@ class ImportadorDeClientes implements  Importador{
         def importados = 0
         leerRegistros(QUERY,[]).each { row ->
 
-            def cliente = Cliente.where{ clave == row.clave}.find()
+            def cliente = Cliente.where{ sw2 == row.cliente_id}.find()
             if(!cliente){
                 cliente = new Cliente()
                 importados++
@@ -39,10 +42,40 @@ class ImportadorDeClientes implements  Importador{
         def select = QUERY_ROW + ' where cliente_id = ?'
         def row = getSql().firstRow(select,[sw2])
         bindData(cliente,row)
-        cliente.direccion = cliente.direccion ?: new Direccion()
-        bindData(cliente.direccion,row)
+       // cliente.direccion = cliente.direccion ?: new Direccion()
+       // bindData(cliente.direccion,row)+
+        cliente.sucursal=Sucursal.findBySw2(1)
         cliente.save failOnError:true, flush:true
 
+    }
+
+    def sincronizar(){
+
+    }
+
+    def importarCatalogoClientes(){
+
+
+        def queryAudit=""" select * from audit_log_integration where entityName='Cliente' and replicado is null"""
+
+
+        getSql().eachRow(queryAudit){audit ->
+            def queryEntity=""" select * from entity_integration where table_name=?  """
+
+
+
+            if(audit.action.equals("INSERT")){
+
+                println "Importando: "+audit.entityId
+               importar(audit.entityId)
+
+            }
+
+            if(audit.action.equals("UPDATE")){
+                println "Actualizando"
+            }
+
+        }
     }
 
     static String QUERY = """
@@ -56,10 +89,11 @@ class ImportadorDeClientes implements  Importador{
             numero,
             numeroint,
             delmpo as municipio,
-            cp as codigoPostal,
+            cp ,
             colonia,
             estado,
             pais
+            1 as sucursal
             from sx_clientes
             where year(modificado) > 2015  and month(modificado) > 1
             """
@@ -74,7 +108,7 @@ class ImportadorDeClientes implements  Importador{
             numero,
             numeroint,
             delmpo as municipio,
-            cp as codigoPostal,
+            cp ,
             colonia,
             estado,
             pais
