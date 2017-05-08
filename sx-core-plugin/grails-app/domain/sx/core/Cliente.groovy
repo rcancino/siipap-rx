@@ -7,47 +7,81 @@ import groovy.transform.EqualsAndHashCode
 @EqualsAndHashCode(includes='nombre,rfc')
 class Cliente {
 
-	String id
+	String	id
 
-    String clave
+	Boolean	activo	 = true
 
-	String nombre
+	String	rfc
 
-	String rfc
+	String	nombre
 
-	Boolean activo = false
+	Boolean	permiteCheque	 = false
 
-	Boolean juridico = false
+	BigDecimal	chequeDevuelto	 = 0
 
-    Direccion direccion
+	Boolean	juridico	 = false
 
-	Long sw2
+	Long	folioRFC	 = 1
+
+	Long	formaDePago	 = 1
+
+	Long	sw2
+
+	Sucursal	sucursal
+
+	Vendedor	vendedor
+
+	String	calle
+
+	String	exterior
+
+	String	interior
+
+	String	colonia
+
+	String	cp
+
+	String	municipio
+
+	String	estado
+
+	String	pais
 
 	Date dateCreated
 
 	Date lastUpdated
 
-  	//static hasOne=[clienteCredito:ClienteCredito,cuentaBancaria:CuentaBancaria]
+
+	//static hasOne=[clienteCredito:ClienteCredito,cuentaBancaria:CuentaBancaria]
 
 	//static hasMany=[contactos:Contacto,telefonos:Telefono,cfdiMails:CfdiMail,direccionDeEntrega:DireccionDeEntrega,direcciones:Direccion]
 
-    static constraints = {
-    	nombre unique:true
-    	rfc minSize:12, maxSize:13, unique: 'nombre'
-    	sw2 nullable:true
-    	direccion nullable:true
-    }
+	static constraints = {
 
-    static embedded = ['direccion']
+		rfc maxSize:13
+		//clienteCredito nullable:true
+		//cuentaBancaria nullable:true
+		sw2 nullable:true
+		vendedor nullable:true
+		calle nullable: true
+		exterior nullable: true
+		interior nullable: true
+		colonia nullable:  true
+		municipio nullable: true
+		estado nullable: true
+		pais nullable: true
+		dateCreated nullable:true
+		lastUpdated nullable:true
 
-    static mapping={
-    	id generator:'uuid'
-        clave index: 'Clie_IDX_1'
-        nombre index: 'Clie_IDX_1'
-   		//contactos cascade:"all-delete-orphan"
-    	//telefonos cascade:"all-delete-orphan"
-    	//cfdiMails cascade:"all-delete-orphan"
-    	//direcciones cascade:"all-delete-orphan"
-    	//clienteCredito cascade:"all-delete-orphan"
-    }
+	}
+
+	static mapping={
+		id generator:'uuid'
+		//rfcCliente composite: ['rfc', 'grupoRfc'], unique: true
+		//contactos cascade:"all-delete-orphan"
+		//telefonos cascade:"all-delete-orphan"
+		//cfdiMails cascade:"all-delete-orphan"
+		//direcciones cascade:"all-delete-orphan"
+		//clienteCredito cascade:"all-delete-orphan"
+	}
 }
