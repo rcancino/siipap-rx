@@ -37,14 +37,13 @@ class ImportadorDeClientes implements  Importador{
         return message
     }
 
-    def importar(def sw2){
+    def importar(def sw2,String queryRow){
         def cliente = Cliente.where{ sw2 == sw2}.find() ?: new Cliente()
-        def select = QUERY_ROW + ' where cliente_id = ?'
+        def select = queryRow + ' where cliente_id = ?'
         def row = getSql().firstRow(select,[sw2])
         bindData(cliente,row)
        // cliente.direccion = cliente.direccion ?: new Direccion()
        // bindData(cliente.direccion,row)+
-        cliente.sucursal=Sucursal.findBySw2(1)
         cliente.save failOnError:true, flush:true
 
     }
@@ -60,19 +59,24 @@ class ImportadorDeClientes implements  Importador{
 
 
         getSql().eachRow(queryAudit){audit ->
-            def queryEntity=""" select * from entity_integration where table_name=?  """
+            def queryEntity=""" select * from entity_integration where entity_rx=?  """
+
+            def entity = getSql().firstRow(queryEntity,[audit.entityName])
 
 
 
             if(audit.action.equals("INSERT")){
 
                 println "Importando: "+audit.entityId
-               importar(audit.entityId)
+               importar(audit.entityId,entity.sw_select)
 
             }
 
             if(audit.action.equals("UPDATE")){
                 println "Actualizando"
+
+                def queryUpdate="""  """
+
             }
 
         }
@@ -93,7 +97,6 @@ class ImportadorDeClientes implements  Importador{
             colonia,
             estado,
             pais
-            1 as sucursal
             from sx_clientes
             where year(modificado) > 2015  and month(modificado) > 1
             """
