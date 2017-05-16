@@ -52,15 +52,13 @@ class Cliente {
 	Date lastUpdated
 
 
-	//static hasOne=[clienteCredito:ClienteCredito,cuentaBancaria:CuentaBancaria]
+	static hasOne=[clienteCredito:ClienteCredito]
 
 	//static hasMany=[contactos:Contacto,telefonos:Telefono,cfdiMails:CfdiMail,direccionDeEntrega:DireccionDeEntrega,direcciones:Direccion]
 
 	static constraints = {
 
 		rfc maxSize:13
-		//clienteCredito nullable:true
-		//cuentaBancaria nullable:true
 		sw2 nullable:true
 		vendedor nullable:true
 		calle nullable: true

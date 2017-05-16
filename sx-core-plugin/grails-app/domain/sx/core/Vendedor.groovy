@@ -6,29 +6,26 @@ import groovy.transform.EqualsAndHashCode
 @EqualsAndHashCode(includes='id')
 class Vendedor {
 
-    String id
+    String	id
 
-    Long sw2
+    Boolean	activo	 = true
 
-    Boolean activo
+    String	apellido_paterno
 
-    String apellidoPaterno
+    String	apellido_materno
 
-    String apellidoMaterno
+    String	nombres
 
-    String nombres
+    String	rfc
 
-    String curp
+    String	curp
 
-    String rfc
+    BigDecimal	comision_contado	 = 0
 
-    BigDecimal comisionContado=0
+    BigDecimal	comision_credito	 = 0
 
-    BigDecimal comisionCredito=0
+    Long	sw2	 = 0
 
-    Date dateCreated
-
-    Date lastUpdated
 
     static constraints = {
         sw2 nullable:true
