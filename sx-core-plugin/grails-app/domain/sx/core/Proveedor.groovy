@@ -7,29 +7,35 @@ import groovy.transform.EqualsAndHashCode
 @EqualsAndHashCode(includes='id')
 class Proveedor {
 
-	String id
+    String	id
 
-	String nombre
+    Boolean	activo	 = true
 
-    String clave
+    String	rfc
 
-	String rfc = 'XAXX010101000'
+    String	nombre
 
-	Boolean activo = true
+    String	tipo
 
-	String tipo = 'COMPRAS'
+    String  CuentaBancaria
 
-    String telefono1
+    Long	sw2	 = 0
 
-    String telefono2
+    String	calle
 
-    String telefono3
+    String	exterior
 
-    Direccion direccion
+    String	interior
 
-    boolean nacional = true
+    String	colonia
 
-	Long sw2
+    String	cp
+
+    String	municipio
+
+    String	estado
+
+    String	pais
 
 	Date dateCreated
 
@@ -38,12 +44,9 @@ class Proveedor {
     static constraints = {
         rfc size:12..13
     	nombre unique: true
-    	clave unique: true
     	tipo inList:['COMPRAS','GASTOS']		
     	sw2 nullable: true
-        telefono1 nullable:true ,maxSize:30
-        telefono2 nullable:true ,maxSize:30
-        telefono3 nullable:true ,maxSize:30
+
     }
 
     static embedded = ['direccion']
