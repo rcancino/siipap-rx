@@ -7,6 +7,8 @@ import groovy.transform.EqualsAndHashCode
 @EqualsAndHashCode(includes='nombre,rfc')
 class Cliente {
 
+    static  auditable=true
+
 	String	id
 
 	Boolean	activo	 = true
@@ -71,6 +73,7 @@ class Cliente {
 		dateCreated nullable:true
 		lastUpdated nullable:true
         sucursal nullable: true
+        clienteCredito nullable: true
 
 	}
 
