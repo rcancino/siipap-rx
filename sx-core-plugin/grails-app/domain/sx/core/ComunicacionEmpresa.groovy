@@ -12,11 +12,13 @@ class ComunicacionEmpresa {
 
     String	comentario
 
+    Boolean cfdi = false
+
     Long	sw2	 = 0
 
 
     static constraints = {
-        tipo inList:['TIPO','TEL','CEL','FAX','MAIL','WEB']
+        tipo inList:['TEL','CEL','FAX','MAIL','WEB']
         descripcion nullable:true
         comentario  nullable:true
         sw2 nullable: true

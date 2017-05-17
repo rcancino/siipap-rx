@@ -54,7 +54,7 @@ class Cliente {
 	Date lastUpdated
 
 
-	static hasOne=[clienteCredito:ClienteCredito]
+	static hasOne=[clienteCredito:ClienteCredito,contacto:ClienteContactos,medioComunicacion:ComunicacionEmpresa]
 
 	//static hasMany=[contactos:Contacto,telefonos:Telefono,cfdiMails:CfdiMail,direccionDeEntrega:DireccionDeEntrega,direcciones:Direccion]
 
@@ -74,6 +74,8 @@ class Cliente {
 		lastUpdated nullable:true
         sucursal nullable: true
         clienteCredito nullable: true
+        contacto nullable: true
+        medioComunicacion nullable: true
 
 	}
 
