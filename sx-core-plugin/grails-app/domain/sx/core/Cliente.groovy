@@ -54,9 +54,11 @@ class Cliente {
 	Date lastUpdated
 
 
-	static hasOne=[clienteCredito:ClienteCredito,contacto:ClienteContactos,medioComunicacion:ComunicacionEmpresa]
+	static hasOne=[clienteCredito:ClienteCredito,contacto:ClienteContactos]
 
-	//static hasMany=[contactos:Contacto,telefonos:Telefono,cfdiMails:CfdiMail,direccionDeEntrega:DireccionDeEntrega,direcciones:Direccion]
+    static hasMany=[medioComunicacion :ComunicacionEmpresa]
+
+
 
 	static constraints = {
 
@@ -81,11 +83,6 @@ class Cliente {
 
 	static mapping={
 		id generator:'uuid'
-		//rfcCliente composite: ['rfc', 'grupoRfc'], unique: true
-		//contactos cascade:"all-delete-orphan"
-		//telefonos cascade:"all-delete-orphan"
-		//cfdiMails cascade:"all-delete-orphan"
-		//direcciones cascade:"all-delete-orphan"
-		//clienteCredito cascade:"all-delete-orphan"
+		
 	}
 }
