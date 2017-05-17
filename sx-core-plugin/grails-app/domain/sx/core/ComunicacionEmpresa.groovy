@@ -16,6 +16,9 @@ class ComunicacionEmpresa {
 
     Long	sw2	 = 0
 
+    Cliente cliente
+
+    static  belongsTo={Cliente}
 
     static constraints = {
         tipo inList:['TEL','CEL','FAX','MAIL','WEB']
