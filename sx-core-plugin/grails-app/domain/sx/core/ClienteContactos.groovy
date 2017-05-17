@@ -17,6 +17,10 @@ class ClienteContactos {
 
     Long	sw2	 = 0
 
+    Cliente cliente
+
+    static belongsTo={Cliente}
+
 
     static constraints = {
         nombre nullable:true
