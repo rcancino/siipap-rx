@@ -15,7 +15,7 @@ import sx.core.Proveedor
 @Component
 class ImportadorDeListaDePrecios implements Importador {
 
-    @Autowired
+  /*  @Autowired
     ImportadorDeProductos importadorDeProductos
 
     def importar(f1){
@@ -74,7 +74,7 @@ class ImportadorDeListaDePrecios implements Importador {
         }
     }
 
-
+*/
 
     static String QUERY  = """
         select

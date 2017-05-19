@@ -94,7 +94,7 @@ dataSources:
         driverClassName: com.mysql.jdbc.Driver
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         username: root
-        password: sys
+        password: shoto
     importacion:
         pooled: true
         dbCreate: none
@@ -112,8 +112,8 @@ environments:
                 #url: jdbc:mysql://10.10.1.229/siipapx?autoReconnect=false
             importacion:
                 dbCreate: none
-                url: jdbc:mysql://localhost/sw2?autoReconnect=true
-                #url: jdbc:mysql://10.10.1.228/produccion?autoReconnect=false
+                #url: jdbc:mysql://localhost/sw2?autoReconnect=true
+                url: jdbc:mysql://10.10.1.228/produccion?autoReconnect=false
                 properties:
                   maxActive: 3
                   maxIdle: 3
@@ -197,7 +197,7 @@ environments:
 ---
 server:
   port: 8088
-  contextPath: /sx-replica        
+  contextPath: /sx-replica
 ---
 grails:
     mail:

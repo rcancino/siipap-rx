@@ -53,10 +53,12 @@ class Cliente {
 
 	Date lastUpdated
 
+    List<ComunicacionEmpresa> medios
+
 
 	static hasOne=[clienteCredito:ClienteCredito,contacto:ClienteContactos]
 
-    static hasMany=[medioComunicacion :ComunicacionEmpresa]
+    static hasMany=[medios :ComunicacionEmpresa]
 
 
 
@@ -77,7 +79,7 @@ class Cliente {
         sucursal nullable: true
         clienteCredito nullable: true
         contacto nullable: true
-        medioComunicacion nullable: true
+        medios nullable: true
 
 	}
 

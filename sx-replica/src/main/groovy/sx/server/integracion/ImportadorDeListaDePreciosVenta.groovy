@@ -14,7 +14,7 @@ import sx.core.Proveedor
  */
 @Component
 class ImportadorDeListaDePreciosVenta implements Importador, SW2Lookup {
-
+/*
     @Autowired
     ImportadorDeProductos importadorDeProductos
 
@@ -69,7 +69,7 @@ class ImportadorDeListaDePreciosVenta implements Importador, SW2Lookup {
     }
 
 
-
+*/
     static String QUERY  = """
         select
             lista_id as sw2,
