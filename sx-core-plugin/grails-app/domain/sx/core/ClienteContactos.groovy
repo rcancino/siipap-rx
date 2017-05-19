@@ -19,7 +19,7 @@ class ClienteContactos {
 
     Cliente cliente
 
-    static belongsTo={Cliente}
+    static belongsTo=[Cliente]
 
 
     static constraints = {

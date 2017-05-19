@@ -4,6 +4,8 @@ import grails.web.databinding.DataBinder
 import groovy.sql.Sql
 import org.springframework.stereotype.Component
 import sx.core.Cliente
+import sx.core.ClienteContactos
+import sx.core.ComunicacionEmpresa
 import sx.core.Direccion
 import sx.core.Sucursal
 
@@ -42,15 +44,18 @@ class ImportadorDeClientes implements  Importador{
         def select = queryRow + ' where cliente_id = ?'
         def row = getSql().firstRow(select,[sw2])
         bindData(cliente,row)
-       // cliente.direccion = cliente.direccion ?: new Direccion()
-       // bindData(cliente.direccion,row)+
+
         cliente.save failOnError:true, flush:true
+
+        importarColecciones(cliente)
 
     }
 
     def sincronizar(){
 
     }
+
+
 
     def importarCatalogoClientes(){
 
@@ -68,18 +73,55 @@ class ImportadorDeClientes implements  Importador{
             if(audit.action.equals("INSERT")){
 
                 println "Importando: "+audit.entityId
-               importar(audit.entityId,entity.sw_select)
+               importar(audit.entityId,QUERY_ROW)
+                getSql().execute("UPDATE audit_log_integration SET replicado= CURRENT_DATE WHERE ID = :ID",[ID:audit.id]);
 
             }
 
             if(audit.action.equals("UPDATE")){
                 println "Actualizando"
 
-                def queryUpdate="""  """
+
 
             }
 
         }
+    }
+
+    def importarColecciones(Cliente cliente){
+
+        def contactos=leerRegistros(QUERY_CONTACTO,[cliente.sw2]).each{contactoRow ->
+
+
+            println contactoRow
+            def contacto=cliente.contacto?:new ClienteContactos()
+
+            contacto.cliente=cliente
+            contacto.activo=contactoRow.activo
+            contacto.email=contactoRow.email1
+            contacto.nombre=contactoRow.nombre
+            contacto.puesto=contactoRow.puesto
+            contacto.sw2=contactoRow.sw2
+            contacto.telefono=contactoRow.telefono
+
+            contacto.save failOnError:true, flush:true
+
+        }
+
+        def medios=leerRegistros(QUERY_COMUNICACION,[cliente.sw2,cliente.sw2,cliente.sw2]).each{medioRow ->
+
+            def medio=new ComunicacionEmpresa()
+
+                    medio.cliente=cliente
+                    medio.activo=medioRow.activo
+                    medio.tipo=medioRow.tipo
+                    medio.descripcion=medioRow.descripcion
+                    medio.cfdi=medioRow.cfdi
+
+
+                cliente.addToMedios(medio)
+        }
+
     }
 
     static String QUERY = """
@@ -99,6 +141,7 @@ class ImportadorDeClientes implements  Importador{
             pais
             from sx_clientes
             where year(modificado) > 2015  and month(modificado) > 1
+
             """
     static String QUERY_ROW = """
             select
@@ -118,4 +161,30 @@ class ImportadorDeClientes implements  Importador{
             from sx_clientes
 
             """
+
+    static String QUERY_CONTACTO="""
+            select cliente_id as sw2,true as activo,nombre,puesto,email1,telefono
+            from sx_clientes_contactos
+            where cliente_id=?
+            """
+
+    static String QUERY_COMUNICACION="""
+            SELECT CLIENTE_ID as sw2,true as activo,case when tipo like 'TEL%' then 'TEL' else tipo end as tipo,TELEFONO as descripcion,false as cfdi
+            FROM sx_clientes_tels
+            where cliente_id=?
+            union
+            SELECT CLIENTE_ID as sw2,true as ACTIVO, 'MAIL'aS TIPO, EMAIL1 AS DESCRIPCION, true as cfdi
+            FROM sx_clientes_cfdi_mails where EMAIL1 is not null and EMAIL1 <> ''
+            and cliente_id=?
+            union
+            SELECT CLIENTE_ID as sw2,true as ACTIVO, 'MAIL'aS TIPO, EMAIL2 AS DESCRIPCION, true as cfdi
+            FROM sx_clientes_cfdi_mails where EMAIL2 is not null and EMAIL2 <> ''
+            and cliente_id=?
+            """
+
+     static String QUERY_UPDATE="""
+
+            """
+
+
 }
