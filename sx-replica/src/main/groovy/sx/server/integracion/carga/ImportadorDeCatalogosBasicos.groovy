@@ -35,8 +35,7 @@ class ImportadorDeCatalogosBasicos implements Importador, SW2Lookup{
     def importarLineas(){
         def query = "select * from sx_lineas"
         leerRegistros(query,[]).each { row ->
-            println 'Importando: ' +row
-            def linea = Linea.findOrSaveWhere(linea: row.nombre, descripcion: row.descripcion)
+            def linea = Linea.findOrSaveWhere(linea: row.nombre)
         }
         return this
     }

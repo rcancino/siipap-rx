@@ -4,6 +4,9 @@ import org.apache.commons.lang.exception.ExceptionUtils
 import org.springframework.stereotype.Component
 import sx.core.Producto
 import sx.core.Proveedor
+import sx.core.Linea
+import sx.core.Clase
+import sx.core.Marca
 
 /**
  * Created by rcancino on 16/08/16.
@@ -17,13 +20,19 @@ class ImportadorDeProductos implements Importador{
 
         def importados = 0
         String query = SELECT //+ all ? "" : "  where year(creado) = 2016"
-        if(!all) query+= " where year(creado) = 2016 "
+        if(!all) query+= " where year(modificado) = 2017 "
         leerRegistros(query,[]).each { row ->
-            def producto = build(row)
-            if(producto){
-                importados++
-                logger.info('Producto importado: '+producto.clave)
+            try {
+                def producto = build(row)
+                if(producto){
+                    importados++
+                    logger.info('Producto importado: '+producto.clave)
+                }
             }
+            catch(Exception e) {
+              println 'Error importando '+ row   
+            }
+            
         }
         def message = "Productos  importados o actualizados: $importados"
         return message
@@ -37,25 +46,23 @@ class ImportadorDeProductos implements Importador{
     }
 
     def build(def row){
+        
         def producto = Producto.where{ sw2 == row.sw2}.find()
-        String tipo = 'actualizado'
+        
         if(!producto){
             producto = new Producto()
-            tipo = 'importado'
+            
         }
         bindData(producto,row)
+        producto.linea = Linea.where{ linea == row.linea_id}.find()
+        producto.clase = Clase.where{ clase == row.clase_id}.find()
+        producto.marca = Marca.where{ marca == row.marca_id}.find()
         if(row.proveedor_id){
             producto.proveedorFavorito = Proveedor.where {sw2 == row.proveedor_id}.find()
         }
-
-        try{
-            producto = producto.save failOnError:true, flush:true
-            logger.info("Producto ${producto.clave} $tipo" )
-            return producto
-        }catch (Exception ex){
-            ex.printStackTrace()
-            logger.error(ExceptionUtils.getRootCauseMessage(ex))
-        }
+        producto = producto.save failOnError:true, flush:true
+        return producto
+        
     }
 
 
@@ -82,9 +89,10 @@ class ImportadorDeProductos implements Importador{
             modoDeVenta as modoVenta,
             calibre,
             inventariable,
-            l.nombre as linea,
-            c.nombre as clase,
-            m.nombre as marca,
+            l.nombre as linea_id,
+            c.nombre as clase_id,
+            m.nombre as marca_id,
+            p.ajuste,
             p.proveedor_id
             from sx_productos p
             join sx_lineas l on(l.LINEA_ID = p.linea_id)

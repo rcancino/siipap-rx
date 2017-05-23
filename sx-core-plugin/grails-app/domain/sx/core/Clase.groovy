@@ -7,6 +7,8 @@ class Clase {
 
 	String clase
 
+    Boolean activa =  true
+
 	Date dateCreated
 
 	Date lastUpdated

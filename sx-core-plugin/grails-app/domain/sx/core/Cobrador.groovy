@@ -5,29 +5,29 @@ import groovy.transform.EqualsAndHashCode
 @EqualsAndHashCode(includes='id')
 class Cobrador {
 
-    String	id
+    String id
 
-    Boolean	activo
+    Long sw2
 
-    String	apellido_paterno
+    Boolean activo
 
-    String	apellido_materno
+    String clave
 
-    String	rfc
+    String apellidoPaterno
 
-    String	curp
+    String apellidoMaterno
 
-    BigDecimal	comision
+    String nombres
 
-    Long	sw2
+    String curp
 
+    String rfc
+
+    BigDecimal comision=0
 
     Date dateCreated
 
     Date lastUpdated
-
-    static  hasMany=[clienteCredito : ClienteCredito]
-
 
     static constraints = {
         sw2 nullable:true
@@ -47,7 +47,7 @@ class Cobrador {
     }
 
     String toString() {
-    	return "$nombres $apellidoPaterno"
+        return "$nombres $apellidoPaterno"
     }
 }
 

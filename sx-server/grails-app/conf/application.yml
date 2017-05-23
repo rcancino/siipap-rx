@@ -72,7 +72,7 @@ dataSources:
     dataSource:
         pooled: true
         dbCreate: update
-        url: jdbc:mysql://localhost:3306/siipapx?autoReconnect=true
+        #url: jdbc:mysql://localhost:3306/siipapx?autoReconnect=true
         driverClassName: com.mysql.jdbc.Driver
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         username: root
@@ -80,7 +80,7 @@ dataSources:
     importacion:
         pooled: true
         dbCreate: none
-        url: jdbc:mysql://localhost/sw2?autoReconnect=true
+        #url: jdbc:mysql://localhost/sw2?autoReconnect=true
         driverClassName: com.mysql.jdbc.Driver
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         username: root

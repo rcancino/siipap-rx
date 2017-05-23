@@ -15,6 +15,8 @@ class Producto {
 
 	String unidad
 
+	String	modoVenta		
+
 	String codigo
 
 	Boolean activo = true
@@ -47,19 +49,22 @@ class Producto {
 
 	Date fechaLista
 
-	String modoVenta
 
 	BigDecimal m2XMillar = 0.0
 
-	Boolean inventariable=true
+	Boolean inventariable = true
 
-	String linea
+	Linea linea
 
-    String marca
+    Marca marca
 
-    String clase
+    Clase clase
 
     Proveedor proveedorFavorito
+
+    String	comentario	
+
+    Long ajuste = 0	
 
 	Long sw2
 
@@ -74,19 +79,22 @@ class Producto {
 		caras range:0..2
 		color nullable:true, maxSize:15
 		acabado nullable:true, maxSize:20
-		presentacion nullable:true, maxSize:25
+		presentacion inList:['EXTENDIDO','CORTADO','BOBINA','ND']
 		ancho nullable:true
 		largo nullable:true
 		fechaLista nullable:true
-		modoVenta nullable:true, maxSize:1
 		sw2 nullable:true
         linea nullable:true
         marca nullable: true
         clase nullable: true
         proveedorFavorito nullable:true
+        modoVenta inList: ['B','N']
+        comentario nullable: true
     }
 
     static mapping={
     	id generator:'uuid'
     }
+
+    
 }

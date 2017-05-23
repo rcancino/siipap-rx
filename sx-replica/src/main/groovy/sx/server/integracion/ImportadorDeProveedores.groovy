@@ -98,7 +98,9 @@ class ImportadorDeProveedores implements Importador{
     }
 
     static String QUERY_COMPRAS = """
-        select nombre,clave,rfc, proveedor_id as sw2,
+        select nombre,clave,
+        if(ifnull(rfc,'') = '', 'XAXX010101000', rfc) as rfc,
+        proveedor_id as sw2,
         activo,'COMPRAS' as tipo,telefono1,telefono2,telefono3,calle,numero,numeroint,delmpo as municipio,cp as codigoPostal,colonia,estado,pais,email1,email2
         from sx_proveedores 
     """
@@ -107,7 +109,7 @@ class ImportadorDeProveedores implements Importador{
         ifnull(nombre,concat(apellidop,' ',apellidom,' ', nombres)) as nombre,
         'GASTOS' as tipo,
         concat('G-',proveedor_id) as clave,
-        ifnull(rfc,'XAXX010101000'), 
+        if(ifnull(rfc,'') = '', 'XAXX010101000', rfc) as rfc,
         proveedor_id as sw2,
         'GASTOS' as tipo
         ,telefono1,telefono2,telefono3,calle

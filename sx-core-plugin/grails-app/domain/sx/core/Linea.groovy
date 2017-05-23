@@ -7,7 +7,7 @@ class Linea {
 
 	String linea
 
-	String descripcion
+    Boolean activa = true
 
 	Date dateCreated
 

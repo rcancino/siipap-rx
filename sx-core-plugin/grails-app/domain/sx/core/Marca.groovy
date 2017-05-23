@@ -6,6 +6,8 @@ class Marca {
 
 	String marca
 
+    Boolean activa = true
+
 	Date dateCreated
 
 	Date lastUpdated

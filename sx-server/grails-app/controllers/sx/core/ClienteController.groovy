@@ -18,7 +18,8 @@ class ClienteController extends RestfulController{
 
         if(params.term){
             def search = '%' + params.term + '%'
-            query = query.where { clave =~ search || nombre =~ search}
+            //query = query.where { clave =~ search || nombre =~ search}
+            query = query.where { nombre =~ search}
         }
         if(params.activo){
             query = query.where { activo == params.activo}
