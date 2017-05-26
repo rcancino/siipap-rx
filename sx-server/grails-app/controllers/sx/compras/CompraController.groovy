@@ -16,10 +16,21 @@ class CompraController extends RestfulController{
         super(Compra)
     }
 
+     @Override
+    protected List listAllResources(Map params) {
+        params.max=500
+        println 'En Compras CONTROLLER con params: ' + params
+        def query = Compra.where {}
+        
+        if(params.pendientes){
+            println 'Compras pendientes'
+            query = query.where {pendiente == true}
+        }
+        return query.list(params)
+    }
+
     @Transactional
     def save(Compra compraInstance) {
-        String ser = 'OFICINAS'
-        compraInstance.serie = ser
         compraInstance.folio = Folio.nextFolio('COMPRA',ser)
         compraInstance.validate()
         if (compraInstance.hasErrors()) {

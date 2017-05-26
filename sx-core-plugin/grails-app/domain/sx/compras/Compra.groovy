@@ -7,18 +7,14 @@ import sx.cxc.NotaDeCreditoDet
 
 
 @ToString(excludes = 'dateCreated,lastUpdated,version,partidas',includeNames=true,includePackage=false)
-@EqualsAndHashCode(includes='serie,folio')
+@EqualsAndHashCode(includes='id,sucursal,folio')
 class Compra {
 
 	String id
 
-    String tipo
-
 	Proveedor proveedor
 
     Sucursal sucursal
-
-    String serie                   /******** ? *****/
 
 	Long folio
 
@@ -28,9 +24,7 @@ class Compra {
 
 	String comentario
 
-	Date depuracion
-
-    Date cierre
+	Date ultimaDepuracion
 
 	BigDecimal importeBruto = 0.0
 
@@ -46,11 +40,15 @@ class Compra {
 
 	BigDecimal tipoDeCambio = 1.0
 
-	Boolean especial= false
+    Boolean pendiente = true
 
-    Boolean consolidada = false
+	Boolean consolidada = false
 
-    Boolean importacion = false
+    Boolean centralizada = false
+
+    Boolean especial= false
+
+    Boolean nacional = true
 
     List partidas  = []
 
@@ -61,12 +59,10 @@ class Compra {
 	Date lastUpdated
 
     static constraints = {
-        tipo inList:['NACIONAL','IMPORTADO']
     	comentario nullable:true
-    	depuracion nullable:true
-        cierre nullable:true
+    	ultimaDepuracion nullable:true
     	entrega nullable:true
-        folio unique:'serie'
+        folio unique:'sucursal'
         sw2 nullable:true
 
     }
@@ -79,7 +75,6 @@ class Compra {
         fecha type:'date', index: 'COMPRA_IDX1'
         entrega type:'date'
         folio index: 'COMPRA_IDX2'
-        serie index: 'COMPRA_IDX2'
     }
 
 }

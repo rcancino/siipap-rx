@@ -30,9 +30,20 @@ class ImportadorDeCompras implements  Importador, SW2Lookup{
     def importar(Date ini, Date fin){
         logger.info("Importando compras  del : ${ini.format('dd/MM/yyyy')} al ${ini.format('dd/MM/yyyy')}" )
         def ids = leerRegistros("select compra_id from SX_COMPRAS2 where date(fecha) between ? and ? ",[ini,fin])
+        
+        def errores = [];
+
         ids.each { row ->
-            importar(row.compra_id)
+            try {
+                importar(row.compra_id)
+            }
+            catch(Exception e) {
+                logger.error(ExceptionUtils.getRootCauseMessage(e))
+                errores.add(row.compra_id)
+            }
         }
+        if(errores)
+            println "Errores importando compras: " + errores.join(',');
     }
 
     def importar(String sw2){
@@ -48,26 +59,31 @@ class ImportadorDeCompras implements  Importador, SW2Lookup{
             compra = new Compra()
         }
         bindData(compra,row)
+        compra.sucursal = buscarSucursal( row.sucursal_id)
+        compra.proveedor = buscarProveedor(row.proveedor_id)
+        compra.nacional = !row.importacion
+        importarPartidas(compra)
+        compra.save failOnError:true, flush:true
+        /*
         try{
-
-            compra.sucursal = buscarSucursal( row.sucursal_id)
-            compra.serie = compra.sucursal.nombre
-            compra.proveedor = buscarProveedor(row.proveedor_id)
-            importarPartidas(compra)
-            compra.save failOnError:true, flush:true
         }catch (Exception ex){
             //ex.printStackTrace()
             logger.error(ExceptionUtils.getRootCauseMessage(ex))
         }
+        */
     }
 
     def importarPartidas(Compra compra){
         logger.info("Importando partidas para compra ${compra.folio}")
         validarProductos(compra)
+        compra.partidas.clear()
+        
         List partidas = leerRegistros(QUERY_PARTIDAS,[compra.sw2])
 
         partidas.each{ row ->
             //logger.info("Importando partida: " + row)
+            //
+            //CompraDet det = compra.partidas.find{ it.sw2 == row.sw2}
             CompraDet det = new  CompraDet()
             Producto producto = Producto.where {sw2 == row.producto_id}.find()
             if(!producto) {
@@ -78,14 +94,7 @@ class ImportadorDeCompras implements  Importador, SW2Lookup{
             det.producto = producto
             det.sucursal = buscarSucursal( row.sucursal_id)
             bindData(det,row)
-            def existente = compra.partidas.find{ it.sw2 == row.sw2}
-            if(existente){
-                println 'Partida existente solo se actualiza....ID: ' + existente.id
-                bindData(existente,det,['id','version'])
-            } else {
-                compra.addToPartidas(det)
-            }
-
+            compra.addToPartidas(det)
         }
     }
 
@@ -104,7 +113,9 @@ class ImportadorDeCompras implements  Importador, SW2Lookup{
         compra_id as sw2,
         tipo,
         comentario,
-        depuracion,
+        (case when c.DEPURACION is null then (SELECT max(x.DEPURACION) FROM sx_compras2_det x where x.COMPRA_ID=c.COMPRA_ID) else c.depuracion end) as ultimaDepuracion,
+        (case when ((SELECT sum(x.solicitado) - sum(x.DEPURADO)  - ifnull((SELECT sum(i.cantidad) FROM sx_inventario_com i join sx_compras2_det d on(d.COMPRADET_ID=i.COMPRADET_ID) where d.compra_id= c.compra_id),0)
+            FROM sx_compras2_det x where x.COMPRA_ID=c.COMPRA_ID))>0 then 'true' else 'false' end) as pendiente,
         entrega,
         fecha,
         folio,
@@ -121,7 +132,7 @@ class ImportadorDeCompras implements  Importador, SW2Lookup{
         consolidada,
         especial,
         importacion
-        from sx_compras2
+        from sx_compras2 c
     """
 
     static String QUERY_PARTIDAS ="""

@@ -39,11 +39,22 @@ class ImportadorDeProveedores implements Importador{
         String query = tipo == 'COMPRAS' ? QUERY_COMPRAS : QUERY_GASTOS
 
         int importados = 0
+        def errores = []
+
         leerRegistros(query,[]).each { row ->
-            build(row)
-            importados++
+            try {
+                build(row)
+                importados++
+            }
+            catch(Exception e) {
+                errores.add(row.sw2)
+            }
+            
         }
         def message = "Proveedores iportados importadas: $importados (${tipo})"
+        if(errores){
+            message + "Errores importando proveedores: "+ errores.join(',')
+        }
         return message
     }
 

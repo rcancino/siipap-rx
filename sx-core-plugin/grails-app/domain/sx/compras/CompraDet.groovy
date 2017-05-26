@@ -48,7 +48,6 @@ class CompraDet {
 
     String comentario
 
-
     String sw2
 
     Date dateCreated
