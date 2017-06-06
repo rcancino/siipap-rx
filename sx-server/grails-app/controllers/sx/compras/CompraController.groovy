@@ -19,11 +19,9 @@ class CompraController extends RestfulController{
      @Override
     protected List listAllResources(Map params) {
         params.max=500
-        println 'En Compras CONTROLLER con params: ' + params
         def query = Compra.where {}
         
         if(params.pendientes){
-            println 'Compras pendientes'
             query = query.where {pendiente == true}
         }
         return query.list(params)
