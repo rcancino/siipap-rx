@@ -11,9 +11,11 @@ class RecepcionDeCompra {
 
     String id
 
-    Long folio
+    Long folio = 0
 
     String remision
+
+    Date fechaRemision
 
     Compra compra
 
@@ -31,11 +33,23 @@ class RecepcionDeCompra {
 
     Date lastUpdated
 
+    String createUser
+
+    String updateUser
+
     String sw2
+
+
 
     static constraints = {
         comentario nullable:true
         sw2 nullable:true
+        remision nullable: true
+        fechaRemision nullable: true
+        dateCreated nullable: true
+        lastUpdated nullable: true
+        createUser nullable: true
+        updateUser nullable: true
     }
 
     static hasMany =[partidas:RecepcionDeCompraDet]

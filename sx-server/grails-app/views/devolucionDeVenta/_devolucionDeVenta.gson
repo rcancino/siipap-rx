@@ -1,0 +1,7 @@
+import sx.inventario.DevolucionDeVenta
+
+model{
+    DevolucionDeVenta devolucionDeVenta
+}
+
+json g.render(devolucionDeVenta, [excludes:['dateCreated','lastUpdated']])

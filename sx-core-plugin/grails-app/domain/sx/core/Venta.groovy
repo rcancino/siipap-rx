@@ -1,124 +1,111 @@
 package sx.core
 
 import groovy.transform.ToString
+import sx.cxc.CuentaPorCobrar
 
 
-@ToString( includes = "clave,nombre,sucursal,fecha,total",includeNames=true,includePackage=false)
+@ToString( includes = "sucursal,documento,fecha,total",includeNames=true,includePackage=false)
 class Venta {
+
 
     String id
 
-    Sucursal sucursal    // Cambio de Long a String
-    
-    Cliente cliente
-    
-    String clave
-    
-    String nombre
-    
-    String rfc
-    
-    String tipo
-    
-    String documento  
+    Cliente	cliente
 
-    Date fecha 
+    Vendedor	vendedor
 
-    String folio
+    Sucursal sucursal
 
-    String serie
+    Sucursal	sucursalVenta
 
-    String uuid
+    String	tipo
+
+    Long	documento	 = 0
+
+    BigDecimal	importe	 = 0
+
+    BigDecimal	impuesto	 = 0
+
+    BigDecimal	total	 = 0
+
+    BigDecimal	descuento	 = 0
+
+    BigDecimal	descuentoOriginal	 = 0
+
+    BigDecimal	cargosPorManiobra	 = 0
+
+    BigDecimal	comisionTarjeta	 = 0
+
+    BigDecimal	comisionTarjetaImporte	 = 0
+
+    String	formaDePago
 
     Currency moneda = Currency.getInstance('MXN')
 
-    BigDecimal tipoDeCambio = 1.01
+    BigDecimal	tipoDeCambio	 = 1
 
-    String formaDePago
+    BigDecimal	kilos	 = 0
 
-    String cuentaDePago
+    Date	puesto
 
-    BigDecimal importe
+    Date	facturar
 
-    BigDecimal descuento
+    Boolean	vale = false
 
-    BigDecimal impuesto
+    Sucursal	sucursalVale
 
-    BigDecimal total
+    String	clasificacionVale = 'SIN_VALE'
 
-    String comentario
+    Date	impreso
 
-    Date facturar
+    String	comprador
 
-    Date puesto
+    String	atencion
 
-    BigDecimal descuentoOriginal
+    String	manejoEntrega
 
-    BigDecimal cargosPorManiobra = 0.0
+    String	comentario
 
-    BigDecimal kilos = 0.0
+    String	sw2
 
-    Date impreso
-
-    BigDecimal comisionTarjeta  = 0.0
-
-    BigDecimal comisionTarjetaImp = 0.0
-
-    Vendedor vendedor
-
-    String comprador
-
-    Sucursal sucursalVenta    // Nuevo
-
-    String atencion = 'ND'
-
-    String clasificacionVale
-
-    Sucursal sucursalVale    // cambio de Long a String
-
-    Boolean vale = false
-
-    
-
-    CondicionDeEnvio envio
-
-    String sw2
+    Date fecha
 
     Date dateCreated
 
     Date lastUpdated
 
-    String createUser    // Nuevo
+    String createUser
 
-    String updateUser    // Nuevo
+    String updateUser
+
+    CuentaPorCobrar cuenta
 
     List partidas = []
+
+
+
 
     static constraints = {
         tipo  inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
         documento maxSize: 20
-        envio nullable:true
-        uuid nullable:true, unique:true
-        serie nullable:true, maxSize: 20
-        folio nullable:true, unique:'serie', maxSize: 20
-        rfc minSize:12, maxSize:13
         puesto nullable: true
         tipoDeCambio(scale:6)
         impreso nullable:true
-        cuentaDePago nullable:true, maxSize:4
         atencion inList:['MOSTRADOR','TELEFONICA','ND']
         clasificacionVale nullable:true,maxSize:30
         comentario nullable:true
         facturar nullable:true
         comprador nullable:true
-        cancelacion nullable:true
-        credito nullable:true
         sw2 nullable:true
         createUser nullable:true, maxSize: 100
         updateUser nullable:true, maxSize: 100
-        
         sucursalVale nullable:true
         sucursalVenta nullable:true
+        clasificacionVale inList: ['SIN_VALE','ENVIA_SUCURSAL','PASA_CAMIONETA','RECOGE_CLIENTE','EXISTENCIA_VENTA']
+        manejoEntrega inList:['ORDINARIO','PARCIAL']
+        cuenta nullable: true
+        vale nullable: true
+        updateUser nullable: true
 
     }
 
@@ -126,17 +113,13 @@ class Venta {
         partidas cascade: "all-delete-orphan"
         id generator:'uuid'
         fecha type:'date' ,index: 'VENTA_IDX1'
-        serie index: 'VENTA_IDX2'
-        folio index: 'VENTA_IDX2'
         cliente index: 'VENTA_IDX3'
-        nombre index: 'VENTA_IDX4'
-        credito unique: true
-        cancelacion unique: true
+
 
     }
 
     static hasMany =[partidas:VentaDet]
 
-    static hasOne=[credito:VentaCredito,cancelacion: VentaCancelada]
+
 
 }

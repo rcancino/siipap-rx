@@ -18,6 +18,7 @@ class ProveedorContactos {
 
     Long	sw2	 = 0
 
+
     static constraints = {
         nombre nullable:true
         puesto nullable: true

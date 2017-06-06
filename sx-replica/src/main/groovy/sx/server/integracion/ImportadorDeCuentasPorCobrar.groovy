@@ -22,6 +22,10 @@ class ImportadorDeCuentasPorCobrar implements Importador, SW2Lookup{
     @Autowired
     ImportadorDeProductos importadorDeProductos
 
+    @Autowired
+    ImportadorDeVentas importadorDeVentas
+
+
     def importar(Date ini, Date fin){
 
     }
@@ -44,9 +48,10 @@ class ImportadorDeCuentasPorCobrar implements Importador, SW2Lookup{
 
     def build(def row){
 
-        def venta = Venta.where{ sw2 == row.sw2}.find()
+        Venta venta=Venta.where {sw2==dev.venta_id}.find()
+
         if(!venta){
-            venta = new Venta()
+            importadorDeVentas.importar(dev.venta_id)
         }
         bindData(venta,row)
         venta.sucursal = buscarSucursal(row.sucursal_id)
@@ -57,15 +62,7 @@ class ImportadorDeCuentasPorCobrar implements Importador, SW2Lookup{
         venta.cliente = cliente
         venta.vendedor = buscarVendedor(row.vendedor_id)
 
-        if(venta.tipo == 'CRE' || venta.tipo == 'PSF') {
-            if(!venta.credito)
-                venta.credito = new VentaCredito()
-            VentaCredito credito = venta.credito
-            bindData(credito , row)
-            credito.cobrador = buscarCobrador(row.cobrador_id)
-            credito.socio = Socio.where{sw2 == row.socio_id}.find()
-            venta.credito=credito
-        }
+
         importarPartidas(venta)
         try{
             venta = venta.save failOnError:true, flush:true

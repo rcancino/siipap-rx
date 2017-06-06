@@ -12,28 +12,47 @@ import grails.validation.Validateable
 class Cfdi {
 
     //Datos de CFDI...
+    String id
+
     URL url
+
     String emisor
+
     String emisorRfc
+
     String receptorRfc
+
     String tipoDeComprobante
+
     String fileName
+
     String uuid
+
     Date fecha
+
     String rfc
+
     String serie
+
     String folio
+
     String metodoDePago
+
     String formaDePago
+
     BigDecimal total
 
     Date dateCreated
+
     Date lastUpdated
+
+
+
 
     static constraints = {
         emisorRfc minSize: 12, maxSize:13
         receptorRfc minSize: 12, maxSize:13
-        uuid unique:true
+        uuid unique:true , nullable: true
         url url:true
         fileName maxSize:150
         rfc nullable:true

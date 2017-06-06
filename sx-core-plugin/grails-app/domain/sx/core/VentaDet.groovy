@@ -3,90 +3,70 @@ package sx.core
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
-@ToString(includes = ["clave,descripcion,cantidad,precio"],includeNames=true,includePackage=false)
-@EqualsAndHashCode(includes = 'id,sucursal,clave,cantidad,importe')
 class VentaDet {
 
-	String id
+	String	id
 
-	Sucursal sucursal
+	Producto	producto
 
-	Producto producto
+	Sucursal	sucursal
 
-	String clave
+	Venta	venta
 
-	String descripcion
+	Inventario	inventario
 
-	String unidad
+	Long	documento
 
-	BigDecimal factor
+	Date	fecha
 
-	Boolean nacional  = true
+	BigDecimal	cantidad = 0
 
-	Long documento
+	BigDecimal	precioLista = 0
 
-	Date fecha
+	BigDecimal	precioOriginal = 0
 
-	BigDecimal cantidad
+	BigDecimal	precio = 0
 
-	BigDecimal kilos = 0.0
+    BigDecimal	importe = 0
 
-	BigDecimal precioOriginal
+	BigDecimal	desctoOriginal = 0
 
-	BigDecimal precioLista
+	BigDecimal	descuento = 0
 
-	BigDecimal precio
+	BigDecimal	importeDescuento = 0
 
-	BigDecimal importe = 0.0
+	BigDecimal	importeNeto = 0
 
-	BigDecimal desctoOriginal
+	BigDecimal	subtotal = 0
 
-	BigDecimal descuento = 0.0
+	Boolean	nacional = true
 
-	BigDecimal importeDescuento
+	BigDecimal	kilos = 0
 
-	BigDecimal importeNeto
+	String	comentario
 
-	Integer cortes = 0
+	Boolean	conVale = false
 
-	BigDecimal precioCortes
+	Boolean	cortado = false
 
-	BigDecimal importeCortes
+    BigDecimal	importeCortes = 0
 
-	String cortesInstruccion
-
-	BigDecimal subtotal
-
-	BigDecimal costoReposicion
-
-	BigDecimal costoPromedio
-
-	BigDecimal costoUltimo
-
-	Boolean conVale = false
-
-	Boolean cortado = false
-
-	String comentario
-
-	String sw2
-
-	Venta venta
+	String	sw2
 
     Date dateCreated
 
     Date lastUpdated
 
-    String createUser
     String updateUser
 
+    String createUser
 
     static constraints = {
         sw2 nullable:true
         createUser nullable: true
         updateUser nullable: true
 		comentario nullable: true
-        cortesInstruccion nullable: true
+        inventario nullable: true
 
     }
 
@@ -94,9 +74,8 @@ class VentaDet {
         id generator:'uuid'
         fecha index: 'VENTADET_IDX1'
         producto index: 'VENTADET_IDX2'
-        clave index: 'VENTADET_IDX2'
-        descripcion index: 'VENTADET_IDX2'
     }
 
     static belongsTo = [venta:Venta]
+
 }

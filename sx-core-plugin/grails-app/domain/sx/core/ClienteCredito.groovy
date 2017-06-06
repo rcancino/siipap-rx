@@ -36,7 +36,6 @@ class ClienteCredito {
 
     Long	sw2
 
-    static belongsTo=[Cliente]
 
     static constraints = {
 

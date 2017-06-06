@@ -33,33 +33,11 @@ class Cliente {
 
 	Vendedor	vendedor
 
-	String	calle
-
-	String	exterior
-
-	String	interior
-
-	String	colonia
-
-	String	cp
-
-	String	municipio
-
-	String	estado
-
-	String	pais
+    Direccion direccion
 
 	Date dateCreated
 
 	Date lastUpdated
-
-    List<ComunicacionEmpresa> medios
-
-
-	static hasOne=[clienteCredito:ClienteCredito,contacto:ClienteContactos]
-
-    static hasMany=[medios :ComunicacionEmpresa]
-
 
 
 	static constraints = {
@@ -67,21 +45,15 @@ class Cliente {
 		rfc maxSize:13
 		sw2 nullable:true
 		vendedor nullable:true
-		calle nullable: true
-		exterior nullable: true
-		interior nullable: true
-		colonia nullable:  true
-		municipio nullable: true
-		estado nullable: true
-		pais nullable: true
 		dateCreated nullable:true
 		lastUpdated nullable:true
         sucursal nullable: true
-        clienteCredito nullable: true
-        contacto nullable: true
-        medios nullable: true
+        direccion nullable: true
+
 
 	}
+
+    static embedded = ['direccion']
 
 	static mapping={
 		id generator:'uuid'

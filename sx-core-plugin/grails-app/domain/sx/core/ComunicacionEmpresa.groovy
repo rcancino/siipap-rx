@@ -18,7 +18,7 @@ class ComunicacionEmpresa {
 
     Cliente cliente
 
-    static  belongsTo=[Cliente]
+
 
     static constraints = {
         tipo inList:['TEL','CEL','FAX','MAIL','WEB']

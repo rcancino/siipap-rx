@@ -20,6 +20,9 @@ class ImportadorDeRecepcionDeCompras implements Importador, SW2Lookup {
     @Autowired
     ImportadorDeCompras importadorDeCompras
 
+    @Autowired
+    ImportadorDeInventario importadorDeInventario
+
     def importar(f1){
         return importar(f1,f1)
     }
@@ -51,6 +54,7 @@ class ImportadorDeRecepcionDeCompras implements Importador, SW2Lookup {
         importarPartidas(recepcion)
         try{
             recepcion = recepcion.save failOnError:true, flush:true
+            importadorDeInventario.importar(recepcion,'COM')
             return recepcion
         }catch (Exception ex){
             logger.error(ExceptionUtils.getRootCauseMessage(ex))

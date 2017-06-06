@@ -1,0 +1,7 @@
+import sx.inventario.Transformacion
+
+model {
+    Transformacion transformacion
+}
+
+json g.render(transformacion, [excludes:['dateCreated','lastUpdated']])
