@@ -107,9 +107,9 @@ environments:
         dataSources:
             dataSource:
                 dbCreate: update
-                #url: jdbc:mysql://localhost/siipapx?autoReconnect=true
-                url: jdbc:mysql://10.10.1.229/siipapx?autoReconnect=false
-                password: sys
+                url: jdbc:mysql://localhost/siipapx?autoReconnect=true
+                #url: jdbc:mysql://10.10.1.229/siipapx?autoReconnect=false
+                password: shoto
             importacion:
                 dbCreate: none
                 #url: jdbc:mysql://localhost/sw2?autoReconnect=true

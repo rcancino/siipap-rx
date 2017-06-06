@@ -8,6 +8,9 @@ import sx.core.Venta
 import sx.core.VentaCancelada
 import sx.cxc.Cobro
 
+import org.apache.commons.lang.builder.ToStringBuilder
+import org.apache.commons.lang.builder.ToStringStyle
+
 /**
  * Created by rcancino on 26/10/16.
  */
@@ -25,7 +28,7 @@ class ImportadorDeVentasCanceladas implements Importador, SW2Lookup {
 
     def importar(fecha){
         logger.info("Importando ventas canceladas : ${fecha.format('dd/MM/yyyy')}" )
-        String select = QUERY + " where date(c.CREADO) = ? and v.tipo = 'FAC' "
+        String select = QUERY_CANC + " where date(c.CREADO) = ? and v.tipo = 'FAC' "
         def ids = leerRegistros(select,[fecha.format('yyyy-MM-dd')])
         def importados = 0
         ids.each { row ->
@@ -37,9 +40,31 @@ class ImportadorDeVentasCanceladas implements Importador, SW2Lookup {
 
 
     def importar(String sw2){
-        String select = QUERY + " where c.id = ? and v.tipo = 'FAC' "
+        String select = QUERY_CANC + " where c.id = ? and v.tipo = 'FAC' "
+        println select
         def row = findRegistro(select, [sw2])
-        build(row)
+        if(row)
+            build(row)
+    }
+
+    def importarCanc(Venta venta){
+
+        def row = findRegistro(QUERY_CANC,[venta.sw2])
+        if(row){
+            def cancelada = VentaCancelada.where{ sw2 == row.sw2}.find()
+
+            if(!cancelada)
+                cancelada = new VentaCancelada()
+
+            bindData(cancelada,row)
+            cancelada.venta=venta
+            println ToStringBuilder.reflectionToString(cancelada, ToStringStyle.SHORT_PREFIX_STYLE)
+
+            cancelada.save failOnError:true, flush:true
+            println ToStringBuilder.reflectionToString(cancelada, ToStringStyle.SHORT_PREFIX_STYLE)
+
+        }
+
     }
 
     def build(def row){
@@ -47,6 +72,7 @@ class ImportadorDeVentasCanceladas implements Importador, SW2Lookup {
         def cancelada = VentaCancelada.where{ sw2 == row.sw2}.find()
         if(!cancelada){
             cancelada = new VentaCancelada()
+
             bindData(cancelada,row)
             Venta venta = Venta.where {sw2 == row.venta_id}.find()
             if(!venta){
@@ -74,4 +100,18 @@ class ImportadorDeVentasCanceladas implements Importador, SW2Lookup {
     FROM sx_cxc_cargos_cancelados c
     join sx_ventas v on(v.cargo_id=c.cargo_id)
     """
+    static String QUERY_CANC="""
+    SELECT
+        c.cargo_id,
+        c.fecha,
+        c.comentario,
+        c.AUT_ID as autorizacion,
+        ifnull(c.MODIFICADO_USERID,'') as usuario,
+        c.ID as sw2,
+        c.CREADO as dateCreated,
+        ifnull(c.MODIFICADO,c.CREADO) as lastUpdated
+    FROM sx_cxc_cargos_cancelados c
+    where c.cargo_id=?
+    """
 }
+

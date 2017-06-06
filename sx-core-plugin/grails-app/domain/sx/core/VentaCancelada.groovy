@@ -7,6 +7,8 @@ import groovy.transform.ToString
 class VentaCancelada {
 
 	String id
+
+	Venta venta
 	
 	Date fecha
 
@@ -25,6 +27,7 @@ class VentaCancelada {
         comentario nullable:true
         usuario nullable:true
         sw2 nullable:true
+
 	}
 
 	static mapping = {
@@ -32,5 +35,4 @@ class VentaCancelada {
         fecha type:'date' ,index: 'VENTACANCELADA_IDX1'
     }
 
-	static belongsTo = [venta: Venta]
 }

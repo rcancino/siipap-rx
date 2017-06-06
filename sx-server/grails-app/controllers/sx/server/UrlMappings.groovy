@@ -57,11 +57,19 @@ class UrlMappings {
         "/api/compras/recepciones"(resources: "recepcionDeCompra") {
             "/partidas"(resource: "recepcionDeCompraDet")
         }
+        "/api/compras/devolucionCompra"(resources: "devolucionDeCompra")
 
         // Ventas
         "/api/ventas/listas"(resources: "listaDePreciosVenta")
         "/api/core/ventas"(resources:"venta")
-        
+
+        //Inventario
+        "/api/inventario"(resources: "inventario")
+        "/api/inventario/traslados"(resources: "traslado")
+        "/api/inventario/devolucionVenta"(resources: "devolucionDeVenta")
+        "/api/inventario/movimientoAlmacen"(resources: "movimientoDeAlmacen")
+        "/api/inventario/transformacion"(resources: "transformacion")
+
 
         "/"(controller: 'application', action:'index')
         "500"(view: '/error')

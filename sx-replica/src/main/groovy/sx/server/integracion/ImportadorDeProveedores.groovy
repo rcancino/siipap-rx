@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component
 import sx.core.Direccion
 import sx.core.Producto
 import sx.core.Proveedor
+import sx.core.ProveedorCompras
 import sx.core.ProveedorProducto
 
 /**
@@ -15,7 +16,7 @@ class ImportadorDeProveedores implements Importador{
 
     @Autowired
     ImportadorDeProductos importadorDeProductos
-
+/*
     def importar(String tipo = 'COMPRAS', String clave){
         String query = tipo == 'COMPRAS' ? QUERY_COMPRAS : QUERY_GASTOS
         query += ' where clave = ?'
@@ -23,7 +24,7 @@ class ImportadorDeProveedores implements Importador{
         Proveedor proveedor = build(row)
 
     }
-
+*/
     def importar(Long sw2, tipo = 'COMPRAS'){
         logger.info(" Importando proveedor ${sw2} (${tipo})")
         String sql = tipo == 'COMPRAS' ? QUERY_COMPRAS : QUERY_GASTOS
@@ -32,9 +33,10 @@ class ImportadorDeProveedores implements Importador{
         build(row)
     }
 
-    def importar(tipo = 'COMPRAS'){
+    def importar(String tipo){
+        if(!tipo) tipo = 'COMPRAS'
+        println("Importando proveedores (${tipo})")
 
-        logger.info("Importando proveedores (${tipo})")
 
         String query = tipo == 'COMPRAS' ? QUERY_COMPRAS : QUERY_GASTOS
 
@@ -42,15 +44,19 @@ class ImportadorDeProveedores implements Importador{
         def errores = []
 
         leerRegistros(query,[]).each { row ->
+
+            build(row)
+            importados++
             try {
-                build(row)
-                importados++
+               // build(row)
+                //importados++
             }
             catch(Exception e) {
                 errores.add(row.sw2)
             }
             
         }
+
         def message = "Proveedores iportados importadas: $importados (${tipo})"
         if(errores){
             message + "Errores importando proveedores: "+ errores.join(',')
@@ -58,17 +64,49 @@ class ImportadorDeProveedores implements Importador{
         return message
     }
 
+
+
     def build(def row){
         logger.info('Importando proveedor: ' + row)
         def proveedor = Proveedor.where{sw2 == row.sw2 && tipo == row.tipo}.find()
         if(!proveedor){
-            proveedor = new Proveedor(row)
+            proveedor = new Proveedor()
         }
         proveedor.rfc = proveedor.rfc ?:'XAXX010101000'
         proveedor.direccion = resolveDireccion(row)
         bindData(proveedor,row)
-        proveedor = proveedor.save failOnError:true, flush:true
+        //proveedor = proveedor.save failOnError:true, flush:true
+        try{
+            proveedor = proveedor.save failOnError:true, flush:true
+            importarProveedorCompras(proveedor)
+        }catch(Exception e) {
+           e.printStackTrace()
+        }
+
         return proveedor
+    }
+
+
+    def importarProveedorCompras(Proveedor proveedor){
+
+        if(proveedor.tipo=='COMPRAS'){
+
+            def rowCompras = getSql().firstRow(QUERY_PROV_COMPRAS,[proveedor.sw2])
+            ProveedorCompras provCompras=ProveedorCompras.where {proveedor==proveedor}.find()
+            if(!provCompras){
+                provCompras=new ProveedorCompras()
+            }
+            provCompras.proveedor=proveedor
+            if(!rowCompras.cuentaContable)
+                provCompras.cuentaContable='NA'
+            bindData(provCompras,rowCompras)
+
+            provCompras.save failOnError:true,flush:true
+
+        }
+
+        return proveedor
+
     }
 
     def resolveDireccion(row){
@@ -112,7 +150,21 @@ class ImportadorDeProveedores implements Importador{
         select nombre,clave,
         if(ifnull(rfc,'') = '', 'XAXX010101000', rfc) as rfc,
         proveedor_id as sw2,
-        activo,'COMPRAS' as tipo,telefono1,telefono2,telefono3,calle,numero,numeroint,delmpo as municipio,cp as codigoPostal,colonia,estado,pais,email1,email2
+        activo,
+        'COMPRAS' as tipo,
+        telefono1,
+        telefono2,
+        telefono3,
+        calle,
+        numero,
+        numeroint,
+        delmpo as municipio,
+        cp as codigoPostal,
+        colonia,
+        estado,
+        pais,
+        email1,
+        email2
         from sx_proveedores 
     """
     static String QUERY_GASTOS = """
@@ -123,8 +175,30 @@ class ImportadorDeProveedores implements Importador{
         if(ifnull(rfc,'') = '', 'XAXX010101000', rfc) as rfc,
         proveedor_id as sw2,
         'GASTOS' as tipo
-        ,telefono1,telefono2,telefono3,calle
-        ,numero,numeroint,delmpo as municipio,cp as codigoPostal,colonia,estado,pais,email1,email2
+        ,telefono1,
+        telefono2,
+        telefono3,
+        calle,
+        numero,
+        numeroint,
+        delmpo as municipio,
+        cp as codigoPostal,
+        colonia,
+        estado,
+        pais,
+        email1,
+        email2
         from sw_gproveedor 
+    """
+    static String QUERY_PROV_COMPRAS="""
+        SELECT
+            ifnull(p.CUENTACONTABLE,'') as cuentaContable,
+            p.DESCUENTOF as descuentoF,
+            p.DIASDF as diasDF,
+            p.plazo as plazo,
+            p.VTO_FECHAREV as fechaRevision,
+            p.IMPRIMIR_COSTO as imprimirCosto
+        FROM sx_proveedores p
+        where proveedor_id=?
     """
 }

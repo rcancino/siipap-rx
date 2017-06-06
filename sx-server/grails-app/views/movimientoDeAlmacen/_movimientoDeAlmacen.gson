@@ -1,0 +1,8 @@
+import sx.inventario.MovimientoDeAlmacen
+
+
+model {
+    MovimientoDeAlmacen movimientoDeAlmacen
+}
+
+json g.render(movimientoDeAlmacen, [excludes:['dateCreated','lastUpdated']])

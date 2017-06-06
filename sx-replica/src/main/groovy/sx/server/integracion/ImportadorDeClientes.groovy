@@ -45,13 +45,25 @@ class ImportadorDeClientes implements  Importador{
         def row = getSql().firstRow(select,[sw2])
         bindData(cliente,row)
 
+        cliente.direccion = cliente.direccion ?: new Direccion()
+        bindData(cliente.direccion,row)
+
         cliente.save failOnError:true, flush:true
 
-        importarColecciones(cliente)
 
     }
 
-    def sincronizar(){
+    def importar(def sw2){
+        def cliente = Cliente.where{ sw2 == sw2}.find() ?: new Cliente()
+        def select = QUERY_ROW + ' where cliente_id = ?'
+        def row = getSql().firstRow(select,[sw2])
+        bindData(cliente,row)
+        cliente.direccion = cliente.direccion ?: new Direccion()
+        bindData(cliente.direccion,row)
+
+        cliente.save failOnError:true, flush:true
+
+
 
     }
 
@@ -81,20 +93,33 @@ class ImportadorDeClientes implements  Importador{
             if(audit.action.equals("UPDATE")){
                 println "Actualizando"
 
-
-
             }
 
         }
     }
 
+
+
+    def importarColeccionesClientes(Date fecha){
+
+        def clientes=Cliente.findAllByDateCreated(fecha).each {cliente->
+            importarColecciones(cliente)
+        }
+    }
+
+
     def importarColecciones(Cliente cliente){
+
 
         def contactos=leerRegistros(QUERY_CONTACTO,[cliente.sw2]).each{contactoRow ->
 
 
             println contactoRow
-            def contacto=cliente.contacto?:new ClienteContactos()
+
+            ClienteContactos contacto=ClienteContactos.where {sw2==contactoRow.sw2 && nombre==contactoRow.nombre}.find()
+
+            if(!contacto)
+             contacto=new ClienteContactos()
 
             contacto.cliente=cliente
             contacto.activo=contactoRow.activo
@@ -108,18 +133,25 @@ class ImportadorDeClientes implements  Importador{
 
         }
 
+
         def medios=leerRegistros(QUERY_COMUNICACION,[cliente.sw2,cliente.sw2,cliente.sw2]).each{medioRow ->
 
-            def medio=new ComunicacionEmpresa()
+                ComunicacionEmpresa medio=ComunicacionEmpresa.where {sw2==medioRow.sw2 && descripcion==medioRow.descripcion }.find()
+
+            if(!medio)
+                medio =new ComunicacionEmpresa()
+
+                println "importando Medio de Comunicacion para"+cliente.sw2
 
                     medio.cliente=cliente
                     medio.activo=medioRow.activo
                     medio.tipo=medioRow.tipo
                     medio.descripcion=medioRow.descripcion
                     medio.cfdi=medioRow.cfdi
+                    medio.sw2=medioRow.sw2
 
 
-                cliente.addToMedios(medio)
+                medio.save failOnError:true, flush:true
         }
 
     }
@@ -169,17 +201,33 @@ class ImportadorDeClientes implements  Importador{
             """
 
     static String QUERY_COMUNICACION="""
-            SELECT CLIENTE_ID as sw2,true as activo,case when tipo like 'TEL%' then 'TEL' else tipo end as tipo,TELEFONO as descripcion,false as cfdi
+          SELECT
+            CLIENTE_ID as sw2,
+            true as activo,
+            case when tipo like 'TEL%' then 'TEL'
+            when tipo like 'CEL%' then 'CEL'
+            when tipo like 'FAX%' then 'FAX'
+            else 'TEL' end as tipo,
+            TELEFONO as descripcion,
+            false as cfdi
             FROM sx_clientes_tels
             where cliente_id=?
             union
-            SELECT CLIENTE_ID as sw2,true as ACTIVO, 'MAIL'aS TIPO, EMAIL1 AS DESCRIPCION, true as cfdi
-            FROM sx_clientes_cfdi_mails where EMAIL1 is not null and EMAIL1 <> ''
-            and cliente_id=?
+          SELECT
+            CLIENTE_ID as sw2,
+            true as ACTIVO,
+            'MAIL'aS TIPO,
+             EMAIL1 AS DESCRIPCION,
+             true as cfdi
+          FROM sx_clientes_cfdi_mails where EMAIL1 is not null and EMAIL1 <> '' and cliente_id=?
             union
-            SELECT CLIENTE_ID as sw2,true as ACTIVO, 'MAIL'aS TIPO, EMAIL2 AS DESCRIPCION, true as cfdi
-            FROM sx_clientes_cfdi_mails where EMAIL2 is not null and EMAIL2 <> ''
-            and cliente_id=?
+          SELECT
+            CLIENTE_ID as sw2,
+            true as ACTIVO,
+            'MAIL'aS TIPO,
+            EMAIL2 AS DESCRIPCION,
+            true as cfdi
+          FROM sx_clientes_cfdi_mails where EMAIL2 is not null and EMAIL2 <> '' and cliente_id=?
             """
 
      static String QUERY_UPDATE="""

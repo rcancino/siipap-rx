@@ -16,7 +16,6 @@ class ProveedorComunicacionEmpresa {
 
     Long	sw2	 = 0
 
-
     static constraints = {
         descripcion nullable: true
         comentario nullable: true

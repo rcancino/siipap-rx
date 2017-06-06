@@ -2,69 +2,66 @@ package sx.cxc
 
 import groovy.transform.ToString
 import sx.core.Cliente
+import sx.core.Sucursal
+import sx.cxp.CuentaPorPagarException
+
 //import sx.core.Sucursal
 
 /**
  * Created by rcancino on 23/03/17.
  */
-@ToString( includes = "clave,nombre,fecha,serie,folio,total",includeNames=true,includePackage=false)
+@ToString( includes = "cliente,total",includeNames=true,includePackage=false)
 class NotaDeCargo {
 
-    String id
+    String	id
 
-    //Sucursal sucursal
+    Cliente	cliente
 
-    Cliente cliente
+    Sucursal sucursal
 
-    String clave
+    Long	documento	 = 0
 
-    String rfc
+    BigDecimal	importe	 = 0
 
-    String nombre
+    BigDecimal	impuesto	 = 0
 
-    Date fecha
+    BigDecimal	total	 = 0
 
-    String tipo
-
-    String serie
-
-    String folio
-
-    String uuid
+    String	formaDePago
 
     Currency moneda = Currency.getInstance('MXN')
 
-    BigDecimal tipoDeCambio = 1.0
+    BigDecimal	tipoDeCambio	 = 1
 
-    String comentario
+    String	comentario
 
-    List partidas = []
+    CuentaPorCobrar cuenta
 
-    String sw2
+    String	sw2
 
     Date dateCreated
 
     Date lastUpdated
 
+    String createUser
+
+    String updateUser
+
+
+
+
+
     static constraints = {
-        tipo  inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
-        uuid nullable:true, unique:true
-        serie nullable:true, maxSize: 20
-        folio nullable:true, unique:'serie', maxSize: 20
-        rfc minSize:12, maxSize:13
         tipoDeCambio(scale:6)
         comentario nullable:true
         sw2 nullable:true
+        cuenta nullable: true
     }
 
     static hasMany =[partidas:NotaDeCargoDet]
 
     static mapping = {
         id generator:'uuid'
-        partidas cascade: "all-delete-orphan"
-        fecha type:'date' ,index: 'NCARGO_IDX1'
-        serie index: 'NCARGO_IDX2'
-        folio index: 'NCARGO_IDX2'
         cliente index: 'NCARGO_IDX3'
     }
 }

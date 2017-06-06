@@ -4,8 +4,9 @@ import org.apache.commons.lang.exception.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import sx.core.Cliente
+import sx.core.Inventario
 import sx.core.Producto
-import sx.core.Socio
+import sx.core.Sucursal
 import sx.core.Venta
 import sx.core.VentaCredito
 import sx.core.VentaDet
@@ -22,7 +23,25 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
     @Autowired
     ImportadorDeProductos importadorDeProductos
 
+    @Autowired
+    ImportadorDeVentasCredito importadorDeVentasCredito
+
+    @Autowired
+    ImportadorDeVentasCanceladas importadorDeVentasCanceladas
+
+    @Autowired
+    ImportadorDeInventario importadorDeInventario
+
     def importar(Date ini, Date fin){
+
+
+        def ids = leerRegistros("select cargo_id from SX_VENTAS where fecha between ? and ? and tipo = ? ",[ini.format('yyyy-MM-dd'),fin.format('yyyy-MM-dd'), 'FAC'])
+        logger.info('Registros: ' + ids.size())
+
+        ids.each { r ->
+            importar(r.cargo_id)
+        }
+        return 'OK'
 
     }
 
@@ -42,14 +61,23 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
     }
 
     def importar(String sw2){
-        String select = QUERY + " where tipo = ? and cargo_id = ? "
+        String select = QUERY_VENTA + " where tipo = ? and cargo_id = ? "
         def row = findRegistro(select, ['FAC',sw2])
         def venta = build(row)
+
+        if(venta.tipo == 'CRE' || venta.tipo == 'PSF') {
+                importadorDeVentasCredito.importar(venta)
+        }
+
+        if(venta.total==0 && venta.tipo!='ANT'){
+            println "Importando ventas canceladas"
+            importadorDeVentasCanceladas.importarCanc(venta)
+        }
 
     }
 
     def build(def row){
-        logger.info('Importando venta con ROW: ' + row)
+        //println('Importando venta con ROW: ' + row)
         def venta = Venta.where{ sw2 == row.sw2}.find()
         if(!venta){
             venta = new Venta()
@@ -63,43 +91,39 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
         venta.cliente = cliente
         venta.vendedor = buscarVendedor(row.vendedor_id)
 
-        if(venta.tipo == 'CRE' || venta.tipo == 'PSF') {
-            if(!venta.credito)
-                venta.credito = new VentaCredito()
-            VentaCredito credito = venta.credito
-            bindData(credito , row)
-            credito.cobrador = buscarCobrador(row.cobrador_id)
-            credito.socio = Socio.where{sw2 == row.socio_id}.find()
-            venta.credito=credito
-        }
-        importarPartidas(venta)
-        try{
-            venta = venta.save failOnError:true, flush:true
+
+            importarPartidas(venta)
+            venta.save failOnError:true, flush:true
+
+            importadorDeInventario.importar(venta,"FAC")
+
             return venta
-        }catch (Exception ex){
-            logger.error(ExceptionUtils.getRootCauseMessage(ex))
-        }
 
     }
 
     def importarPartidas(Venta venta){
 
-        List partidas = leerRegistros(QUERY_PARTIDAS,[venta.sw2])
+        List partidas = leerRegistros(QUERY_PARTIDAS1,[venta.sw2])
         venta.partidas.clear()
         partidas.each{ row ->
-            logger.info('Importando partida: ' + row.clave)
+            //println('Importando partidas: ' + row.sw2)
             VentaDet det = new  VentaDet()
             det.sucursal = buscarSucursal(row.sucursal_id)
             Producto producto = Producto.where {sw2 == row.producto_id}.find()
             if(!producto) {
-                logger.info("Importando producto $row.producto_id para la venta")
+                println("Importando producto $row.producto_id para la venta")
                 producto = importadorDeProductos.importar( row.producto_id)
                 assert producto, 'No fue posible importar el producto :' +row.producto_id
             }
             det.producto = producto
+            det.sucursal=venta.sucursal
+
             bindData(det,row)
+
+           // println('Agregando partida: ' + row.sw2+" ---- "+det.documento+" "+det.fecha)
             venta.addToPartidas(det)
         }
+        return venta
     }
 
 
@@ -163,6 +187,50 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
 
     """
 
+    static String QUERY_VENTA="""
+    SELECT
+        v.cliente_id,
+        v.vendedor_id,
+        v.sucursal_id,
+        v.origen,
+        V.docto AS documento,
+        v.importe,
+        v.impuesto,
+        v.total,
+        v.descuento,
+        v.descuento as descuentoOriginal,
+        cargos as cargosPorManiobra,
+        0 as comisionTarjeta,
+        0 as comisionTarjetaImporte,
+        v.FPAGO  as formaDePago,moneda,
+        TC as tipoDeCambio,
+        ifnull(kilos,0),
+        fecha as puesto,
+        v.fecha as facturar,
+        null as vale,
+        null as sucursalVale,
+        'SIN_VALE' as clasificacionVale,
+        impreso,
+        comprador,
+        'MOSTRADOR' as atencion,
+        'ORDINARIO' as manejoEntrega,
+        comentario,
+        v.CARGO_ID as sw2,
+        fecha,
+        creado as dateCreated,
+        modificado as lastUpdated,
+        CREADO_USERID as createUser,
+        null as cuenta,
+        CASE WHEN ORIGEN='MOS' THEN 'CON'
+            WHEN ORIGEN='CAM' THEN 'COD'
+            WHEN ORIGEN ='CRE' THEN 'CRE'
+            WHEN POST_FECHADO is true THEN 'PSF'
+            WHEN ANTICIPO IS TRUE OR ANTICIPO_APLICADO<>0 THEN 'ANT'
+            ELSE 'OTR' END AS tipo
+    FROM sx_ventas v
+
+    """
+
     static String QUERY_PARTIDAS  = """
     select
         D.sucursal_id,
@@ -199,4 +267,33 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
         where venta_id = ?
 
     """
+    static String QUERY_PARTIDAS1 ="""
+    SELECT
+        producto_id,
+        sucursal_id,
+        venta_id,
+        null as inventario_id,
+        documento,
+        fecha,
+        cantidad,
+        precio_l as precioLista,
+        precio as precioOriginal,
+        precio,
+        importe,
+        DSCTO as descuento,
+        DSCTO_ORIG  as descuentoOriginal,
+        0 as importeDescuento,
+        importe_neto as importeNeto,
+        subtotal,
+        nacional,
+        kilos,
+        comentario,
+        CORTES* PRECIO_CORTES as importeCortes,
+        INVENTARIO_ID as sw2
+    FROM sx_ventasdet d where d.venta_id=?
+    """
+
+
+
+
 }

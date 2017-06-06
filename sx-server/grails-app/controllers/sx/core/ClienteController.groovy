@@ -27,4 +27,8 @@ class ClienteController extends RestfulController{
 
         return query.list(params)
     }
+
+
+
+
 }
