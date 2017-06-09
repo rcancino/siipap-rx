@@ -4,6 +4,8 @@ package sx.tesoreria
 
 
 class Inversion extends Traspaso{
+
+	String id
 	
 	Date rendimientoFecha = new Date()
 
@@ -33,6 +35,7 @@ class Inversion extends Traspaso{
     }
 	
 	static mapping ={
+		id generator: 'uuid'
         rendimientoFecha type:'date' 
     }
 	

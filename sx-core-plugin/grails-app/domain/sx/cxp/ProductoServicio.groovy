@@ -11,4 +11,8 @@ class ProductoServicio {
 
     String cuentaContable
 
+    static  mapping={
+        id generator:'uuid'
+    }
+
 }

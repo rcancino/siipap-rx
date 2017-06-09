@@ -35,5 +35,10 @@ class SaldoPorCuentaDeBanco {
 		cierre(nullable:true)
     }
 
+	static mapping = {
+		id generator: 'uuid'
+	}
+
+
     
 }

@@ -34,5 +34,9 @@ class NotaDeCreditoDet {
         comentario nullable:true
     }
 
+    static mapping={
+        id generator:'uuid'
+    }
+
     static belongsTo =[nota:NotaDeCredito]
 }

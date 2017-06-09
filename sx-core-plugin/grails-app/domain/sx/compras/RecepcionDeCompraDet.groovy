@@ -3,14 +3,13 @@ package sx.compras
 import sx.core.Inventario
 import sx.core.Producto
 import sx.core.Sucursal
+import sx.compras.RecepcionDeCompra
 
 class RecepcionDeCompraDet {
 
     String id
 
     Inventario inventario
-
-    RecepcionDeCompra recepcionDeCompra
 
     CompraDet compraDet
 
@@ -33,6 +32,7 @@ class RecepcionDeCompraDet {
         sw2 nullable:true
         comentario nullable: true
         inventario nullable: true
+        compraDet nullable: true
     }
 
     static mapping = {

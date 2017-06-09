@@ -5,6 +5,8 @@ import groovy.transform.EqualsAndHashCode
 @EqualsAndHashCode(includes='clave')
 class CuentaContable {
 
+    String id
+
     String clave
 
     String descripcion
@@ -46,6 +48,7 @@ class CuentaContable {
     }
 
     static mapping ={
+        id generator:'uuid'
         subCuentas cascade: "all-delete-orphan", batchSize: 10
 
     }

@@ -34,6 +34,8 @@ class CobroCheque {
     }
 
     static mapping={
+
+        id generator:'uuid'
         vencimiento type: 'date'
     }
 

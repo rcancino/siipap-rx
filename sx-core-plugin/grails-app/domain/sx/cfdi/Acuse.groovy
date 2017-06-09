@@ -27,5 +27,8 @@ class Acuse {
         uuid unique:true
     }
 
+    static  mapping={
+        id generator:'uuid'
+    }
 
 }

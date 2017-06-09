@@ -56,6 +56,7 @@ class Ficha {
     }
 
     static mapping ={
+		id generator: 'uuid'
         fecha type:'date' , index: 'FICHA_IDX1'
         sucursal index: 'FICHA_IDX1'
         partidas cascade: "all-delete-orphan"

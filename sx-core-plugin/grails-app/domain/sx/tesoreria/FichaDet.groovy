@@ -31,4 +31,8 @@ class FichaDet {
     	banco maxSize: 50
     }
 
+	static mapping = {
+		id generator: 'uuid'
+	}
+
 }

@@ -27,7 +27,7 @@ class ChequeDevuelto {
 
     String	comentario
 
-    CuentaPorCobrar cuenta
+    CuentaPorCobrar cuentaPorCobrar
 
     String	sw2
 

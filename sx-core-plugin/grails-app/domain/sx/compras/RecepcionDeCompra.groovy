@@ -3,15 +3,17 @@ package sx.compras
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import sx.core.Proveedor
+import sx.compras.Compra
 import sx.core.Sucursal
+import sx.compras.RecepcionDeCompraDet
 
-@ToString(includes = 'folio,remision,sucursal,fecha,comentario',includeNames=true,includePackage=false)
-@EqualsAndHashCode(includes='sucursal,documento')
+@ToString(includes = 'remision,sucursal,fecha,comentario',includeNames=true,includePackage=false)
+@EqualsAndHashCode(includes='id,sucursal,documento')
 class RecepcionDeCompra {
 
     String id
 
-    Long folio = 0
+    Long documento = 0
 
     String remision
 
@@ -40,6 +42,7 @@ class RecepcionDeCompra {
     String sw2
 
 
+    static hasMany =[partidas:RecepcionDeCompraDet]
 
     static constraints = {
         comentario nullable:true
@@ -52,19 +55,14 @@ class RecepcionDeCompra {
         updateUser nullable: true
     }
 
-    static hasMany =[partidas:RecepcionDeCompraDet]
+
 
     static mapping = {
         id generator:'uuid'
         partidas cascade: "all-delete-orphan"
         fecha type:'date', index: 'RECOMPRA_IDX1'
-        folio unique: 'sucursal'
     }
 
-    public void setCompra(Compra compra){
-        this.compra = compra
-        this.proveedor = compra.proveedor
-    }
 
 
 }

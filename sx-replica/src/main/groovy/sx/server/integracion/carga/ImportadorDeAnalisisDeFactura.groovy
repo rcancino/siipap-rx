@@ -44,13 +44,17 @@ class ImportadorDeAnalisisDeFactura implements Importador, SW2Lookup {
     def build(def row){
         def analisis = AnalisisDeFactura.where{ sw2 == row.sw2}.find()
         if(!analisis){
+
+
+            analisis = new AnalisisDeFactura()
+            bindData(analisis,row)
+            analisis.factura = buscarFactura(row.cxp_id)
+            importarPartidas(analisis)
+            analisis = analisis.save failOnError:true, flush:true
+            return analisis
+
             try{
-                analisis = new AnalisisDeFactura()
-                bindData(analisis,row)
-                analisis.factura = buscarFactura(row.cxp_id)
-                importarPartidas(analisis)
-                analisis = analisis.save failOnError:true, flush:true
-                return analisis
+
             }catch (Exception ex){
                 logger.error(ExceptionUtils.getRootCauseMessage(ex))
             }

@@ -26,6 +26,10 @@ class CorteDeTarjetaAplicacion {
     static constraints = {
     	comentario nullable:true
     }
+
+	static mapping = {
+		id generator: 'uuid'
+	}
 }
 
 enum TipoDeAplicacion {

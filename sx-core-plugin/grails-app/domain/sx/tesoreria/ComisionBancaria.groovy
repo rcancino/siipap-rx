@@ -4,6 +4,8 @@ package sx.tesoreria
 import sx.cxp.CuentaPorPagar
 
 class ComisionBancaria {
+
+	String id
 	
 	Date fecha
 
@@ -30,6 +32,7 @@ class ComisionBancaria {
     }
 	
 	static mapping ={
+		id generator: 'uuid'
 		fecha type:'date'
 		movimientos cascade:"all-delete-orphan"
 	}

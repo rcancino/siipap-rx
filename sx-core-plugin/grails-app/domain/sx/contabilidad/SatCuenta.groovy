@@ -17,6 +17,10 @@ class SatCuenta {
     }
 
 
+    static  mapping={
+        id generator:'uuid'
+    }
+
     String toString(){
         return "$codigo $nombre"
     }

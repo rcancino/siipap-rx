@@ -7,7 +7,7 @@ class VentaAnticipo {
 
     String	id
 
-    CuentaPorCobrar	cuenta
+    Venta venta
 
     BigDecimal importe	 = 0
 

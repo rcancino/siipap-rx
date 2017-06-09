@@ -22,5 +22,9 @@ class NotaDeCargoDet {
         venta nullable:true
     }
 
+    static mapping={
+        id generator:'uuid'
+    }
+
     static belongsTo =[nota:NotaDeCargo]
 }

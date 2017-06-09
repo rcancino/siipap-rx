@@ -78,7 +78,7 @@ class Venta {
 
     String updateUser
 
-    CuentaPorCobrar cuenta
+    CuentaPorCobrar cuentaPorCobrar
 
     List partidas = []
 
@@ -103,7 +103,7 @@ class Venta {
         sucursalVenta nullable:true
         clasificacionVale inList: ['SIN_VALE','ENVIA_SUCURSAL','PASA_CAMIONETA','RECOGE_CLIENTE','EXISTENCIA_VENTA']
         manejoEntrega inList:['ORDINARIO','PARCIAL']
-        cuenta nullable: true
+        cuentaPorCobrar nullable: true
         vale nullable: true
         updateUser nullable: true
 

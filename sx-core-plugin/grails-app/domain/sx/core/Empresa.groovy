@@ -11,6 +11,8 @@ import org.apache.commons.lang.exception.ExceptionUtils
 
 class Empresa {
 
+    String id
+
     String clave
 
     String nombre
@@ -47,6 +49,12 @@ class Empresa {
 
 
     static embedded = ['direccion']
+
+
+    static  mapping={
+        id generator:'uuid'
+    }
+
 
     static constraints = {
         clave size:3..15,unique:true

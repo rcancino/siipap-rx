@@ -8,6 +8,8 @@ import groovy.transform.ToString
 @EqualsAndHashCode(includeFields = true,includes = ['id,folio'])
 class Cheque {
 
+	String id
+
 	Integer folio
 
 	Date impresion
@@ -35,6 +37,10 @@ class Cheque {
 		fechaDevolucion nullable:true
 		devolucion nullable: true
     }
+
+	static mapping = {
+		id generator: 'uuid'
+	}
     
    
 }

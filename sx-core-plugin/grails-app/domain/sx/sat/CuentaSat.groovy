@@ -5,10 +5,15 @@ import grails.rest.*
 
 //@Resource(uri='/api/sat/cuentas', formats=['json'])
 class CuentaSat {
+
+    String id
 	
 	String codigo
+
     String nombre
+
     String tipo
+
     Integer nivel
 
     static constraints = {
@@ -18,5 +23,9 @@ class CuentaSat {
 
     String toString(){
         return "$codigo $nombre"
+    }
+
+    static  mapping={
+        id generator:'uuid'
     }
 }

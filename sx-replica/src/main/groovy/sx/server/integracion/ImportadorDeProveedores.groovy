@@ -135,6 +135,7 @@ class ImportadorDeProveedores implements Importador{
             if(!provProd){
                 provProd = new ProveedorProducto(proveedor:proveedor, producto:producto)
             }
+            provProd.proveedor=proveedor
             provProd.claveProveedor = row.claveprov
             provProd.codigoProveedor = row.codigoprov
             provProd.descripcionProveedor = row.descriprov

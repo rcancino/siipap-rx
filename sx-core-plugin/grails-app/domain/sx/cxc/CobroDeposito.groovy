@@ -31,6 +31,7 @@ class CobroDeposito {
     }
 
     static mapping={
+        id generator:'uuid'
         fechaDeposito type:'date' ,index: 'COBRO_TRANS_IDX1'
 
     }

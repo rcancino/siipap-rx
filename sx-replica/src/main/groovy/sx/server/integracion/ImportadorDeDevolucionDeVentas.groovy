@@ -1,5 +1,6 @@
 package sx.server.integracion
 
+import org.apache.commons.lang.exception.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import sx.core.Inventario
@@ -24,6 +25,11 @@ class ImportadorDeDevolucionDeVentas implements  Importador, SW2Lookup{
 
     @Autowired
     ImportadorDeInventario importadorDeInventario
+
+    def importar(Date f1){
+
+        importar(f1, f1)
+    }
 
     def importar(Date ini, Date fin){
 
@@ -59,10 +65,20 @@ class ImportadorDeDevolucionDeVentas implements  Importador, SW2Lookup{
 
             importarPartidas(devolucion)
 
-            devolucion.save failOnError:true,flush:true
 
-            //crearInventarioDevolucion(devolucion)
-            importadorDeInventario.crearInventario(devolucion,'RMD')
+            try {
+
+                devolucion.save failOnError:true,flush:true
+
+                importadorDeInventario.crearInventario(devolucion,'RMD')
+
+            }catch(Exception e) {
+                logger.error(ExceptionUtils.getRootCauseMessage(e))
+
+                movimiento.save failOnError:true,flush:true
+            }
+
+
 
         }
     }

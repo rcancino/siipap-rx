@@ -55,6 +55,7 @@ class MovimientoDeCuenta {
     }
 
     static mapping ={
+        id generator: 'uuid'
         fecha type:'date' , index: 'MOV_CTA_IDX1'
         afavor index: 'MOV_CTA_IDX2'
         formaDePago index: 'MOV_CTA_IDX3'

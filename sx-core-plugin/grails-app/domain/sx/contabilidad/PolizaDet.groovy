@@ -8,17 +8,28 @@ import groovy.transform.ToString
 @ToString(includes='cuenta,debe,haber,concepto,asiento,referencia,entidad,origen',includeNames=true,includePackage=false)
 class PolizaDet {
 
+    String id
+
     CuentaContable cuenta
+
     BigDecimal debe = 0.0
+
     BigDecimal haber = 0.0
+
     String concepto
+
     String descripcion
+
     String asiento
+
     String referencia
+
     String origen
+
     String entidad
 
     Date dateCreated
+
     Date lastUpdated
 
 
@@ -36,6 +47,9 @@ class PolizaDet {
         //cheque(nullable:true)
         //transferencia(nullable:true)
         //compraNal nullable:true
+    }
+    static  mapping={
+        id generator:'uuid'
     }
 
 

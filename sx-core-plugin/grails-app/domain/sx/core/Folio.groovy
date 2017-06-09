@@ -2,6 +2,8 @@ package sx.core
 
 class Folio {
 
+    String id
+
     String entidad
 
     String serie
@@ -12,6 +14,10 @@ class Folio {
         entidad maxSize:30
         serie size:1..20
         folio unique: ['entidad','serie']
+    }
+
+    static  mapping={
+        id generator:'uuid'
     }
 
     Long next(){

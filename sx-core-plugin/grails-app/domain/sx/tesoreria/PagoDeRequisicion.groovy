@@ -7,8 +7,14 @@ import sx.cxp.AbonoCxP
  */
 class PagoDeRequisicion extends AbonoCxP {
 
+    String id
+
     MovimientoDeCuenta egreso
 
     Requisicion requisicion
+
+    static mapping = {
+        id generator: 'uuid'
+    }
 
 }

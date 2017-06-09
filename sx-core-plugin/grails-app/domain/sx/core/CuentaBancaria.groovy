@@ -4,6 +4,8 @@ class CuentaBancaria {
 
     String	id
 
+    Cliente cliente
+
     Boolean	activo	 = true
 
     String	cuentaHabiente

@@ -41,6 +41,7 @@ class CorteDeTarjeta {
     }
 
     static mapping ={
+		id generator: 'uuid'
         fecha type:'date' , index: 'CORTE_TAR_IDX1'
         corte type: 'date'
         partidas cascade: "all-delete-orphan"

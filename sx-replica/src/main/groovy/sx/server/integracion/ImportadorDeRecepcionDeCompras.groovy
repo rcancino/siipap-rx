@@ -44,17 +44,34 @@ class ImportadorDeRecepcionDeCompras implements Importador, SW2Lookup {
 
 
     def build(def row){
-        def recepcion = RecepcionDeCompra.where{ sw2 == row.sw2}.find()
+
+        RecepcionDeCompra recepcion = RecepcionDeCompra.where{ sw2 == row.sw2}.find()
+
+
         if(!recepcion){
             recepcion = new RecepcionDeCompra()
+        }else{
+            recepcion.partidas.clear()
         }
-        bindData(recepcion,row)
-        recepcion.compra = buscarCompra(row.compra_id)
+
+
+
+        Compra compra= buscarCompra(row.compra_id)
+
+        recepcion.compra =compra
         recepcion.sucursal = buscarSucursal(row.sucursal_id)
+        recepcion.proveedor=compra.proveedor
+
+        bindData(recepcion,row)
+
+
         importarPartidas(recepcion)
+
+
+
         try{
-            recepcion = recepcion.save failOnError:true, flush:true
-            importadorDeInventario.importar(recepcion,'COM')
+            recepcion.save failOnError:true, flush:true
+            importadorDeInventario.crearInventario(recepcion,'COM')
             return recepcion
         }catch (Exception ex){
             logger.error(ExceptionUtils.getRootCauseMessage(ex))
@@ -63,13 +80,20 @@ class ImportadorDeRecepcionDeCompras implements Importador, SW2Lookup {
 
     def importarPartidas(RecepcionDeCompra recepcion){
         List partidas = leerRegistros(QUERY_PARTIDAS,[recepcion.sw2])
-        recepcion.partidas.clear()
+        //recepcion.partidas.clear()
         partidas.each{ row ->
+            println "Importando Partida"+row.sw2
+
             RecepcionDeCompraDet det = new  RecepcionDeCompraDet()
+
             det.producto = buscarProducto(row.producto_id)
+
             det.compraDet = buscarCompraDet(row.compradet_id)
+
             bindData(det,row)
+
             recepcion.addToPartidas(det)
+
         }
     }
 
@@ -93,27 +117,35 @@ class ImportadorDeRecepcionDeCompras implements Importador, SW2Lookup {
 
 
     static String QUERY  = """
-        select
-            e.id as sw2,
-            e.fecha,
-            e.remision,
-            e.compra_id,
-            e.sucursal_id,
-            e.documento as folio,
-            e.comentario
-        from SX_ENTRADA_COMPRAS e
+    SELECT
+        e.DOCUMENTO as folio,
+        e.REMISION as remision,
+        e.COMPRA_ID as compra_id,
+        e.SUCURSAL_ID as sucursal_id,
+        e.FECHA as fecha,
+        e.COMENTARIO as comentario,e.ID as sw2,
+        e.CREADO as dateCreated,
+        e.MODIFICADO as lastUpdated,
+        e.CREADO_USR as createUser,
+        e.MODIFICADO_USR as updateUser
+    FROM sx_entrada_compras e
+
+    """
 
 
-        """
+
     static String QUERY_PARTIDAS ="""
-        select
-            e.inventario_id as sw2,
-            e.compradet_id,
-            e.producto_id,
-            e.cantidad,
-            e.kilos,
-            e.comentario
-            from sx_inventario_com e
-            where recepcion_id = ?
-        """
+    SELECT
+        i.COMPRADET_ID as compradet_id,
+        i.PRODUCTO_ID as producto_id,
+        i.cantidad as cantidad,
+        kilos,
+        comentario,
+        inventario_id as sw2,
+        creado as dateCreated,
+        modificado as lastUpdated
+    FROM sx_inventario_com i
+    where  RECEPCION_ID= ?
+
+    """
 }

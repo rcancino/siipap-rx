@@ -22,6 +22,10 @@ class SubTipoDePoliza {
         tipo(inList:['INGRESO','EGRESO','DIARIO'])
     }
 
+    static  mapping={
+        id generator:'uuid'
+    }
+
     String toString() {
         return "$clave ($descripcion"
     }

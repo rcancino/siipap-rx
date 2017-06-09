@@ -1,12 +1,11 @@
 package sx.server.integracion
 
+import org.apache.commons.lang.exception.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import sx.core.Inventario
 import sx.core.Producto
 import sx.core.Sucursal
-import sx.inventario.MovimientoDeAlmacen
-import sx.inventario.MovimientoDeAlmacenDet
 import sx.inventario.Transformacion
 import sx.inventario.TransformacionDet
 
@@ -20,6 +19,11 @@ class ImportadorDeTransFormaciones implements Importador,SW2Lookup{
 
     @Autowired
     ImportadorDeInventario importadorDeInventario
+
+    def importar(Date f1){
+
+        importar(f1, f1)
+    }
 
 
     def importar(Date ini, Date fin){
@@ -54,11 +58,22 @@ class ImportadorDeTransFormaciones implements Importador,SW2Lookup{
 
             importarPartidas(transformacion)
 
-            transformacion.save failOnError:true,flush:true
 
-            //crearInventarioDevolucion(devolucion)
-            importadorDeInventario.crearInventario(transformacion,'TRS')
-           ajusteDestino(transformacion)
+            try {
+
+                transformacion.save failOnError:true,flush:true
+
+                importadorDeInventario.crearInventario(transformacion,'TRS')
+
+                ajusteDestino(transformacion)
+
+            }catch(Exception e) {
+                logger.error(ExceptionUtils.getRootCauseMessage(e))
+
+                movimiento.save failOnError:true,flush:true
+            }
+
+
 
         }
     }

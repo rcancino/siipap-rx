@@ -8,9 +8,13 @@ import groovy.transform.ToString
 class Autorizacion {
 
     String id
+
     String solicito
+
     String autorizo
+
     String comentario
+
     Date fechaDeAutorizacion
 
     Date dateCreated

@@ -18,30 +18,33 @@ class ImportadorDeClientesCredito implements Importador, SW2Lookup {
 
         leerRegistros(QUERYCLIENTE,[]).each { row ->
                 println "Cliente credito id : "+row.id
-
-            def creditoRow=getSql().firstRow(QUERYCREDITO,[row.id])
-
-            println "----"+ creditoRow
-
-            Cliente cliente = Cliente.where {sw2 == creditoRow.cliente_id}.find()
-            if(!cliente){
-                cliente = importadorDeClientes.importar(creditoRow.cliente_id)
-            }
-            ClienteCredito credito=ClienteCredito.where {sw2==creditoRow.sw2}.find()
-
-            if(!credito)
-                credito =new ClienteCredito()
-
-            credito.cliente=cliente
-            credito.cobrador = buscarCobrador(creditoRow.cobrador_id)
-
-            bindData(credito,creditoRow)
-
-            credito.save failOnError:true, flush:true
-            println("Proceso Terminado")
+            importar(row.id)
         }
 
+    }
 
+    def importar(def sw2){
+
+        def creditoRow=getSql().firstRow(QUERYCREDITO,[sw2])
+
+        println "----"+ creditoRow
+
+        Cliente cliente = Cliente.where {sw2 == creditoRow.cliente_id}.find()
+        if(!cliente){
+            cliente = importadorDeClientes.importar(creditoRow.cliente_id)
+        }
+        ClienteCredito credito=ClienteCredito.where {sw2==creditoRow.sw2}.find()
+
+        if(!credito)
+            credito =new ClienteCredito()
+
+        credito.cliente=cliente
+        credito.cobrador = buscarCobrador(creditoRow.cobrador_id)
+
+
+        bindData(credito,creditoRow)
+
+        credito.save failOnError:true, flush:true
 
     }
 

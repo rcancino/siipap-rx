@@ -27,4 +27,8 @@ class CorteDeTarjetaDet {
     	comentario nullable: true
     }
 
+	static mapping = {
+		id generator: 'uuid'
+	}
+
 }

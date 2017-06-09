@@ -15,10 +15,6 @@ class VentaDet {
 
 	Inventario	inventario
 
-	Long	documento
-
-	Date	fecha
-
 	BigDecimal	cantidad = 0
 
 	BigDecimal	precioLista = 0
@@ -57,14 +53,10 @@ class VentaDet {
 
     Date lastUpdated
 
-    String updateUser
-
-    String createUser
 
     static constraints = {
         sw2 nullable:true
-        createUser nullable: true
-        updateUser nullable: true
+
 		comentario nullable: true
         inventario nullable: true
 
@@ -72,7 +64,6 @@ class VentaDet {
 
     static mapping = {
         id generator:'uuid'
-        fecha index: 'VENTADET_IDX1'
         producto index: 'VENTADET_IDX2'
     }
 

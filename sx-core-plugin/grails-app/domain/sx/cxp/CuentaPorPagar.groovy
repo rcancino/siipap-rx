@@ -59,7 +59,7 @@ class CuentaPorPagar {
 
     BigDecimal pagosAplicados = 0.0
 
-    ContraRecibo contraRecibo
+
 
     List gastos = []
     

@@ -7,9 +7,14 @@ import groovy.transform.ToString
 @ToString(includes='ejercicio,mes,subTipo,folio',includeNames=true,includePackage=false)
 class PolizaFolio {
 
+    String id
+
     Integer ejercicio
+
     Integer mes
+
     String subTipo
+
     Long folio=0
 
     Date dateCreated
@@ -19,6 +24,10 @@ class PolizaFolio {
         subTipo maxSize:50
         mes inList:(1..13)
         folio nullable:false,unique:['subTipo','mes','ejercicio']
+    }
+
+    static  mapping={
+        id generator:'uuid'
     }
 
     Long next(){

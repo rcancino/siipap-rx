@@ -23,9 +23,14 @@ class ContraRecibo {
     Currency moneda = Currency.getInstance('MXN')
 
     Date dateCreated
+
     Date lastUpdated
 
     Long sw2
+
+    List cuentasPorPagar = []
+
+    static  hasMany =[cuentasPorPagar: CuentaPorPagar]
 
 
     static constraints = {
@@ -39,4 +44,6 @@ class ContraRecibo {
         proveedor index: 'CRIBO_IDX1'
 
     }
+
+
 }

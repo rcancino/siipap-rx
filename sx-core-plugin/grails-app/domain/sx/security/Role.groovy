@@ -12,7 +12,7 @@ class Role implements Serializable {
 	String authority
 
 	Role(String authority) {
-		this()
+		//this()
 		this.authority = authority
 	}
 

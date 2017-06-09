@@ -9,6 +9,8 @@ import sx.utils.MonedaUtils
 @ToString(includes='ejercicio,mes,tipo,subtipo,folio,debe,haber,fecha',includeNames=true,includePackage=false)
 class Poliza {
 
+    String id
+
     Integer ejercicio
 
     Integer mes
@@ -60,6 +62,7 @@ class Poliza {
 
 
     static mapping ={
+        id generator:'uuid'
         partidas cascade: "all-delete-orphan"
         fecha type:'date'
     }

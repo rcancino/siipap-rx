@@ -39,6 +39,15 @@ class ImportadorDeClientes implements  Importador{
         return message
     }
 
+    def importarClientesValidos(){
+        logger.info('Importando clientes Validos' + new Date().format('dd/MM/yyyy HH:mm:ss'))
+        String select="select cliente_id from clientes_integracion"
+        leerRegistros(select,[]).each { row ->
+            importar(row.cliente_id)
+        }
+
+    }
+
     def importar(def sw2,String queryRow){
         def cliente = Cliente.where{ sw2 == sw2}.find() ?: new Cliente()
         def select = queryRow + ' where cliente_id = ?'

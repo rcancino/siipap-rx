@@ -94,6 +94,7 @@ dataSources:
         driverClassName: com.mysql.jdbc.Driver
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         username: root
+
     importacion:
         pooled: true
         dbCreate: none
@@ -107,9 +108,24 @@ environments:
         dataSources:
             dataSource:
                 dbCreate: update
-                url: jdbc:mysql://localhost/siipapx?autoReconnect=true
-                #url: jdbc:mysql://10.10.1.229/siipapx?autoReconnect=false
-                password: shoto
+                #url: jdbc:mysql://localhost/siipapx?autoReconnect=true
+                url: jdbc:mysql://10.10.1.229/siipapx?autoReconnect=false
+                password: sys
+                properties:
+                  maxActive: 3
+                  maxIdle: 3
+                  minIdle: 2
+                  initialSize: 1
+                  minEvictableIdleTimeMillis: 1800000
+                  timeBetweenEvictionRunsMillis: 1800000
+                  numTestsPerEvictionRun: 3
+                  testOnBorrow: true
+                  testWhileIdle: true
+                  testOnReturn: true
+                  maxWait: 10000
+                  validationQuery: 'SELECT 1'
+                  validationQueryTimeout: 3
+                  validationInterval: 15000
             importacion:
                 dbCreate: none
                 #url: jdbc:mysql://localhost/sw2?autoReconnect=true
@@ -144,7 +160,7 @@ environments:
         dataSources:
             dataSource:
                 dbCreate: none
-                url: jdbc:mysql://10.10.1.228/siipapx?autoReconnect=false
+                url: jdbc:mysql://10.10.1.229/siipapx?autoReconnect=false
                 username: root
                 password: sys
                 properties:

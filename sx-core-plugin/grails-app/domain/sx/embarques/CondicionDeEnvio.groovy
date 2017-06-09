@@ -1,6 +1,10 @@
-package sx.core
+package sx.embarques
+
+import sx.core.Direccion
 
 class CondicionDeEnvio {
+
+    String id
 
     Direccion direccion
 
@@ -8,5 +12,9 @@ class CondicionDeEnvio {
     }
 
     static embedded = ['direccion']
+
+    static  mapping={
+        id generator:'uuid'
+    }
 
 }

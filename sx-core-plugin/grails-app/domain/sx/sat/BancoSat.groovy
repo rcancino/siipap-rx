@@ -6,8 +6,12 @@ import grails.rest.*
 //@Resource(uri='/api/sat/bancos', formats=['json'])
 class BancoSat {
 
+    String id
+
     String clave
+
     String nombreCorto
+
     String razonSocial
 
     static constraints = {
@@ -16,5 +20,9 @@ class BancoSat {
 
     String toString(){
         return "$clave $nombreCorto"
+    }
+
+    static  mapping={
+        id generator:'uuid'
     }
 }

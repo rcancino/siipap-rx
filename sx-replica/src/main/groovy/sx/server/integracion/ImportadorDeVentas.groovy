@@ -95,7 +95,7 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
             importarPartidas(venta)
             venta.save failOnError:true, flush:true
 
-            importadorDeInventario.importar(venta,"FAC")
+            importadorDeInventario.crearInventario(venta,"FAC")
 
             return venta
 

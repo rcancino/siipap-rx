@@ -28,7 +28,7 @@ class User implements Serializable {
   String puesto
 
 	User(String username, String password) {
-		this()
+		//this()
 		this.username = username
 		this.password = password
 	}

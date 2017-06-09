@@ -27,7 +27,7 @@ class DevolucionCliente {
 
     String	comentario
 
-    CuentaPorCobrar cuenta
+    CuentaPorCobrar cuentaPorCobrar
 
     String	sw2
 

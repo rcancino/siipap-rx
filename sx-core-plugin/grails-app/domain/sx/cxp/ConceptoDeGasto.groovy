@@ -45,9 +45,11 @@ class ConceptoDeGasto {
 
     }
 
-    static mapping ={
+    static  mapping={
         id generator:'uuid'
     }
+
+
     
 
 }

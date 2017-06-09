@@ -45,6 +45,14 @@ class ImportadorDeProductos implements Importador{
         build(row)
     }
 
+    def importarProductosValidos(){
+        logger.info('Importando productos Validos' + new Date().format('dd/MM/yyyy HH:mm:ss'))
+        String select="SELECT producto_id  FROM producto_integracion"
+        leerRegistros(select,[]).each { row ->
+            importar(row.producto_id)
+        }
+    }
+
     def build(def row){
         
         def producto = Producto.where{ sw2 == row.sw2}.find()
@@ -86,7 +94,7 @@ class ImportadorDeProductos implements Importador{
             precioContado,
             precioCredito,
             fecha_LP as fechaLista,
-            modoDeVenta as modoVenta,
+            ifnull(modoDeVenta,"B")as modoVenta,
             calibre,
             inventariable,
             l.nombre as linea_id,

@@ -15,6 +15,10 @@ class SatBanco {
         clave nullable:false,unique:true,maxSize:20
     }
 
+    static  mapping={
+        id generator:'uuid'
+    }
+
 
     String toString(){
         return "$clave $nombreCorto"

@@ -63,6 +63,7 @@ class AplicacionDeCobro {
     Date creado
 
     Date dateCreated
+
     Date lastUpdated
 
 

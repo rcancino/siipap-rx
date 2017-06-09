@@ -35,7 +35,7 @@ class NotaDeCargo {
 
     String	comentario
 
-    CuentaPorCobrar cuenta
+    CuentaPorCobrar cuentaPorCobrar
 
     String	sw2
 
@@ -55,7 +55,7 @@ class NotaDeCargo {
         tipoDeCambio(scale:6)
         comentario nullable:true
         sw2 nullable:true
-        cuenta nullable: true
+        cuentaPorCobrar nullable: true
     }
 
     static hasMany =[partidas:NotaDeCargoDet]

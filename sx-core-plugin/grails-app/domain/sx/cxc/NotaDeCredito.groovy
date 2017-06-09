@@ -68,6 +68,7 @@ class NotaDeCredito {
     static hasMany =[partidas:NotaDeCreditoDet]
 
     static mapping ={
+        id generator:'uuid'
         partidas cascade: "all-delete-orphan"
         //requisitado formula:'select sum(x.total) from requisicion'
         //aplicado formula:'(select COALESCE(sum(x.total),0) from aplicacion x where x.abono_id=id)'

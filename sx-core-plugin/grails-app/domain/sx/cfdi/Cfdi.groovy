@@ -62,5 +62,9 @@ class Cfdi {
         formaDePago maxSize:50
         metodoDePago maxSize:30
     }
+
+    static  mapping={
+        id generator:'uuid'
+    }
 }
 

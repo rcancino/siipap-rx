@@ -44,6 +44,7 @@ class Traspaso {
     }
 	
 	static mapping ={
+		id generator: 'uuid'
 		fecha type: 'date'
 		movimientos cascad:"all-delete-orphan"
 	}

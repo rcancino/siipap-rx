@@ -49,6 +49,10 @@ class ComprobanteFiscal {
         acuse nullable:true, unique: true
     }
 
+    static  mapping={
+        id generator:'uuid'
+    }
+
     static hasOne = [acuse:Acuse]
 }
 
