@@ -72,3 +72,5 @@ atlassian-ide-plugin.xml
 
 **/.sublime-workspace
 sx-server/sx-server.sublime-workspace
+
+*.sublime-workspace

@@ -519,24 +519,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "grails-app/controllers/sx/compras/CompraController.groovy",
-			"settings":
-			{
-				"buffer_size": 1650,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "grails-app/controllers/sx/core/ProveedorController.groovy",
-			"settings":
-			{
-				"buffer_size": 869,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -634,6 +616,7 @@
 	],
 	"file_history":
 	[
+		"/Users/rcancino/dev/siipap-rx/sx-server/grails-app/conf/application.yml",
 		"/Users/rcancino/dev/siipapx/sx-server/.gitignore",
 		"/Users/rcancino/dev/siipapx/sx-server/grails-app/controllers/sx/server/UrlMappings.groovy",
 		"/Users/rcancino/dev/siipapx/sx-server/grails-app/controllers/sx/core/LineaController.groovy",
@@ -760,8 +743,7 @@
 		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/ventas/listaDePreciosPorProveedor/create-lp-venta.html",
 		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/ventas/listaDePreciosPorProveedor/lista-de-precios-ventadet.value.js",
 		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/ventas/listaDePreciosPorProveedor/lp-venta-edit.controller.js",
-		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/ventas/listaDePreciosPorProveedor/lista-de-precios-venta.service.js",
-		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/ventas/listaDePreciosPorProveedor/lp-venta-edit.html"
+		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/ventas/listaDePreciosPorProveedor/lista-de-precios-venta.service.js"
 	],
 	"find":
 	{
@@ -789,7 +771,6 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"activos",
 			"lineas",
 			"jwtHelper",
 			"routerConfig",
@@ -916,7 +897,8 @@
 			"List",
 			"ProveedorField",
 			"ListaDePreciosVentaListController",
-			"ventas"
+			"ventas",
+			"venta"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -934,69 +916,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "grails-app/controllers/sx/compras/CompraController.groovy",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1650,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								520,
-								520
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Grails/Controller/GrailsController.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": -0.0,
-						"translation.y": 342.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "grails-app/controllers/sx/core/ProveedorController.groovy",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 869,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								278,
-								278
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Grails/Controller/GrailsController.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -1049,12 +970,8 @@
 		"selected_items":
 		[
 			[
-				"proveed",
-				"Controllers\\sx\\core\\ProveedorController.groovy"
-			],
-			[
-				"comprac",
-				"Controllers\\sx\\compras\\CompraController.groovy"
+				"app",
+				"Configuration/application.yml"
 			],
 			[
 				".git",
@@ -1559,6 +1476,10 @@
 			[
 				"index.cons",
 				"src/app/app/index.constants.js"
+			],
+			[
+				"notadecredit",
+				"src/app/app/notas/nota-de-credito-create.html"
 			]
 		],
 		"width": 0.0
