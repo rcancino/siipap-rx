@@ -22,7 +22,7 @@ class Ficha {
 
 	BigDecimal total = 0.0
 
-	CuentaDeBanco cuenta
+	CuentaDeBanco cuentaDeBanco
 
 	String tipoDeFicha
 
@@ -36,12 +36,18 @@ class Ficha {
 
 	String comentario
 
+	String	tipo
+
+	Boolean	envioValores	 = true
+
 	String sw2
 
 	List partidas = []
 
 	Date dateCreated
+
 	Date lastUpdated
+
 
 	static hasMany =[partidas: FichaDet]
 

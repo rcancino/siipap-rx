@@ -21,7 +21,16 @@ class CorteDeTarjetaAplicacion {
 	
 	int orden = 0
 
+	Boolean	debitoCredito	 = true
+
+	CorteDeTarjeta	corteDeTarjeta
+
+	Boolean	visa_Master	 = true
+
+	String	sw2
+
 	static belongsTo = [corte: CorteDeTarjeta]
+
 
     static constraints = {
     	comentario nullable:true

@@ -2,12 +2,15 @@ package sx.inventario
 
 import sx.core.Sucursal
 import sx.core.Venta
+import sx.cxc.NotaDeCredito
 
 class DevolucionDeVenta {
 
     String	id
 
     Venta venta
+
+    NotaDeCredito notaDeCredito
 
     Long	documento	 = 0
 
@@ -48,6 +51,7 @@ class DevolucionDeVenta {
         lastUpdated nullable: true
         createUser nullable: true
         updateUser nullable: true
+        notaDeCredito nullable: true
     }
 
     static  mapping ={

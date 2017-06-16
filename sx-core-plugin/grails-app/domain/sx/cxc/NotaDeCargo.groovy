@@ -1,5 +1,6 @@
 package sx.cxc
 
+import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import sx.core.Cliente
 import sx.core.Sucursal
@@ -11,6 +12,7 @@ import sx.cxp.CuentaPorPagarException
  * Created by rcancino on 23/03/17.
  */
 @ToString( includes = "cliente,total",includeNames=true,includePackage=false)
+@EqualsAndHashCode(includeFields = true,includes = ['id'])
 class NotaDeCargo {
 
     String	id
@@ -18,6 +20,8 @@ class NotaDeCargo {
     Cliente	cliente
 
     Sucursal sucursal
+
+    Date	fecha
 
     Long	documento	 = 0
 
@@ -37,6 +41,11 @@ class NotaDeCargo {
 
     CuentaPorCobrar cuentaPorCobrar
 
+
+    String	tipoDeDocumento
+
+    BigDecimal	cargo	 = 0
+
     String	sw2
 
     Date dateCreated
@@ -48,14 +57,12 @@ class NotaDeCargo {
     String updateUser
 
 
-
-
-
     static constraints = {
         tipoDeCambio(scale:6)
         comentario nullable:true
         sw2 nullable:true
         cuentaPorCobrar nullable: true
+        tipoDeDocumento nullable: true
     }
 
     static hasMany =[partidas:NotaDeCargoDet]

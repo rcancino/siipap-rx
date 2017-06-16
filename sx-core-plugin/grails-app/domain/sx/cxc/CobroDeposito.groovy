@@ -1,10 +1,16 @@
 package sx.cxc
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import sx.tesoreria.Banco
 import sx.tesoreria.CuentaDeBanco
 import sx.tesoreria.MovimientoDeCuenta
 
+@ToString(excludes = ["id,lastUpdated,dateCreated"],includeNames=true,includePackage=false)
+@EqualsAndHashCode(includeFields = true,includes = ['id'])
 class CobroDeposito {
+
+    String id
 
     Banco bancoOrigen
 
@@ -24,10 +30,18 @@ class CobroDeposito {
 
     MovimientoDeCuenta ingreso
 
+    String sw2
+
+    Date dateCreated
+
+    Date lastUpdated
+
+
     static belongsTo = [cobro: Cobro]
 
     static constraints = {
         ingreso nullable:true
+        sw2 nullable: true
     }
 
     static mapping={

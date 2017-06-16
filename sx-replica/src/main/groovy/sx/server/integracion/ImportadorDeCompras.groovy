@@ -46,12 +46,25 @@ class ImportadorDeCompras implements  Importador, SW2Lookup{
             println "Errores importando compras: " + errores.join(',');
     }
 
+
+    def importarComprasIntegracion(){
+
+        def compras= leerRegistros("select compra_id from compras_integracion",[])
+
+        compras.each {row ->
+            importar(row.compra_id)
+        }
+
+    }
+
     def importar(String sw2){
         logger.info('Importando compra ' + sw2)
         String select = QUERY + " where compra_id = ? "
         def row = findRegistro(select, [sw2])
         build(row)
     }
+
+
 
     def build(def row){
         def compra = Compra.where{ sw2 == row.sw2}.find()

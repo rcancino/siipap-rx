@@ -47,14 +47,18 @@ class ImportadorDeProductos implements Importador{
 
     def importarProductosValidos(){
         logger.info('Importando productos Validos' + new Date().format('dd/MM/yyyy HH:mm:ss'))
-        String select="SELECT producto_id  FROM producto_integracion"
+        String select="SELECT producto_id   FROM producto_integracion"
         leerRegistros(select,[]).each { row ->
+
+                println "--------------------"+row.producto_id
             importar(row.producto_id)
         }
     }
 
     def build(def row){
-        
+
+
+
         def producto = Producto.where{ sw2 == row.sw2}.find()
         
         if(!producto){
@@ -90,7 +94,7 @@ class ImportadorDeProductos implements Importador{
             nacional,
             ancho,
             largo,
-            delinea,
+            deLinea,
             precioContado,
             precioCredito,
             fecha_LP as fechaLista,
@@ -103,9 +107,9 @@ class ImportadorDeProductos implements Importador{
             p.ajuste,
             p.proveedor_id
             from sx_productos p
-            join sx_lineas l on(l.LINEA_ID = p.linea_id)
-            join sx_marcas m on(m.marca_id = p.marca_id)
-            join sx_clases c on(c.clase_id = p.clase_id)
+            left join sx_lineas l on(l.LINEA_ID = p.linea_id)
+            left join sx_marcas m on(m.marca_id = p.marca_id)
+            left join sx_clases c on(c.clase_id = p.clase_id)
             """
 
     static String WHERE = """

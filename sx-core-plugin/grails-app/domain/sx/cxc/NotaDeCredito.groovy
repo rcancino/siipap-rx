@@ -3,7 +3,9 @@ package sx.cxc
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import sx.cfdi.ComprobanteFiscal
+import sx.core.Autorizacion
 import sx.core.Cliente
+import sx.core.Sucursal
 import sx.utils.MonedaUtils
 
 
@@ -47,9 +49,28 @@ class NotaDeCredito {
 
     ComprobanteFiscal cfdi
 
+    Sucursal sucursal
+
+    Autorizacion autorizacion
+
+    String	tipoDeOperacion
+
+    String	modoDeCalculo
+
+    BigDecimal	descuento	 = 0
+
+    Date	impreso
+
+    Date	primeraAplicacion
+
+    BigDecimal	diferencia	 = 0
+
+    Date	diferenciaFecha
 
     Date dateCreated
+
     Date lastUpdated
+
 
     static constraints = {
         serie maxSize: 20

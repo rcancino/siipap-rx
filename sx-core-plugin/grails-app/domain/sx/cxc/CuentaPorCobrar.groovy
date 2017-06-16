@@ -55,7 +55,7 @@ class CuentaPorCobrar {
 
     String updateUser
 
-    static belongsTo=[venta:Venta,notaCargo:NotaDeCargo,cheque:ChequeDevuelto,devolucion:DevolucionCliente]
+
 
     static constraints = {
         tipoDocumento inList:['VENTA','CHEQUE_DEVUELTO','DEVOLUCION_CLIENTE','NOTA_DE_CARGO']

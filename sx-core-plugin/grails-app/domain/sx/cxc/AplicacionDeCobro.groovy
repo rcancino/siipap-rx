@@ -8,85 +8,41 @@ import sx.core.Sucursal
 @EqualsAndHashCode(includeFields = true,includes = ['id'])
 class AplicacionDeCobro {
 
-    String id
+    String	id
 
-    String cobroId
+    Cobro	cobro
 
-    String cxcId
+    NotaDeCredito	notaDeCredito
 
-    String clave
+    CuentaPorCobrar	cuentaPorCobrar
 
-    String nombre
+    Date	fecha
 
-    //******** Propiedades del cargo
+    BigDecimal	importe	 = 0
 
-    String cargoSucursal
-
-    Date cargoFecha
-
-    String cargoDocumento
-
-    String cargoOrigen
-
-    BigDecimal cargoTotal
-
-    //******** Propiedades del abono o cobro
-
-    String abonoBanco
-
-    String abonoFolio
-
-    String abonoDescripcion
-
-    Date fecha
-
-    BigDecimal importe
-
-    String tipoId
-
-    Date saf
-
-    Date fechaDeposito
-
-    Boolean anticipo
-
-    BigDecimal diferencia = 0.0
-
-    BigDecimal total
-
-    String cobro
-
-    String tipo
-
-    String sw2
-
-    Date creado
+    String	sw2
 
     Date dateCreated
 
     Date lastUpdated
 
+    String createUser
+
+    String updateUser
 
     static constraints = {
-        clave maxSize:10
-        cargoOrigen maxSize: 5
-        abonoBanco nullable:true, maxSize:100
-        abonoFolio nullable:true, maxSize:30
-        abonoDescripcion nullable:true
-        tipoId maxSize:20
-        fechaDeposito nullable:true
-        cobro maxSize: 20
-        tipo maxSize: 3
-        sw2 nullable:true
-        creado nullable:true
+        sw2 nullable: true
+        cobro nullable: true
+        notaDeCredito nullable: true
+
     }
 
+
     static mapping = {
+
         id generator:'uuid'
         fecha type: 'date'
-        cargoFecha type:'date'
-        saf type:'date'
-        fechaDeposito type:'date'
+
     }
 }
 

@@ -41,9 +41,23 @@ class ImportadorDeClientes implements  Importador{
 
     def importarClientesValidos(){
         logger.info('Importando clientes Validos' + new Date().format('dd/MM/yyyy HH:mm:ss'))
-        String select="select cliente_id from clientes_integracion"
+        String select=  QUERY_VALIDOS
+        def importados = 0
         leerRegistros(select,[]).each { row ->
-            importar(row.cliente_id)
+
+            println "Importando Cliente"+row.nombre
+
+            def cliente = Cliente.where{ sw2 == row.sw2}.find()
+            if(!cliente){
+                cliente = new Cliente()
+                importados++
+            }
+            bindData(cliente,row)
+            cliente.direccion = cliente.direccion ?: new Direccion()
+            bindData(cliente.direccion,row)
+
+
+            cliente.save failOnError:true, flush:true
         }
 
     }
@@ -239,8 +253,22 @@ class ImportadorDeClientes implements  Importador{
           FROM sx_clientes_cfdi_mails where EMAIL2 is not null and EMAIL2 <> '' and cliente_id=?
             """
 
-     static String QUERY_UPDATE="""
-
+     static String QUERY_VALIDOS="""
+        SELECT
+            c.cliente_id as sw2,
+            clave,nombre,rfc,
+            if(suspendido,'false','true') as activo,
+            juridico,
+            permitir_cheque as permitirCheque,
+            calle,
+            numero,
+            numeroint,
+            delmpo as municipio,
+            cp ,
+            colonia,
+            estado,
+            pais
+        FROM sx_clientes C JOIN clientes_integracion I ON ( C.CLIENTE_ID=I.CLIENTE_ID)
             """
 
 

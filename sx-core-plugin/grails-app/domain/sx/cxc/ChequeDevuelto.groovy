@@ -1,17 +1,30 @@
 package sx.cxc
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import sx.core.Cliente
 import sx.core.Sucursal
 
+@ToString(excludes = ["id,lastUpdated,dateCreated"],includeNames=true,includePackage=false)
+@EqualsAndHashCode(includeFields = true,includes = ['id'])
 class ChequeDevuelto {
+
 
     String	id
 
-    Cliente cliente
+    Cliente	cliente
 
-    Sucursal sucursal
+    Sucursal	sucursal
+
+    CuentaPorCobrar	cuentaPorCobrar
+
+    Date	fecha
 
     Long	documento	 = 0
+
+    String	tipoDocumento
+
+    String	formaDePago
 
     BigDecimal	importe	 = 0
 
@@ -19,15 +32,13 @@ class ChequeDevuelto {
 
     BigDecimal	total	 = 0
 
-    String	formaDePago
-
-    Currency moneda = Currency.getInstance('MXN')
+    String	moneda = Currency.getInstance('MXN')
 
     BigDecimal	tipoDeCambio	 = 1
 
     String	comentario
 
-    CuentaPorCobrar cuentaPorCobrar
+    CobroCheque cheque
 
     String	sw2
 
@@ -41,12 +52,12 @@ class ChequeDevuelto {
 
 
 
-
     static constraints = {
         tipoDeCambio(scale:6)
+        tipoDocumento  nullable: true
         comentario nullable:true
         sw2 nullable:true
-        cuenta nullable: true
+        cuentaPorCobrar nullable: true
     }
 
 

@@ -128,20 +128,27 @@ class ImportadorDeProveedores implements Importador{
             def proveedor = Proveedor.where{sw2==row.proveedor_id && tipo =='COMPRAS'}.find() //.findBySw2(row.proveedor_id)
 
             Producto producto = Producto.where {sw2 == row.producto_id}.find()
+           /*
             if(!producto){
                 producto = importadorDeProductos.importar(row.producto_id)
             }
-            ProveedorProducto provProd = ProveedorProducto.where {proveedor == proveedor && producto == producto}.find()
-            if(!provProd){
-                provProd = new ProveedorProducto(proveedor:proveedor, producto:producto)
+            */
+            if(producto){
+
+                ProveedorProducto provProd = ProveedorProducto.where {proveedor == proveedor && producto == producto}.find()
+                if(!provProd){
+                    provProd = new ProveedorProducto(proveedor:proveedor, producto:producto)
+                }
+                provProd.proveedor=proveedor
+                provProd.claveProveedor = row.claveprov
+                provProd.codigoProveedor = row.codigoprov
+                provProd.descripcionProveedor = row.descriprov
+                provProd.paqueteTarima = row.paqtarima
+                provProd.piezaPaquete = row.piezapaq
+                provProd.save failOnError:true, flush: true
+
             }
-            provProd.proveedor=proveedor
-            provProd.claveProveedor = row.claveprov
-            provProd.codigoProveedor = row.codigoprov
-            provProd.descripcionProveedor = row.descriprov
-            provProd.paqueteTarima = row.paqtarima
-            provProd.piezaPaquete = row.piezapaq
-            provProd.save failOnError:true, flush: true
+
         }
         def message = "Productos por proveedor importados"
         return message

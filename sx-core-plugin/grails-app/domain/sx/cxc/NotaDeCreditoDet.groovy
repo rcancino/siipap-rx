@@ -23,15 +23,26 @@ class NotaDeCreditoDet {
 
     String comentario
 
+    CuentaPorCobrar	cuentaPorCobrar
+
+    String	concepto
+
+    BigDecimal	descuento	 = 0
+
     Date dateCreated
 
     Date lastUpdated
+
+
+
+
 
 
     static constraints = {
         unidad maxSize:100
         numeroDeIdentificacion maxSize:50
         comentario nullable:true
+        cuentaPorCobrar nullable:  true
     }
 
     static mapping={

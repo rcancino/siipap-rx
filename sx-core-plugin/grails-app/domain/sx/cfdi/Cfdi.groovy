@@ -42,6 +42,8 @@ class Cfdi {
 
     BigDecimal total
 
+    String sw2
+
     Date dateCreated
 
     Date lastUpdated
@@ -58,9 +60,10 @@ class Cfdi {
         rfc nullable:true
         serie nullable:true,maxSize:30
         folio nullable:true,maxSize:30
-        tipoDeComprobante inList:['ingreso','egreso','traslado']
+        tipoDeComprobante inList:['INGRESO','EGRESO','TRASLADO','PAGO','NOMINA']
         formaDePago maxSize:50
         metodoDePago maxSize:30
+        sw2 nullable: true
     }
 
     static  mapping={

@@ -8,6 +8,7 @@ import sx.core.Proveedor
 import sx.core.Sucursal
 import sx.core.Vendedor
 import sx.cxp.CuentaPorPagar
+import sx.tesoreria.Banco
 import sx.tesoreria.CuentaDeBanco
 
 /**
@@ -63,6 +64,14 @@ trait SW2Lookup {
         assert found, "No existe la cuenta por pagar con ID en SW2 de: $siipapId, es probable que nose ha importado"
         return found
     }
+
+    Banco buscarBanco(def siipapId){
+        def found = Banco.where{sw2==siipapId}.find()
+        assert found, "No existe el banco con ID en SW2 de: $siipapId, es probable que nose ha importado"
+        return found
+    }
+
+
 
 
 }

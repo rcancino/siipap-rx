@@ -39,24 +39,23 @@ class  Cobro {
 
     Date lastUpdated
 
-    String creadoPor
+    String createUser
 
-    String modificadoPor
-    
+    String updateUser
 
     String sw2
 
-    static hasOne = [cheque: CobroCheque, deposito: CobroDeposito, transferencia: CobroTransferencia]
+    static hasOne = [cheque: CobroCheque, deposito: CobroDeposito, transferencia: CobroTransferencia,tarjeta: CobroTarjeta]
 
     static constraints = {
         tipo inList:['CAM','MOS','CRE','CHE','JUR']
         referencia nullable:true
         sw2 nullable:true, unique:true
-        creadoPor nullable:true
-        modificadoPor nullable:true
-        cheque nullable:true
-        deposito nullable:true
-        transferencia nullable:true
+        cheque nullable: true
+        deposito nullable: true
+        transferencia nullable: true
+        tarjeta nullable: true
+
 
     }
 

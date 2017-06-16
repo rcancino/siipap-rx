@@ -14,13 +14,13 @@ class CorteDeTarjeta {
 
 	Date corte = new Date()
 
-	CuentaDeBanco cuenta
-
-	String tipoDeTarjeta = "VISA/MASTERCARD"
+	CuentaDeBanco cuentaDeBanco
 
 	BigDecimal total = 0.0
 
 	String comentario
+
+	Boolean	visaMaster	 = true
 
 	String sw2
 
@@ -29,12 +29,14 @@ class CorteDeTarjeta {
 	List aplicaciones = []
 
 	Date dateCreated
+
 	Date lastUpdated
+
+
 
 	static hasMany =[partidas: CorteDeTarjetaDet, aplicaciones: CorteDeTarjetaAplicacion]
 
     static constraints = {
-    	tipoDeTarjeta inList: ["VISA/MASTERCARD","AMEX"]
     	sw2 nullable: true
     	comentario nullable: true
     	corte nullable: true

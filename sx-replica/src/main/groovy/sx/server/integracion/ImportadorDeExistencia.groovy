@@ -25,24 +25,31 @@ class ImportadorDeExistencia implements Importador,SW2Lookup {
 
                 Sucursal sucursal = buscarSucursal(row.sucursal_id)
                 Producto producto = Producto.where {sw2 == row.producto_id}.find()
-                if(!producto) {
+          /*      if(!producto) {
                     println("Importando producto $row.producto_id para la venta")
                     producto = importadorDeProductos.importar( row.producto_id)
                     assert producto, 'No fue posible importar el producto :' +row.producto_id
+                }*/
+
+
+                if(producto){
+
+                    Existencia existencia=Existencia.where {anio == row.anio && mes == row.mes && producto == producto && sucursal == sucursal}.find()
+
+                    if(!existencia){
+                        existencia = new Existencia()
+                    }else{
+                        println "Existencia ya importada" + existencia.id
+                    }
+                    existencia.sucursal=sucursal
+                    existencia.producto=producto
+                    bindData(existencia,row)
+
+                    existencia.save failOnError: true, flush: true
+
                 }
 
-                Existencia existencia=Existencia.where {anio == row.anio && mes == row.mes && producto == producto && sucursal == sucursal}.find()
 
-                if(!existencia){
-                    existencia = new Existencia()
-                }else{
-                    println "Existencia ya importada" + existencia.id
-                }
-                existencia.sucursal=sucursal
-                existencia.producto=producto
-                bindData(existencia,row)
-
-                existencia.save failOnError: true, flush: true
 
             }
 
@@ -60,22 +67,24 @@ class ImportadorDeExistencia implements Importador,SW2Lookup {
 
         Producto producto = Producto.where {sw2 == row.producto_id}.find()
 
-        if(!producto) {
+     /*   if(!producto) {
             println("Importando producto $row.producto_id para la venta")
             producto = importadorDeProductos.importar( row.producto_id)
             assert producto, 'No fue posible importar el producto :' +row.producto_id
-        }
+        }*/
 
-        existencia.sucursal=sucursal
-        existencia.producto=producto
-        bindData(existencia,row)
+        if(producto){
+            existencia.sucursal=sucursal
+            existencia.producto=producto
+            bindData(existencia,row)
 
-        try {
-            existencia.save failOnError: true, flush: true
-        }
-        catch(Exception e) {
-            logger.error(ExceptionUtils.getRootCauseMessage(e))
-            errores.add(sw2)
+            try {
+                existencia.save failOnError: true, flush: true
+            }
+            catch(Exception e) {
+                logger.error(ExceptionUtils.getRootCauseMessage(e))
+                errores.add(sw2)
+            }
         }
 
     }

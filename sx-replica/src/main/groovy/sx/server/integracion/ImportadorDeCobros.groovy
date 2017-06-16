@@ -7,7 +7,10 @@ import sx.core.Cliente
 import sx.cxc.Cobro
 import sx.cxc.CobroCheque
 import sx.cxc.CobroDeposito
+import sx.cxc.CobroTarjeta
 import sx.cxc.CobroTransferencia
+import sx.tesoreria.Banco
+import sx.tesoreria.CuentaDeBanco
 
 /**
  * Created by rcancino on 25/10/16.
@@ -78,24 +81,38 @@ class ImportadorDeCobros implements Importador, SW2Lookup{
             case 'PAGO_CHE':
                 cobro.formaDePago = 'CHEQUE'
                 CobroCheque cheque = new CobroCheque()
+                Banco banco=buscarBanco(row.banco_id)
+                cheque.bancoOrigen=banco
                 bindData(cheque,row)
-                cobro.cheque = cheque
+                cheque.save failOnError: true, flush: true
+               cobro.cheque = cheque
                 return cobro
             case 'PAGO_DEP':
                 if(row.totalTransferencia > 0.0){
                     cobro.formaDePago = 'TRANSFERENCIA'
                     CobroTransferencia transferencia = new CobroTransferencia()
-                    bindData(transferencia,row)
-                    cobro.transferencia = transferencia
+                    Banco banco=buscarBanco(row.banco_id)
+                    CuentaDeBanco cuenta=buscarCuentaDeBanco(row.cuenta_id)
+                    transferencia.cuentaDestino=cuenta
+                    transferencia.bancoOrigen=banco
+                   bindData(transferencia,row)
+                   cobro.transferencia = transferencia
                 } else {
                     cobro.formaDePago = 'DEPOSITO'
                     CobroDeposito deposito = new CobroDeposito()
+                    Banco banco=buscarBanco(row.banco_id)
+                    CuentaDeBanco cuenta=buscarCuentaDeBanco(row.cuenta_id)
+                    deposito.cuentaDestino=cuenta
+                    deposito.bancoOrigen=banco
                     bindData(deposito,row)
                     cobro.deposito = deposito
                 }
                 break
             case 'PAGO_TAR':
                 cobro.formaDePago = 'TARJETA'
+               CobroTarjeta tarjeta= new CobroTarjeta()
+                bindData(tarjeta,row)
+                cobro.tarjeta=tarjeta
                 break
             default:
                 cobro.formaDePago = row.tipo_id
@@ -114,7 +131,7 @@ class ImportadorDeCobros implements Importador, SW2Lookup{
         A.nombre,
         c.rfc,
         A.fecha,
-        A.origen,
+        A.origen as tipo,
         A.importe,
         A.impuesto,
         A.total,
@@ -122,7 +139,7 @@ class ImportadorDeCobros implements Importador, SW2Lookup{
         A.tc as tipoDeCambio,
         A.anticipo,
         A.enviado,
-        A.SAF as saldoAFavor,
+        A.SAF as primeraAplicacion,
         A.diferencia,
         A.DIFERENCIA_FECHA as direrenciaFecha,
         A.COBRADOR_ID,
@@ -144,7 +161,21 @@ class ImportadorDeCobros implements Importador, SW2Lookup{
         A.AUTO_TARJETA_BANCO,
         A.comision_tarjeta,
         A.tarjeta_id,
-        A.creado
+        A.creado as dateCreated,
+        'na' as createUser ,
+        a.MODIFICADO as lastUpdated,
+        'na' as updateUser,
+        case when a.tipo_id ='pago_hxe' then 'PAGO_CHE' ELSE a.TIPO_ID end as tipo_id,
+        CUENTA_HABIENTE as emisor,
+        'NA' as numeroDeCuenta,
+        ifnull(a.numero,'') as numero,
+        CASE WHEN a.TIPO_ID='PAGO_HXE' THEN true else false end as cambioPorEfectivo,
+        (SELECT b.banco_id FROM sw_bancos b where b.clave=a.banco or b.nombre=a.banco) as banco_id,
+        a.COMISION_TARJETA as comision,
+        (SELECT DEBITO FROM sx_tarjetas t where t.TARJETA_ID=a.TARJETA_ID)  as debitoCredito,
+        CUENTA_ID as cuenta_id,
+        CHEQUE,
+        EFECTIVO
         FROM sx_cxc_abonos A join sx_clientes c on a.cliente_id = c.cliente_id
     """
 

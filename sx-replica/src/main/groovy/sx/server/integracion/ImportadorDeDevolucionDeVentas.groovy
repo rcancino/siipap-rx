@@ -68,9 +68,15 @@ class ImportadorDeDevolucionDeVentas implements  Importador, SW2Lookup{
 
             try {
 
-                devolucion.save failOnError:true,flush:true
 
-                importadorDeInventario.crearInventario(devolucion,'RMD')
+
+                    devolucion.save failOnError:true,flush:true
+
+                    importadorDeInventario.crearInventario(devolucion,'RMD')
+
+
+
+
 
             }catch(Exception e) {
                 logger.error(ExceptionUtils.getRootCauseMessage(e))
@@ -103,13 +109,16 @@ class ImportadorDeDevolucionDeVentas implements  Importador, SW2Lookup{
                 assert producto, 'No fue posible importar el producto :' +row.producto_id
             }
 
-            det.producto = producto
-            det.ventaDet=ventaDet
+                det.producto = producto
+                det.ventaDet=ventaDet
 
-            bindData(det,row)
+                bindData(det,row)
 
-            // println('Agregando partida: ' + row.sw2+" ---- "+det.documento+" "+det.fecha)
-            devolucion.addToPartidas(det)
+                // println('Agregando partida: ' + row.sw2+" ---- "+det.documento+" "+det.fecha)
+                devolucion.addToPartidas(det)
+
+
+
         }
 
 

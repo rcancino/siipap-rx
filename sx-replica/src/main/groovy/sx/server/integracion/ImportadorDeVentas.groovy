@@ -32,6 +32,9 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
     @Autowired
     ImportadorDeInventario importadorDeInventario
 
+    @Autowired
+    ImportadorDeCuentasPorCobrar importadorDeCuentasPorCobrar
+
     def importar(Date ini, Date fin){
 
 
@@ -55,29 +58,51 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
         logger.info('Registros: ' + ids.size())
 
         ids.each { r ->
+            println "Importando para cargo"+r.cargo_id
             importar(r.cargo_id)
         }
         return 'OK'
     }
 
+
+
     def importar(String sw2){
         String select = QUERY_VENTA + " where tipo = ? and cargo_id = ? "
         def row = findRegistro(select, ['FAC',sw2])
+
+        println "++++++++++++++++++++++++++++++"+sw2
+
         def venta = build(row)
 
-        if(venta.tipo == 'CRE' || venta.tipo == 'PSF') {
-                importadorDeVentasCredito.importar(venta)
-        }
+            println "++++++++++++++++++++++++++++++"+venta
 
-        if(venta.total==0 && venta.tipo!='ANT'){
-            println "Importando ventas canceladas"
-            importadorDeVentasCanceladas.importarCanc(venta)
-        }
+        println "++++++++++++++++++++++++++++++"+sw2
+
+            if(venta.tipo == 'CRE' || venta.tipo == 'PSF') {
+                importadorDeVentasCredito.importar(venta)
+            }
+
+            if(venta.total==0 && venta.tipo!='ANT'){
+                println "Importando ventas canceladas"
+                importadorDeVentasCanceladas.importarCanc(venta)
+            }
+
+        importadorDeCuentasPorCobrar.importar(venta.sw2)
+
+        println "importada la cuenta por cobrar"
+
+        importadorDeInventario.crearInventario(venta,"FAC")
+
+        println "Inventario creado"
+
+        return venta
+
 
     }
 
     def build(def row){
-        //println('Importando venta con ROW: ' + row)
+
+        println('Importando venta con ROW: ' + row)
         def venta = Venta.where{ sw2 == row.sw2}.find()
         if(!venta){
             venta = new Venta()
@@ -92,12 +117,18 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
         venta.vendedor = buscarVendedor(row.vendedor_id)
 
 
+        try{
             importarPartidas(venta)
+
             venta.save failOnError:true, flush:true
-
-            importadorDeInventario.crearInventario(venta,"FAC")
-
             return venta
+
+        }catch (Exception ex){
+            logger.error(ExceptionUtils.getRootCauseMessage(ex))
+        }
+
+
+
 
     }
 
@@ -110,18 +141,28 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
             VentaDet det = new  VentaDet()
             det.sucursal = buscarSucursal(row.sucursal_id)
             Producto producto = Producto.where {sw2 == row.producto_id}.find()
+
+
             if(!producto) {
                 println("Importando producto $row.producto_id para la venta")
                 producto = importadorDeProductos.importar( row.producto_id)
                 assert producto, 'No fue posible importar el producto :' +row.producto_id
             }
-            det.producto = producto
-            det.sucursal=venta.sucursal
 
-            bindData(det,row)
 
-           // println('Agregando partida: ' + row.sw2+" ---- "+det.documento+" "+det.fecha)
-            venta.addToPartidas(det)
+                det.producto = producto
+                det.sucursal=venta.sucursal
+
+                bindData(det,row)
+
+                 println'Agregando partida: ' + row.sw2
+
+                venta.addToPartidas(det)
+
+
+
+
+
         }
         return venta
     }
@@ -220,7 +261,6 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
         creado as dateCreated,
         modificado as lastUpdated,
         CREADO_USERID as createUser,
-        null as cuenta,
         CASE WHEN ORIGEN='MOS' THEN 'CON'
             WHEN ORIGEN='CAM' THEN 'COD'
             WHEN ORIGEN ='CRE' THEN 'CRE'

@@ -1,8 +1,12 @@
 package sx.cxc
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import sx.core.Cliente
 import sx.core.Sucursal
 
+@ToString(excludes = ["id,lastUpdated,dateCreated"],includeNames=true,includePackage=false)
+@EqualsAndHashCode(includeFields = true,includes = ['id'])
 class DevolucionCliente {
 
     String	id
@@ -29,6 +33,10 @@ class DevolucionCliente {
 
     CuentaPorCobrar cuentaPorCobrar
 
+    Date	fecha
+
+    String	tipoDeDocumento
+
     String	sw2
 
     Date dateCreated
@@ -40,13 +48,12 @@ class DevolucionCliente {
     String updateUser
 
 
-
-
     static constraints = {
         tipoDeCambio(scale:6)
         comentario nullable:true
         sw2 nullable:true
-        cuenta nullable: true
+        cuentaPorCobrar nullable: true
+        tipoDeDocumento nullable: true
     }
 
 
