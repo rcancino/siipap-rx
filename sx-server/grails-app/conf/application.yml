@@ -90,12 +90,12 @@ environments:
         dataSources:
             dataSource:
                 dbCreate: update
-                url: jdbc:mysql://localhost:3306/siipapx?autoReconnect=true
-                #url: jdbc:mysql://10.10.1.229/siipapx?autoReconnect=false
+                #url: jdbc:mysql://localhost:3306/siipapx?autoReconnect=true
+                url: jdbc:mysql://10.10.1.229/siipapx?autoReconnect=false
             importacion:
                 dbCreate: none
-                #url: jdbc:mysql://10.10.1.228/produccion?autoReconnect=false
-                url: jdbc:mysql://localhost/sw2?autoReconnect=false
+                url: jdbc:mysql://10.10.1.228/produccion?autoReconnect=false
+                #url: jdbc:mysql://localhost/sw2?autoReconnect=false
                 roperties:
                   maxActive: 3
                   maxIdle: 3
