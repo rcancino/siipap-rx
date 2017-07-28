@@ -519,6 +519,40 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "grails-app/conf/application.groovy",
+			"settings":
+			{
+				"buffer_size": 1651,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/conf/application.yml",
+			"settings":
+			{
+				"buffer_size": 4599,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/init/sx/server/BootStrap.groovy",
+			"settings":
+			{
+				"buffer_size": 880,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "grails-app/controllers/sx/server/UrlMappings.groovy",
+			"settings":
+			{
+				"buffer_size": 2932,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -616,6 +650,9 @@
 	],
 	"file_history":
 	[
+		"/Users/rcancino/play/siipap-rx/sx-server/grails-app/conf/application.yml",
+		"/Users/rcancino/play/siipap-rx/sx-server/build.gradle",
+		"/Users/rcancino/play/siipap-rx/sx-server/grails-app/controllers/sx/server/UrlMappings.groovy",
 		"/Users/rcancino/dev/siipap-rx/sx-server/grails-app/conf/application.yml",
 		"/Users/rcancino/dev/siipapx/sx-server/.gitignore",
 		"/Users/rcancino/dev/siipapx/sx-server/grails-app/controllers/sx/server/UrlMappings.groovy",
@@ -740,14 +777,11 @@
 		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/proveedores/precios/lpcompra-edit.controller.js",
 		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/ventas/listaDePreciosPorProveedor/lista-de-precios-venta-item.service.js",
 		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/ventas/listaDePreciosPorProveedor/components/selector-de-productos.component.js",
-		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/ventas/listaDePreciosPorProveedor/create-lp-venta.html",
-		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/ventas/listaDePreciosPorProveedor/lista-de-precios-ventadet.value.js",
-		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/ventas/listaDePreciosPorProveedor/lp-venta-edit.controller.js",
-		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/ventas/listaDePreciosPorProveedor/lista-de-precios-venta.service.js"
+		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/ventas/listaDePreciosPorProveedor/create-lp-venta.html"
 	],
 	"find":
 	{
-		"height": 35.0
+		"height": 23.0
 	},
 	"find_in_files":
 	{
@@ -916,8 +950,128 @@
 	"groups":
 	[
 		{
+			"selected": 2,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "grails-app/conf/application.groovy",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1651,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								89,
+								89
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "grails-app/conf/application.yml",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4599,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4501,
+								4555
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/YAML/YAML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1830.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "grails-app/init/sx/server/BootStrap.groovy",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 880,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Groovy/Groovy.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "grails-app/controllers/sx/server/UrlMappings.groovy",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2932,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Grails/Controller/GrailsController.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -970,6 +1124,26 @@
 		"selected_items":
 		[
 			[
+				"boo",
+				"Init/sx/server/BootStrap.groovy"
+			],
+			[
+				"appl",
+				"Configuration/application.yml"
+			],
+			[
+				"url",
+				"Controllers/sx/server/UrlMappings.groovy"
+			],
+			[
+				"appli",
+				"Configuration/application.groovy"
+			],
+			[
+				"buil",
+				"RottFoleder/build.gradle"
+			],
+			[
 				"app",
 				"Configuration/application.yml"
 			],
@@ -984,14 +1158,6 @@
 			[
 				"productocontroller",
 				"Controllers/sx/core/ProductoController.groovy"
-			],
-			[
-				"appli",
-				"RottFoleder/grails-app/conf/application.groovy"
-			],
-			[
-				"url",
-				"RottFoleder/grails-app/controllers/sx/server/UrlMappings.groovy"
 			],
 			[
 				"bui",
@@ -1016,10 +1182,6 @@
 			[
 				"log",
 				"Configuration/logback.groovy"
-			],
-			[
-				"appl",
-				"Configuration/application.yml"
 			],
 			[
 				"sidebar",
@@ -1472,14 +1634,6 @@
 			[
 				"_edit",
 				"src/app/app/compras/_editForm.html"
-			],
-			[
-				"index.cons",
-				"src/app/app/index.constants.js"
-			],
-			[
-				"notadecredit",
-				"src/app/app/notas/nota-de-credito-create.html"
 			]
 		],
 		"width": 0.0

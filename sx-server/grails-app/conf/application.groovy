@@ -1,7 +1,7 @@
 
 
 // Added by the Spring Security Core plugin:
-grails.plugin.springsecurity.active = false
+grails.plugin.springsecurity.active = true
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'sx.security.User'
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'sx.security.UserRole'
 grails.plugin.springsecurity.authority.className = 'sx.security.Role'
@@ -26,7 +26,6 @@ grails.plugin.springsecurity.filterChain.chainMap = [
 	[pattern: '/**/css/**',      filters: 'none'],
 	[pattern: '/**/images/**',   filters: 'none'],
 	[pattern: '/**/favicon.ico', filters: 'none'],
-  [pattern: '/api/**',         filters: 'JOINED_FILTERS,-anonymousAuthenticationFilter,-exceptionTranslationFilter,-authenticationProcessingFilter,-securityContextPersistenceFilter,-rememberMeAuthenticationFilter'],
-	[pattern: '/**',             filters: 'JOINED_FILTERS']
+  [pattern: '/api/**',         filters: 'JOINED_FILTERS,-anonymousAuthenticationFilter,-exceptionTranslationFilter,-authenticationProcessingFilter,-securityContextPersistenceFilter,-rememberMeAuthenticationFilter']
 ]
 
