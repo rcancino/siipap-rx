@@ -58,7 +58,7 @@ class ImportadorDeCfdi implements Importador, SW2Lookup{
         MODIFICADO as lastUpdated,
         cfd_id as sw2,
         'http://www.papelsa.com.mx' as url,
-        (SELECT FPAGO FROM sx_ventas v where v.cargo_id=c.ORIGEN_ID )  as formaDePago,
+        (SELECT ifnull(FPAGO,'EFECTIVO') FROM sx_ventas v where v.cargo_id=c.ORIGEN_ID )  as formaDePago,
         'PUE' AS metodoDePago
     FROM sx_cfdi c
     """

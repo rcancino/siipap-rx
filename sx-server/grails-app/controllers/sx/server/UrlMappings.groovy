@@ -65,6 +65,8 @@ class UrlMappings {
 
         //Inventario
         "/api/inventario"(resources: "inventario")
+        "/api/inventario/kardex"(controller: "inventario", action: "kardex" )
+        "/api/inventario/saveInventario"(controller: "inventario", action: "saveInventario" , method: 'POST')
         "/api/inventario/traslados"(resources: "traslado")
         "/api/inventario/devolucionVenta"(resources: "devolucionDeVenta")
         "/api/inventario/movimientoAlmacen"(resources: "movimientoDeAlmacen")

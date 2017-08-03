@@ -62,7 +62,7 @@ class Venta {
 
     String	atencion
 
-    String	manejoEntrega
+    Boolean parcial = false
 
     String	comentario
 
@@ -102,7 +102,6 @@ class Venta {
         sucursalVale nullable:true
         sucursalVenta nullable:true
         clasificacionVale inList: ['SIN_VALE','ENVIA_SUCURSAL','PASA_CAMIONETA','RECOGE_CLIENTE','EXISTENCIA_VENTA']
-        manejoEntrega inList:['ORDINARIO','PARCIAL']
         cuentaPorCobrar nullable: true
         vale nullable: true
         updateUser nullable: true

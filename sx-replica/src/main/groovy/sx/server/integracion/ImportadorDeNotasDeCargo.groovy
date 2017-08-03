@@ -4,7 +4,10 @@ import org.apache.commons.lang.exception.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import sx.core.*
+import sx.cxc.ChequeDevuelto
 import sx.cxc.NotaDeCargo
+import sx.cxc.NotaDeCargoDet
+import sx.tesoreria.Cheque
 
 /**
  * Created by rcancino on 16/08/16.
@@ -15,8 +18,25 @@ class ImportadorDeNotasDeCargo implements Importador, SW2Lookup{
     @Autowired
     ImportadorDeClientes importadorDeClientes
 
-    def importar(Date ini, Date fin){
+    @Autowired
+    ImportadorDeVentas importadorDeVentas
 
+    @Autowired
+    ImportadorDeCuentasPorCobrar importadorDeCuentasPorCobrar
+
+
+    @Autowired
+    ImportadorDeChequesDevueltos importadorDeChequesDevueltos
+
+    def importar(Date ini, Date fin){
+        logger.info("Importando notas de cargo" )
+        def ids = leerRegistros("select cargo_id from SX_VENTAS where fecha between ? and ? and tipo = ? ",[ini.format('yyyy-MM-dd'),fin.format('yyyy-MM-dd'), 'CAR'])
+        logger.info('Registros: ' + ids.size())
+
+        ids.each { r ->
+            importar(r.cargo_id)
+        }
+        return 'OK'
     }
 
     def importar(){
@@ -37,24 +57,29 @@ class ImportadorDeNotasDeCargo implements Importador, SW2Lookup{
     def importar(String sw2){
         String select = QUERY + " where tipo = ? and cargo_id = ? "
         def row = findRegistro(select, ['CAR',sw2])
-        def venta = build(row)
+        def cargo = build(row)
+
+        importadorDeCuentasPorCobrar.importar(cargo.sw2)
 
     }
 
     def build(def row){
-        logger.info('Importando venta con ROW: ' + row)
+        logger.info('Importando Nota de cargo con ROW: ' + row)
         def cargo = NotaDeCargo.where{ sw2 == row.sw2}.find()
         if(!cargo){
             cargo = new NotaDeCargo()
         }
         bindData(cargo,row)
-        //venta.sucursal = buscarSucursal(row.sucursal_id)
         Cliente cliente = Cliente.where {sw2 == row.cliente_id}.find()
         if(!cliente){
             cliente = importadorDeClientes.importar(row.cliente_id)
         }
+
+
+        Sucursal sucursal=buscarSucursal(row.sucursal_id)
+        cargo.sucursal=sucursal
         cargo.cliente = cliente
-        //importarPartidas(venta)
+        importarPartidas(cargo)
         try{
             cargo = cargo.save failOnError:true, flush:true
             return cargo
@@ -63,94 +88,76 @@ class ImportadorDeNotasDeCargo implements Importador, SW2Lookup{
         }
 
     }
-    /*
+
     def importarPartidas(NotaDeCargo cargo){
 
         List partidas = leerRegistros(QUERY_PARTIDAS,[cargo.sw2])
-        cargo.partidas.clear()
+
+        if(cargo.partidas.size()>0)
+            cargo.partidas.clear()
+
+
         partidas.each{ row ->
-            logger.info('Importando partida: ' + row.clave)
-            VentaDet det = new  VentaDet()
-            det.sucursal = buscarSucursal(row.sucursal_id)
-            Producto producto = Producto.where {sw2 == row.producto_id}.find()
-            if(!producto) {
-                logger.info("Importando producto $row.producto_id para la venta")
-                producto = importadorDeProductos.importar( row.producto_id)
-                assert producto, 'No fue posible importar el producto :' +row.producto_id
+            logger.info('Importando partida: ' + row.venta_id)
+
+            NotaDeCargoDet det = new  NotaDeCargoDet()
+
+            if(row.tipo=='CHE'){
+                ChequeDevuelto chequeDevuelto=ChequeDevuelto.where{sw2==row.venta_id}.find()
+                if(!chequeDevuelto){
+                    chequeDevuelto=importadorDeChequesDevueltos.importar(row.venta_id)
+                }
+            }else{
+                Venta venta=Venta.where{sw2==row.venta_id}.find()
+
+                if(!venta ){
+                    venta=importadorDeVentas.importar(row.venta_id)
+                }
+
+                det.venta=venta
             }
-            det.producto = producto
+
             bindData(det,row)
-            venta.addToPartidas(det)
+            cargo.addToPartidas(det)
         }
+
+
     }
-    */
+
 
 
     static String QUERY = """
-       select
+    SELECT
         cliente_id,
-        clave,
-        nombre,
-        (SELECT c.rfc FROM sx_clientes c where c.CLIENTE_ID=v.CLIENTE_ID) rfc,
-        (case when v.ANTICIPO is true then 'ANT'
-            when v.POST_FECHADO is true then 'PSF'
-            when v.POST_FECHADO is false and v.origen='CRE' then 'CRE'
-            when v.origen='CAM' and V.CE is true then 'COD'
-            when v.origen='CAM' and V.CE is false then 'CON'
-            when v.origen='MOS' then 'CON' else 'ND'  end     ) tipo,
-        v.origen,
-        v.docto as folio,
-        v.fecha fecha,
-        ,(SELECT c.serie FROM sx_cfdi c where c.ORIGEN_ID=v.cargo_id) as serie
-        ,(SELECT c.uuid FROM sx_cfdi c where c.ORIGEN_ID=v.cargo_id) as uuid
-        ,v.moneda
-        ,v.tc as tipoDeCambio
-        ,v.importe
-        ,v.descuento
-        ,v.impuesto
-        ,v.total
-        ,v.fpago as formaDePago
-        ,v.comentario
-        ,v.cargo_id as sw2
-        ,VTO as     vencimiento
-        from sx_ventas v
-
+        sucursal_id,
+        fecha,
+        docto as documento,
+        importe,
+        impuesto,
+        total,
+        ifnull(FPAGO,'EFECTIVO') as formaDePago,
+        moneda,
+        TC as tipoDeCambio,
+        comentario,
+        CARGOS as cargo,
+        CARGO_ID as sw2,
+        ifnull(CREADO,fecha) as dateCreated,
+        ifnull(MODIFICADO,fecha) as lastUpdated,
+        ifnull(CREADO_USERID,'NA') as createUser,
+        ifnull(MODIFICADO_USERID,'NA') as updateUser
+    FROM sx_ventas
     """
 
     static String QUERY_PARTIDAS  = """
-    select
-        D.sucursal_id,
-        D.producto_id,
-        D.clave,
-        D.descripcion,
-        D.unidad_id as unidad,
-        D.factorU as factor,
-        D.nacional,
-        D.documento,
-        D.fecha,
-        D.cantidad,
-        D.kilos,
-        D.precio_l AS precioOriginal,
-        D.precio_l as precioLista,
-        D.precio,
-        D.importe,
-        D.dscto_orig as desctoOriginal,
-        D.dscto as descuento,
-        D.importe-D.importe_neto AS importeDescuento,
-        D.importe_neto as importeNeto,
-        D.cortes,
-        D.precio_cortes as precioCortes,
-        D.cortes*D.precio_cortes as importeCortes,
-        D.cortes_Instruccion as cortesInstruccion,
-        D.subtotal,
-        D.costo as costoReposicion,
-        D.costoP as costoPromedio,
-        D.costoU as costoUltimo,
-        (case when D.CORTES=0 then 'false' else 'true' end) as cortado,
-        D.comentario,
-        D.inventario_id as sw2
-        from sx_ventasdet D
-        where venta_id = ?
+    SELECT
+    d.importe as cargo,
+    d.importe,d.venta_id,
+    d.CARGODET_ID as sw2,
+    v.fecha as dateCreated,
+    v.fecha as lastUpdated,
+    (SELECT tipo FROM sx_ventas x where x.CARGO_ID=d.VENTA_ID ) as tipo
+    FROM sx_notadecargo_det d join sx_ventas v on (v.CARGO_ID=d.CARGO_ID)
+    where d.CARGO_ID=?
 
     """
 }

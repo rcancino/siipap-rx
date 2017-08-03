@@ -10,13 +10,25 @@ import groovy.transform.ToString
 class Direccion implements Validateable{
 
     String calle
+
     String numeroInterior
+
     String numeroExterior
+
     String colonia
+
     String municipio
+
     String codigoPostal
+
     String estado
+
     String pais='MEXICO'
+
+    BigDecimal latitud =  0
+
+    BigDecimal longitud = 0
+
 
 
     static constraints = {
@@ -28,6 +40,8 @@ class Direccion implements Validateable{
         codigoPostal(nullable:true)
         estado(nullable:true)
         pais(nullable:true,size:1..100)
+        latitud nullable: true
+        longitud nullable: true
     }
 
     String toLabel(){
