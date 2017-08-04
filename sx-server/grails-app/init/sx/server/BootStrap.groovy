@@ -8,9 +8,11 @@ class BootStrap {
       
       def userRole = Role.findOrSaveWhere(authority:'ROLE_USER')
       def adminRole = Role.findOrSaveWhere(authority:'ROLE_ADMIN')
-      def comprasUserRole = Role.findOrSaveWhere(authority: 'COMPRAS_USER')
+      def comprasUserRole = Role.findOrSaveWhere(authority: 'ROLE_COMPRAS_USER')
+      def cxcUserRole = Role.findOrSaveWhere(authority: 'ROLE_CXC_USER')
 
       def admin=User.findByUsername('admin')
+      
       if(!admin) {
         admin=new User(username:'admin'
           ,password:'admin'
@@ -30,6 +32,15 @@ class BootStrap {
           it.clear()
         }
       }
+
+      if(!UserRole.exists(admin.id, cxcUserRole.id)) {
+        UserRole.create admin, cxcUserRole
+        UserRole.withSession {
+          it.flush()
+          it.clear()
+        }
+      }
+
     }
     def destroy = {
     }

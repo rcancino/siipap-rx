@@ -1,0 +1,12 @@
+import sx.cxc.CuentaPorCobrar
+
+model {
+    CuentaPorCobrar cuentaPorCobrar
+}
+json g.render(cuentaPorCobrar, [excludes:['moneda','dateCreated','lastUpdated','cliente']]){
+    cliente g.render(cuentaPorCobrar.cliente, [includes: ['id', 'nombre', 'rfc']])
+    modificado cuentaPorCobrar.lastUpdated.format('yyyy-MM-dd\'T\'HH:mm:ssZ')
+    creado cuentaPorCobrar.dateCreated.format('yyyy-MM-dd\'T\'HH:mm:ssZ')
+    moneda cuentaPorCobrar.moneda.currencyCode
+}
+

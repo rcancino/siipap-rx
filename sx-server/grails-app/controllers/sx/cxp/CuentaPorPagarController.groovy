@@ -1,6 +1,8 @@
 package sx.cxp
 
 import grails.rest.RestfulController
+import grails.plugin.springsecurity.annotation.Secured
+
 import grails.web.http.HttpHeaders
 import groovy.transform.ToString
 import org.springframework.web.multipart.MultipartFile
@@ -9,6 +11,7 @@ import sx.core.Proveedor
 import static org.springframework.http.HttpStatus.CREATED
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY
 
+@Secured("IS_AUTHENTICATED_ANONYMOUSLY")
 class CuentaPorPagarController extends RestfulController{
 
     static responseFormats = ['json']
