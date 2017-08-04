@@ -35,7 +35,7 @@ class UrlMappings {
         }
 
         // CxP
-        "/api/cxp/cuentas"(resources: "cuentaPorPagar")
+        "/api/cxp"(resources: "cuentaPorPagar")
         "/api/cxp/importar"(controller:"cuentaPorPagar", action:"importar")
 
         //Comprobantes fiscales CFDI's
@@ -62,6 +62,10 @@ class UrlMappings {
         // Ventas
         "/api/ventas/listas"(resources: "listaDePreciosVenta")
         "/api/core/ventas"(resources:"venta")
+
+        // CXC
+        "/api/notasDeCargo"(resources: "notaDeCargo")
+        "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
 
         //Inventario
         "/api/inventario"(resources: "inventario")

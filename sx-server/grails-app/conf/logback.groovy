@@ -31,8 +31,14 @@ if (Environment.isDevelopmentMode() && targetDir != null) {
             pattern = "%level %logger - %msg%n"
         }
     }
+    
+    //logger("org.springframework.security", DEBUG, ['STDOUT'], false)
+    //logger("grails.plugin.springsecurity", DEBUG, ['STDOUT'], false)
+    //logger("org.pac4j", DEBUG, ['STDOUT'], false)
+
     logger("StackTrace", ERROR, ['FULL_STACKTRACE'], false)
     root(ERROR, ['STDOUT', 'FULL_STACKTRACE'])
+
 }
 else {
     root(ERROR, ['STDOUT'])

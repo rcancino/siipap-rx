@@ -5,6 +5,7 @@ grails.plugin.springsecurity.active = true
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'sx.security.User'
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'sx.security.UserRole'
 grails.plugin.springsecurity.authority.className = 'sx.security.Role'
+grails.plugin.springsecurity.rest.token.storage.jwt.expiration = 3600 * 10
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/',               access: ['permitAll']],
 	[pattern: '/application/index',               access: ['permitAll']],

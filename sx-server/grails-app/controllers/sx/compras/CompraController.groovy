@@ -1,5 +1,6 @@
 package sx.compras
 
+import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.RestfulController
 import grails.transaction.Transactional
 import grails.web.http.HttpHeaders
@@ -7,6 +8,7 @@ import sx.core.Folio
 
 import static org.springframework.http.HttpStatus.CREATED
 
+@Secured("IS_AUTHENTICATED_ANONYMOUSLY")
 class CompraController extends RestfulController{
 
 
