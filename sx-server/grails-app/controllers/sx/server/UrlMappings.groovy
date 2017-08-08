@@ -66,6 +66,7 @@ class UrlMappings {
         // CXC
         "/api/notasDeCargo"(resources: "notaDeCargo")
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
+        "/api/notasDeCredito"(resources: "notaDeCredito")
 
         //Inventario
         "/api/inventario"(resources: "inventario")
@@ -74,6 +75,9 @@ class UrlMappings {
         "/api/inventario/movimientoAlmacen"(resources: "movimientoDeAlmacen")
         "/api/inventario/transformacion"(resources: "transformacion")
 
+        // Security
+        "/api/security/users"(resources: "user")
+        "/api/security/roles"(resources: "role")
 
         "/"(controller: 'application', action:'index')
         "500"(view: '/error')

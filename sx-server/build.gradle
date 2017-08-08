@@ -7,6 +7,7 @@ buildscript {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
         classpath "org.grails.plugins:hibernate5:6.0.7"
         classpath "org.grails.plugins:views-gradle:1.1.5"
+        classpath 'org.grails.plugins:database-migration:3.0.3'
     }
 }
 
@@ -71,6 +72,8 @@ dependencies {
 
     runtime 'mysql:mysql-connector-java:5.1.29'
     compile "org.grails.plugins:spring-security-rest:2.0.0.M2"
+    compile 'org.grails.plugins:database-migration:3.0.3'
+    compile 'org.liquibase:liquibase-core:3.5.3'
 }
 
 bootRun {
@@ -81,5 +84,13 @@ bootRun {
 }
 tasks.withType(JavaExec) {
     jvmArgs '-XX:MaxPermSize=512m'
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir 'grails-app/migrations'
+        }
+    }
 }
 

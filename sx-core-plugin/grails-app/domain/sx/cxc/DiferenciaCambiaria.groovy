@@ -29,7 +29,7 @@ class DiferenciaCambiaria {
     Date lastUpdated
 
 
-    static mappin ={
+    static  mapping ={
         id generator: 'uuid'
     }
 

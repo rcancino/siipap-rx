@@ -20,8 +20,6 @@ class NotaDeCargoDet {
 
     BigDecimal importe = 0.0
 
-    Venta venta
-
     CuentaPorCobrar	cuentaPorCobrar
 
     String sw2
@@ -32,7 +30,6 @@ class NotaDeCargoDet {
 
 
     static constraints = {
-        venta nullable:true
         cuentaPorCobrar nullable: true
     }
 

@@ -19,8 +19,6 @@ class NotaDeCargo {
 
     Cliente	cliente
 
-    Sucursal sucursal
-
     Date	fecha
 
     Long	documento	 = 0
@@ -40,7 +38,6 @@ class NotaDeCargo {
     String	comentario
 
     CuentaPorCobrar cuentaPorCobrar
-
 
     String	tipoDeDocumento
 

@@ -5,9 +5,11 @@ import grails.rest.RestfulController
 import grails.transaction.Transactional
 import grails.web.http.HttpHeaders
 import sx.core.Folio
-
 import static org.springframework.http.HttpStatus.OK
 
+import grails.plugin.springsecurity.annotation.Secured
+
+@Secured("hasRole('ROLE_CXC_USER')")
 class NotaDeCreditoController extends RestfulController{
 
     static responseFormats = ['json']
@@ -16,11 +18,11 @@ class NotaDeCreditoController extends RestfulController{
         super(NotaDeCredito)
     }
 
+    
     @Override
     protected Object saveResource(Object resource) {
         if(resource.id == null)
             resource.folio = Folio.nextFolio(resourceName, resource.serie)
-        log.info("Salvando nota : " + resource)
         resource.save flush:true
     }
 
