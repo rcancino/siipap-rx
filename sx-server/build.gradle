@@ -72,8 +72,8 @@ dependencies {
 
     runtime 'mysql:mysql-connector-java:5.1.29'
     compile "org.grails.plugins:spring-security-rest:2.0.0.M2"
-    compile 'org.grails.plugins:database-migration:3.0.3'
-    compile 'org.liquibase:liquibase-core:3.5.3'
+    // compile 'org.grails.plugins:database-migration:3.0.3'
+    // compile 'org.liquibase:liquibase-core:3.5.3'
 }
 
 bootRun {

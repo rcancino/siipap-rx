@@ -32,11 +32,12 @@ class CompraController extends RestfulController{
     protected Integer countResources() {
         return super.countResources()
     }
-
+    /*
     @Override
     protected Object saveResource(Compra compraInstance) {
         compraInstance.folio = Folio.nextFolio('COMPRA',ser)
         compraInstance.save flush: true
     }
+    */
 
 }
