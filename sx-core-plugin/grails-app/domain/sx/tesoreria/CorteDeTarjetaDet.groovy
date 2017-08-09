@@ -18,6 +18,7 @@ class CorteDeTarjetaDet {
 	String sw2 
 
 	Date dateCreated
+
 	Date lastUpdated
 
 	static belongsTo = [corte: CorteDeTarjeta]

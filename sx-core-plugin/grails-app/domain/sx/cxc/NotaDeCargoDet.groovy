@@ -31,6 +31,7 @@ class NotaDeCargoDet {
 
     static constraints = {
         cuentaPorCobrar nullable: true
+        concepto nullable: true
     }
 
     static mapping={

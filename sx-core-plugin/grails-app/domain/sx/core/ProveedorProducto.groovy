@@ -23,11 +23,24 @@ class ProveedorProducto {
 
 	Integer piezaPaquete = 0
 
+	BigDecimal precio= 0
+
+	Date fecha
+
+	Date dateCreated
+
+	Date lastUpdated
+
+
+
 
     static constraints = {
 		claveProveedor nullable:true
         codigoProveedor nullable:true
         descripcionProveedor nullable:true
+		fecha nullable: true
+		dateCreated nullable: true
+		lastUpdated nullable: true
     }
 
     static mapping = {

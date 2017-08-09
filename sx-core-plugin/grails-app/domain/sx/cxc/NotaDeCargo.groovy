@@ -39,6 +39,8 @@ class NotaDeCargo {
 
     CuentaPorCobrar cuentaPorCobrar
 
+    List partidas = []
+
     String	tipoDeDocumento
 
     BigDecimal	cargo	 = 0

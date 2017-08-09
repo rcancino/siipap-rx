@@ -9,7 +9,10 @@ import sx.core.Socio
 import sx.core.Venta
 import sx.core.VentaCredito
 import sx.core.VentaDet
+import sx.cxc.ChequeDevuelto
 import sx.cxc.CuentaPorCobrar
+import sx.cxc.DevolucionCliente
+import sx.cxc.NotaDeCargo
 
 /**
  * Created by rcancino on 16/08/16.
@@ -31,7 +34,12 @@ class ImportadorDeCuentasPorCobrar implements Importador, SW2Lookup{
 
 
     def importar(Date ini, Date fin){
-
+        logger.info("Importando cuentas por cobrar del : ${fecha.format('dd/MM/yyyy')}" )
+        def ids = leerRegistros("select cargo_id from SX_VENTAS where fecha between ? and ? ",[ini.format('yyyy-MM-dd'),fin.format('yyyy-MM-dd')])
+        logger.info('Registros: ' + ids.size())
+        ids.each { r ->
+            importar(r.cargo_id)
+        }
     }
 
     def importar(fecha){
@@ -47,8 +55,11 @@ class ImportadorDeCuentasPorCobrar implements Importador, SW2Lookup{
         logger.info('Importando Cuenta Por cobrar ' + sw2)
         String select = QUERY + " where  cargo_id = ? "
         def row = findRegistro(select, [sw2])
-        build(row)
-        importadorDeCfdi.importar(sw2)
+        def cuentaPorCobrar=build(row)
+        if(cuentaPorCobrar.tipoDocumento!='CHEQUE_DEVUELTO' && cuentaPorCobrar.tipoDocumento!='DEVOLUCION_CLIENTE'){
+            importadorDeCfdi.importar(sw2)
+        }
+
     }
 
     def build(def row){
@@ -71,9 +82,31 @@ class ImportadorDeCuentasPorCobrar implements Importador, SW2Lookup{
 
         try{
             cuentaPorCobrar.save failOnError:true, flush:true
-            Venta venta=Venta.where{sw2==cuentaPorCobrar.sw2}.find()
-            venta.cuentaPorCobrar=cuentaPorCobrar
-            venta.save failOnError: true, flush: true
+            if(cuentaPorCobrar.tipoDocumento=='VENTA'){
+                Venta venta=Venta.where{sw2==cuentaPorCobrar.sw2}.find()
+                venta.cuentaPorCobrar=cuentaPorCobrar
+                venta.save failOnError: true, flush: true
+
+            }
+            if(cuentaPorCobrar.tipoDocumento=='NOTA_DE_CARGO'){
+                NotaDeCargo notaDeCargo=NotaDeCargo.where{sw2==cuentaPorCobrar.sw2}.find()
+                notaDeCargo.cuentaPorCobrar=cuentaPorCobrar
+                notaDeCargo.save failOnError: true, flush: true
+
+            }
+            if(cuentaPorCobrar.tipoDocumento=='CHEQUE_DEVUELTO'){
+                ChequeDevuelto cheque=ChequeDevuelto.where{sw2==cuentaPorCobrar.sw2}.find()
+                cheque.cuentaPorCobrar=cuentaPorCobrar
+                cheque.save failOnError: true, flush: true
+            }
+            if(cuentaPorCobrar.tipoDocumento=='DEVOLUCION_CLIENTE'){
+                DevolucionCliente devolucionCliente=DevolucionCliente.where{sw2==cuentaPorCobrar.sw2}.find()
+                devolucionCliente.cuentaPorCobrar=cuentaPorCobrar
+                devolucionCliente.save failOnError: true, flush: true
+            }
+
+            return cuentaPorCobrar
+
         }catch (Exception ex){
             logger.error(ExceptionUtils.getRootCauseMessage(ex))
         }
@@ -90,14 +123,14 @@ class ImportadorDeCuentasPorCobrar implements Importador, SW2Lookup{
         importe,
         impuesto,
         total,
-        FPAGO as formaDePago,
+        IFNULL(FPAGO,'EFECTIVO') as formaDePago,
         moneda,
         CARGOS as cargo,
         comentario,
-        creado as dateCreated,
-        MODIFICADO as lastUpdated,
-        CREADO_USERID as createUser,
-        MODIFICADO_USERID as updateUser,
+        IFNULL(creado,FECHA) as dateCreated,
+        IFNULL(MODIFICADO,FECHA) as lastUpdated,
+        IFNULL(CREADO_USERID,'NA') as createUser,
+        IFNULL(MODIFICADO_USERID,'NA') as updateUser,
         case when tipo='FAC' THEN 'VENTA'
             WHEN TIPO='CHE' THEN 'CHEQUE_DEVUELTO'
             WHEN TIPO='CAR' THEN 'NOTA_DE_CARGO'
