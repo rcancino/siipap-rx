@@ -2,13 +2,17 @@ package sx.compras
 
 import groovy.transform.ToString
 import groovy.transform.EqualsAndHashCode
-import sx.core.*
-import sx.cxc.NotaDeCreditoDet
+import sx.core.Sucursal
+import sx.core.Proveedor
+
 
 
 @ToString(excludes = 'dateCreated,lastUpdated,version,partidas',includeNames=true,includePackage=false)
 @EqualsAndHashCode(includes='id,sucursal,folio')
 class Compra {
+
+    static auditable = false
+    static stampable = true
 
 	String id
 
@@ -58,12 +62,21 @@ class Compra {
 
 	Date lastUpdated
 
+    String createdBy
+
+    String lastUpdatedBy
+
+
+    static embedded = ['log']
+
     static constraints = {
     	comentario nullable:true
     	ultimaDepuracion nullable:true
     	entrega nullable:true
         folio unique:'sucursal'
         sw2 nullable:true
+        createdBy nullable: true
+        lastUpdatedBy nullable: true
 
     }
 

@@ -12,18 +12,13 @@ class ProductoController extends RestfulController{
         super(Producto)
     }
 
-    @Override
-    Object index() {
-        productoList()
-    }
 
     @Override
     protected List listAllResources(Map params) {
-        println 'In producto controller UPDATED'
         def query = Producto.where {}
-        params.sort = params.sort ?:'linea'
+        params.sort = params.sort ?:'clave'
         params.order = params.order ?:'desc'
-        params.max = params.max ?: 100
+        params.max = params.max ?: 20
 
         if(params.term){
             def search = '%' + params.term + '%'
@@ -34,11 +29,12 @@ class ProductoController extends RestfulController{
 
         }
         if(params.activos){
-            query = query.where {activo == activos}
+            query = query.where {activo == true}
         }
         return query.list(params)
     }
 
+    /*
     def productoList(){
         
         println("Llamando al controlador  "+params)
@@ -53,4 +49,5 @@ class ProductoController extends RestfulController{
         }
 
     }
+    */
 }

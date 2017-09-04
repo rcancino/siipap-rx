@@ -1,7 +1,9 @@
 package sx.core
 
 import grails.rest.RestfulController
+import grails.plugin.springsecurity.annotation.Secured
 
+@Secured("IS_AUTHENTICATED_ANONYMOUSLY")
 class SucursalController extends RestfulController{
 
     static responseFormats = ['json']
@@ -16,8 +18,8 @@ class SucursalController extends RestfulController{
         params.sort = params.sort ?:'nombre'
         params.order = params.order ?:'desc'
 
-        if(params.activa){
-            query = query.where {activa == params.activa}
+        if(params.activas){
+            query = query.where {activa == true}
         }
         return query.list(params)
     }

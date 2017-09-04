@@ -1,16 +1,12 @@
 package sx.compras
 
-import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.RestfulController
-import grails.transaction.Transactional
-import grails.web.http.HttpHeaders
+import grails.plugin.springsecurity.annotation.Secured
+
 import sx.core.Folio
 
-import static org.springframework.http.HttpStatus.CREATED
-
-@Secured("IS_AUTHENTICATED_ANONYMOUSLY")
+@Secured("ROLE_COMPRAS_USER")
 class CompraController extends RestfulController{
-
 
     static responseFormats = ['json']
 
@@ -29,15 +25,10 @@ class CompraController extends RestfulController{
     }
 
     @Override
-    protected Integer countResources() {
-        return super.countResources()
+    protected Object saveResource(Object resource) {
+        resource.folio = Folio.nextFolio('COMPRA','OFICINAS')
+        resource.createdBy = getPrincipal().username
+        return super.saveResource(resource)
     }
-    /*
-    @Override
-    protected Object saveResource(Compra compraInstance) {
-        compraInstance.folio = Folio.nextFolio('COMPRA',ser)
-        compraInstance.save flush: true
-    }
-    */
 
 }

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-package sx.replica
+package sx.security
 
 /**
  * AuditTrails are reported to the AuditLog table.
@@ -53,16 +53,12 @@ class AuditTrail implements Serializable {
 
         oldValue(nullable: true)
         newValue(nullable: true)
-
-        // for large column support (as in < 1.0.6 plugin versions), use
-        // oldValue(nullable: true, maxSize: 65534)
-        // newValue(nullable: true, maxSize: 65534)
     }
 
     static mapping = {
 
         // Set similiar when you used "auditLog.tablename" in < 1.1.0 plugin version.
-       // table 'audit_log'
+        table 'audit_log'
 
         // Remove when you used "auditLog.cacheDisabled = true" in < 1.1.0 plugin version.
         cache usage: 'read-only', include: 'non-lazy'
@@ -77,6 +73,10 @@ class AuditTrail implements Serializable {
         //autoImport false
 
         version false
+        
+        // for large column support (as in < 1.0.6 plugin versions), use this
+        // oldValue type: 'text'
+        // newValue type: 'text'
     }
 
     /**
