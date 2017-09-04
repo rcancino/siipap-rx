@@ -11,6 +11,8 @@ class Cliente {
 
 	String	id
 
+	String clave
+
 	Boolean	activo	 = true
 
 	String	rfc
