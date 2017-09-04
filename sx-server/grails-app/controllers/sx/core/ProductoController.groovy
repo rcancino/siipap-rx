@@ -12,13 +12,6 @@ class ProductoController extends RestfulController{
         super(Producto)
     }
 
-
-    @Override
-    Object index() {
-        productoList()
-    }
-
-
     @Override
     protected List listAllResources(Map params) {
         def query = Producto.where {}
@@ -39,6 +32,5 @@ class ProductoController extends RestfulController{
         }
         return query.list(params)
     }
-
 
 }
