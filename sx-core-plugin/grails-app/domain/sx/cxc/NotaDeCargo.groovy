@@ -41,9 +41,6 @@ class NotaDeCargo {
 
     List partidas = []
 
-    List partidas = []
-
-
     String	tipoDeDocumento
 
     BigDecimal	cargo	 = 0

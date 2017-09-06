@@ -14,9 +14,9 @@ class ImportadorIntegracionJob {
 
     def execute() {
 
-       // println "Job Run!"
+        println "Importando Información para integracion!"
 
-        //importadorAuditLogIntegracion.importar()
+        importadorAuditLogIntegracion.importar()
 
     }
 }
