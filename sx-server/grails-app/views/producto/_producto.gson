@@ -1,0 +1,12 @@
+import sx.core.Producto
+
+model {
+    Producto producto
+}
+
+json g.render(producto, [excludes: ['linea','marca','clase']]){
+    linea producto.linea.linea
+    marca producto.marca.marca
+    clase producto.clase.clase
+
+}

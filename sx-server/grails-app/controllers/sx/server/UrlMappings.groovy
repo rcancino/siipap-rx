@@ -30,6 +30,7 @@ class UrlMappings {
         "/api/contabilidad/polizas"(resources:"poliza")
 
         // Tesoreria
+        "/api/tesoreria/cuentas"(resources: "cuentaDeBanco")
         "/api/tesoreria/requisiciones"(resources:"requisicion"){
             "/partidas"(resources:"requisicionDet")
         }
