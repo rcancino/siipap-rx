@@ -1,10 +1,12 @@
 package sx.tesoreria
 
+import sx.sat.BancoSat
+
 class CuentaDeBanco {
 
     String id
 
-	Banco banco
+    BancoSat bancoSat
 
     String numero
 
@@ -36,10 +38,11 @@ class CuentaDeBanco {
         impresionTemplate nullable:true, maxSize:50
         subCuentaOperativa nullable:true, maxSize:4
         sw2 nullable:true
+        bancoSat nullable: true
     }
 
     String toString() {
-        return "$numero ($banco)"
+        return "$numero $descripcion"
     }
 
     static mapping={
