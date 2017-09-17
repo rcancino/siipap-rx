@@ -4,7 +4,7 @@ import grails.rest.RestfulController
 import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
 
-@Secured("hasRole('ROLE_USER')")
+@Secured("hasRole('ROLE_POS_USER')")
 class VentaController extends RestfulController{
 
     static responseFormats = ['json']
@@ -15,7 +15,8 @@ class VentaController extends RestfulController{
 
 
     def index(VentasFiltro filtro) {
-        
+        println 'Ventas con params: ' + params
+        println 'Ventas filtro: ' + filtro
         params.max = params.registros ?:10
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'

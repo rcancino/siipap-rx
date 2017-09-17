@@ -12,7 +12,6 @@ class ProductoController extends RestfulController{
         super(Producto)
     }
 
-
     @Override
     protected List listAllResources(Map params) {
         def query = Producto.where {}
@@ -39,20 +38,4 @@ class ProductoController extends RestfulController{
         return query.list(params)
     }
 
-    /*
-    def productoList(){
-        
-        println("Llamando al controlador  "+params)
-        def productos=Producto.list()
-
-        render(contentType: "application/json") {
-            products (productos) { Producto b ->
-                    id b.id
-                    clave b.clave
-
-            }
-        }
-
-    }
-    */
 }

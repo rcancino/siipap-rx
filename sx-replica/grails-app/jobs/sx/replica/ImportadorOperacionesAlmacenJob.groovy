@@ -37,7 +37,7 @@ class ImportadorOperacionesAlmacenJob {
 
         println "Ejecutando Importador de Operaciones Almacen"
 
-/*
+
 
         println "Importando movimientos  "+fecha
         importadorMovimientoAlmacen.importar(fecha)
@@ -60,6 +60,6 @@ class ImportadorOperacionesAlmacenJob {
         println "Importando Compras"
         importadorDeCompras.importar(fecha)
 
-*/
+
     }
 }

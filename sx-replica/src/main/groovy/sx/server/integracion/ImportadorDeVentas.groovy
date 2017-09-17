@@ -54,7 +54,7 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
 
     def importar(fecha){
         logger.info("Importando ventas del : ${fecha.format('dd/MM/yyyy')}" )
-        def ids = leerRegistros("select cargo_id from SX_VENTAS where fecha = ? and tipo = ? ",[fecha.format('yyyy-MM-dd'), 'FAC'])
+        def ids = leerRegistros("select cargo_id from SX_VENTAS where fecha = ? and tipo = ? and sucursa_id=9 ",[fecha.format('yyyy-MM-dd'), 'FAC'])
         logger.info('Registros: ' + ids.size())
 
         ids.each { r ->

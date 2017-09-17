@@ -268,7 +268,7 @@ class ImportadorDeClientes implements  Importador{
             colonia,
             estado,
             pais
-        FROM sx_clientes C JOIN clientes_integracion I ON ( C.CLIENTE_ID=I.CLIENTE_ID)
+        FROM sx_clientes C JOIN clientes_integracion2 I ON ( C.CLIENTE_ID=I.CLIENTE_ID)
             """
 
 

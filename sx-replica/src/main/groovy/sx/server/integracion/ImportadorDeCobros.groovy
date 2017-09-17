@@ -79,6 +79,7 @@ class ImportadorDeCobros implements Importador, SW2Lookup{
                 cobro.formaDePago = 'EFECTIVO'
                 return cobro
             case 'PAGO_CHE':
+                println "Importando Abono:  "+row.sw2
                 cobro.formaDePago = 'CHEQUE'
                 CobroCheque cheque = new CobroCheque()
                 Banco banco=buscarBanco(row.banco_id)

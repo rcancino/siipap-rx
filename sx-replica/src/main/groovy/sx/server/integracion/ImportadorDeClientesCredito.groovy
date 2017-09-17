@@ -51,7 +51,8 @@ class ImportadorDeClientesCredito implements Importador, SW2Lookup {
 
 
     static String QUERYCLIENTE="""
-        SELECT credito_id as id FROM sx_clientes where credito_id is not null
+        SELECT credito_id as id FROM clientes_credito_integracion
+        where credito_id is not null
     """
 
     static String QUERYCREDITO="""

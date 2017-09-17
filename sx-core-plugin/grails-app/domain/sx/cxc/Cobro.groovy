@@ -55,8 +55,10 @@ class  Cobro {
         deposito nullable: true
         transferencia nullable: true
         tarjeta nullable: true
-
-
+        dateCreated nullable: true
+        lastUpdated nullable: true
+        createUser nullable: true
+        updateUser nullable: true
     }
 
     static mapping={
