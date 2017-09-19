@@ -8,7 +8,7 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured("ROLE_TESORERIA_USER")
 class CuentaDeBancoController extends RestfulController {
 
-    static responseFormats = ['xml']
+    static responseFormats = ['json']
 
     CuentaDeBancoController() {
         super(CuentaDeBanco)
