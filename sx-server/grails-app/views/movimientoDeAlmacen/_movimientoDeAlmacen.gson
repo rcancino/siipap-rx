@@ -5,4 +5,9 @@ model {
     MovimientoDeAlmacen movimientoDeAlmacen
 }
 
-json g.render(movimientoDeAlmacen, [excludes:['dateCreated','lastUpdated']])
+json g.render(movimientoDeAlmacen, [excludes:['sucursal','partidas']]){
+    sucursal {
+        id movimientoDeAlmacen.sucursal.id
+        nombre movimientoDeAlmacen.sucursal.nombre
+    }
+}
