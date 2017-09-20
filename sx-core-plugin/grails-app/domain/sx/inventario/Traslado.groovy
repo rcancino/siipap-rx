@@ -40,6 +40,8 @@ class Traslado {
 
     String sw2
 
+    Date fechaInventario
+
     static hasMany = [partidas:TrasladoDet]
 
     static constraints = {
@@ -54,6 +56,7 @@ class Traslado {
         createUser nullable: true
         updateUser nullable: true
         porInventario nullable: true
+        fechaInventario nullable: true
     }
 
     static mapping = {

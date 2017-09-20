@@ -30,6 +30,8 @@ class MovimientoDeAlmacen {
 
     String sw2
 
+    Date fechaInventario
+
     static hasMany = [partidas:MovimientoDeAlmacenDet]
 
     static constraints = {
@@ -39,6 +41,7 @@ class MovimientoDeAlmacen {
         lastUpdated nullable: true
         createUser nullable: true
         updateUser nullable: true
+        fechaInventario nullable: true
     }
 
     static mapping = {

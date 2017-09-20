@@ -26,7 +26,7 @@ class SolicitudDeTrasladoDet {
 
     Date lastUpdated
 
-    Date fechaInventario
+
 
     static belongsTo = [solicitudDeTraslado:SolicitudDeTraslado]
 
@@ -34,7 +34,7 @@ class SolicitudDeTrasladoDet {
         cortesInstruccion nullable:true
         comentario nullable: true
         sw2 nullable: true
-        fechaInventario nullable: true
+
     }
 
     static mapping ={

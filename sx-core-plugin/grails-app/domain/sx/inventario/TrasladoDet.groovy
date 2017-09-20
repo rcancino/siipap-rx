@@ -30,7 +30,7 @@ class TrasladoDet {
 
     Date lastUpdated
 
-    Date fechaInventario
+
 
     static belongsTo = [traslado:Traslado]
 
@@ -40,7 +40,7 @@ class TrasladoDet {
         comentario nullable: true
         sw2 nullable: true
         inventario nullable: true
-        fechaInventario nullable: true
+
     }
 
     static mapping = {

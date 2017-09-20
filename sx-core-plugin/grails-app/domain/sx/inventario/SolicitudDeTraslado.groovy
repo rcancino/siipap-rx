@@ -37,6 +37,8 @@ class SolicitudDeTraslado {
 
     String sw2
 
+    Date fechaInventario
+
     static hasMany = [partidas:SolicitudDeTrasladoDet]
 
     static constraints = {
@@ -49,6 +51,7 @@ class SolicitudDeTraslado {
         createUser nullable: true
         updateUser nullable: true
         sw2 nullable: true
+        fechaInventario nullable: true
     }
     static mapping = {
         id generator:'uuid'
