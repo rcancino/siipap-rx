@@ -36,6 +36,8 @@ class Transformacion {
 
     String sw2
 
+    Date fechaInventario
+
 
     static  hasMany = [partidas:TransformacionDet]
 
@@ -51,6 +53,7 @@ class Transformacion {
         createUser nullable: true
         updateUser nullable: true
         porInventario nullable: true
+        fechaInventario nullable: true
 
     }
 

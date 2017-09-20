@@ -39,8 +39,10 @@ class User implements Serializable {
 
 	def beforeInsert() {
 		encodePassword()
-    capitalizarNombre()
+    	capitalizarNombre()
 	}
+
+
 
 	def beforeUpdate() {
 		if (isDirty('password')) {

@@ -47,6 +47,8 @@ class ImportadorDeChequesDevueltos implements Importador, SW2Lookup {
         println('Registros: ' + ids.size())
 
         ids.each { r ->
+
+            println ">>>>"+r.cargo_id
             importar(r.cargo_id)
         }
         return 'OK'
@@ -57,9 +59,11 @@ class ImportadorDeChequesDevueltos implements Importador, SW2Lookup {
         def row = findRegistro(select, ['CHE',sw2])
         def cheque = build(row)
 
+        if(cheque){
+            importadorDeCuentasPorCobrar.importar(cheque.sw2)
+        }
 
 
-        importadorDeCuentasPorCobrar.importar(cheque.sw2)
 
     }
 
@@ -117,7 +121,6 @@ class ImportadorDeChequesDevueltos implements Importador, SW2Lookup {
         ifnull(MODIFICADO_USERID,'NA') as updateUser,
         cheque_id
     FROM sx_ventas
-
     """
 
 }

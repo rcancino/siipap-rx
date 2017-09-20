@@ -87,7 +87,7 @@ class CuentaPorPagar {
         })
         descuentofVto nullable:true
         comprobante nullable:true, unique:true
-        contraRecibo nullable: true
+        pagosAplicados nullable: true
         sw2 nullable:true
 
     }

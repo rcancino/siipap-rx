@@ -23,11 +23,12 @@ class CorteDeTarjetaAplicacion {
 
 	Boolean	debitoCredito	 = true
 
-	CorteDeTarjeta	corteDeTarjeta
 
 	Boolean	visa_Master	 = true
 
 	String	sw2
+
+	CorteDeTarjeta corte
 
 	static belongsTo = [corte: CorteDeTarjeta]
 

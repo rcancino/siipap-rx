@@ -27,8 +27,13 @@ class ImportadorDeCobros implements Importador, SW2Lookup{
         }
     }
 
+    def importar(){
+
+        println "Estamos importando de prueba"
+    }
+
     def importar(fecha){
-        logger.info("Importando cobros del : ${fecha.format('dd/MM/yyyy')}" )
+        //logger.info("Importando cobros del : ${fecha.format('dd/MM/yyyy')}" )
         String select = QUERY + " where A.fecha = ? and a.tipo_id like ? order by a.creado"
         def rows = leerRegistros(select,[fecha.format('yyyy-MM-dd'),'PAGO%'])
         def importados = 0
@@ -41,7 +46,7 @@ class ImportadorDeCobros implements Importador, SW2Lookup{
 
 
     def importar(String sw2){
-        logger.info('Importando cobro ' + sw2)
+        //logger.info('Importando cobro ' + sw2)
         String select = QUERY + " and abono_id = ? "
         def row = findRegistro(select, [sw2])
         if(row){
@@ -51,19 +56,27 @@ class ImportadorDeCobros implements Importador, SW2Lookup{
     }
 
     def build(def row){
-        logger.info('Importando cobro: ' + row)
+        //logger.info('Importando cobro: ' + row)
+
+      //  println "importando cobro: "+ row
         def cobro = Cobro.where{ sw2 == row.sw2}.find()
         if(!cobro){
+
+            println "El cobro no existe procedo a crearlo para :"+row.sw2
             cobro = new Cobro()
             cobro.sucursal = buscarSucursal(row.sucursal_id)
             Cliente cliente = Cliente.where {sw2 == row.cliente_id}.find()
             if(!cliente){
+                println "importando el cliente"+row.cliente_id
                 cliente = importadorDeClientes.importar(row.cliente_id)
             }
             cobro.cliente = cliente
             registrarFormaDePago(row,cobro)
         }
         bindData(cobro,row)
+        //cobro = cobro.save failOnError:true, flush: true
+
+
         try{
             cobro = cobro.save failOnError:true, flush:true
             return cobro
@@ -79,13 +92,13 @@ class ImportadorDeCobros implements Importador, SW2Lookup{
                 cobro.formaDePago = 'EFECTIVO'
                 return cobro
             case 'PAGO_CHE':
-                println "Importando Abono:  "+row.sw2
+               // println "Importando Abono:  "+row.sw2
                 cobro.formaDePago = 'CHEQUE'
                 CobroCheque cheque = new CobroCheque()
                 Banco banco=buscarBanco(row.banco_id)
                 cheque.bancoOrigen=banco
                 bindData(cheque,row)
-                cheque.save failOnError: true, flush: true
+               // cheque.save failOnError: true, flush: true
                cobro.cheque = cheque
                 return cobro
             case 'PAGO_DEP':
@@ -146,7 +159,7 @@ class ImportadorDeCobros implements Importador, SW2Lookup{
         A.COBRADOR_ID,
         A.SUCURSAL_ID,
         A.comentario,
-        A.numero,
+        ifnull(A.numero,0),
         A.postFechado,
         A.VTO as vencimiento ,
         A.CUENTA_HABIENTE as emisor,
@@ -155,7 +168,7 @@ class ImportadorDeCobros implements Importador, SW2Lookup{
         A.folio,
         A.cheque as totalCheque,
         A.efectivo as totalEfectivo,
-        A.transferencia as totalTransferencia,
+        ifnull(A.transferencia,0) as totalTransferencia,
         0.0 AS totalTarjeta,
         A.fecha_deposito as fechaDeposito,
         A.referencia,

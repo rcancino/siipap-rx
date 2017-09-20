@@ -24,7 +24,7 @@ class ImportadorDeCorteDeTarjetas implements Importador, SW2Lookup {
 
     def importar(fecha){
         logger.info("Importando fichas del : ${fecha.format('dd/MM/yyyy')}" )
-        def ids = leerRegistros("select corte_id from sx_corte_tarjetas where fecha = ? ",[fecha.format('yyyy-MM-dd')])
+        def ids = leerRegistros("select corte_id from sx_corte_tarjetas where fecha_corte = ? ",[fecha.format('yyyy-MM-dd')])
         logger.info('Registros: ' + ids.size())
         ids.each { r ->
             importar(r.corte_id)
@@ -44,22 +44,27 @@ class ImportadorDeCorteDeTarjetas implements Importador, SW2Lookup {
         corte = new CorteDeTarjeta()
         bindData(corte,row)
         corte.sucursal = buscarSucursal(row.sucursal_id)
-        corte.cuenta = buscarCuentaDeBanco(row.cuenta_id)
+        corte.cuentaDeBanco = buscarCuentaDeBanco(row.cuenta_id)
         importarPartidas(corte)
         importarAplicaciones(corte)
         corte = corte.save failOnError:true, flush:true
+
         return corte
 
     }
 
     def importarPartidas(CorteDeTarjeta corte){
+
+        println "importando partidas"
         corte.partidas.clear()
         List partidas = leerRegistros(QUERY_PARTIDAS,[corte.sw2])
         partidas.each{ row ->
             CorteDeTarjetaDet det = new  CorteDeTarjetaDet()
-            det.cobro = importadorDeCobros.importar(row.abono_id)
+
             bindData(det,row)
+            det.cobro = importadorDeCobros.importar(row.abono_id)
             corte.addToPartidas(det)
+
         }
     }
     def importarAplicaciones(CorteDeTarjeta corte){
@@ -69,6 +74,7 @@ class ImportadorDeCorteDeTarjetas implements Importador, SW2Lookup {
             CorteDeTarjetaAplicacion det = new  CorteDeTarjetaAplicacion()
             det.ingreso = importadorDeMovimientosDeCuenta.importar(row.cargoabono_id)
             bindData(det,row)
+            det.corte=corte
             corte.addToAplicaciones(det)
         }
     }
@@ -98,6 +104,7 @@ class ImportadorDeCorteDeTarjetas implements Importador, SW2Lookup {
 
     static String QUERY_APLICACIONES = """
         select
+        corte_id as sw2,
         cargoabono_id,
         comentario,
         importe,

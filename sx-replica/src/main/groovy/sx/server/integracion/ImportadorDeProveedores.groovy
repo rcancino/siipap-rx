@@ -22,7 +22,6 @@ class ImportadorDeProveedores implements Importador{
         query += ' where clave = ?'
         def row = findRegistro(query, [clave])
         Proveedor proveedor = build(row)
-
     }
 */
     def importar(Long sw2, tipo = 'COMPRAS'){

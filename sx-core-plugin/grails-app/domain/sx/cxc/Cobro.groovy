@@ -6,7 +6,7 @@ import sx.core.Cliente
 import sx.core.Sucursal
 
 @ToString(includes = ["cliente,fecha,sucursal,formaDePago,total"],includeNames=true,includePackage=false)
-@EqualsAndHashCode(includeFields = true,includes = ['id,clave,fecha,total'])
+@EqualsAndHashCode(includeFields = true,includes = ['id,fecha,total'])
 class  Cobro {
 
     String id
