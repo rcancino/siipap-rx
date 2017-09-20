@@ -13,6 +13,18 @@ import sx.tesoreria.*
 class ImportadorDeMovimientosDeCuenta implements Importador, SW2Lookup{
 
 
+    def importar(def fecha){
+        String select = QUERY + " where fecha=? "
+
+        def rows = leerRegistros(select, [fecha])
+
+        rows.each {row ->
+            build(row)
+        }
+
+
+    }
+
 
     def importar(Long sw2){
         String select = QUERY + " where CARGOABONO_ID = ? "
@@ -29,7 +41,7 @@ class ImportadorDeMovimientosDeCuenta implements Importador, SW2Lookup{
             movimiento.cuenta = buscarCuentaDeBanco(row.cuenta_id)
         }
         bindData(movimiento,row)
-        //movimiento = movimiento.save failOnError:true, flush:true
+        movimiento = movimiento.save failOnError:true, flush:true
         return movimiento
     }
     

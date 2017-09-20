@@ -28,6 +28,7 @@ class RequisicionDet {
 
     static constraints = {
         comentario nullable:true
+        cxp nullable: true
     }
 
     static mapping ={

@@ -80,6 +80,7 @@ bootRun {
     jvmArgs = ['-Xmx1024m']
     println 'Min Heap size: '+minHeapSize
     println 'Max Heap size: '+maxHeapSize
+
 }
 tasks.withType(JavaExec) {
     jvmArgs '-XX:MaxPermSize=512m'

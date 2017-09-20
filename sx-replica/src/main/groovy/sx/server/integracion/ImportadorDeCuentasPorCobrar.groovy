@@ -56,7 +56,8 @@ class ImportadorDeCuentasPorCobrar implements Importador, SW2Lookup{
         String select = QUERY + " where  cargo_id = ? "
         def row = findRegistro(select, [sw2])
         def cuentaPorCobrar=build(row)
-        if(cuentaPorCobrar.tipoDocumento!='CHEQUE_DEVUELTO' && cuentaPorCobrar.tipoDocumento!='DEVOLUCION_CLIENTE'){
+
+        if(cuentaPorCobrar && (cuentaPorCobrar.tipoDocumento!='CHEQUE_DEVUELTO' && cuentaPorCobrar.tipoDocumento!='DEVOLUCION_CLIENTE')){
             importadorDeCfdi.importar(sw2)
         }
 

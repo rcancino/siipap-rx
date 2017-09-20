@@ -80,7 +80,7 @@ class ImportadorDeRecepcionDeCompras implements Importador, SW2Lookup {
 
     def importarPartidas(RecepcionDeCompra recepcion){
         List partidas = leerRegistros(QUERY_PARTIDAS,[recepcion.sw2])
-        //recepcion.partidas.clear()
+        recepcion.partidas.clear()
         partidas.each{ row ->
             println "Importando Partida"+row.sw2
 
@@ -101,6 +101,7 @@ class ImportadorDeRecepcionDeCompras implements Importador, SW2Lookup {
 
         Compra compra = Compra.where {sw2 == siipapId}.find()
         if (!compra) {
+            println("Importando la compra")
            importadorDeCompras.importar(siipapId)
             compra = Compra.where {sw2 == siipapId}.find()
         }

@@ -35,6 +35,8 @@ class DevolucionDeVentaDet {
 
     String sw2
 
+    Date fechaInventario
+
     static  belongsTo = [devolucionDeVenta:DevolucionDeVenta]
 
     static constraints = {
@@ -43,6 +45,8 @@ class DevolucionDeVentaDet {
         dateCreated nullable: true
         lastUpdated nullable: true
         inventario nullable: true
+        fechaInventario nullable: true
+
     }
 
     static  mapping ={

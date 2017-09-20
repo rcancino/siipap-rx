@@ -54,7 +54,7 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
 
     def importar(fecha){
         logger.info("Importando ventas del : ${fecha.format('dd/MM/yyyy')}" )
-        def ids = leerRegistros("select cargo_id from SX_VENTAS where fecha = ? and tipo = ? and sucursa_id=9 ",[fecha.format('yyyy-MM-dd'), 'FAC'])
+        def ids = leerRegistros("select cargo_id from SX_VENTAS where fecha = ? and tipo = ? ",[fecha.format('yyyy-MM-dd'), 'FAC'])
         logger.info('Registros: ' + ids.size())
 
         ids.each { r ->
@@ -70,15 +70,16 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
         String select = QUERY_VENTA + " where tipo = ? and cargo_id = ? "
         def row = findRegistro(select, ['FAC',sw2])
 
-        println "++++++++++++++++++++++++++++++"+sw2
+        println "+......................"+sw2
 
         def venta = build(row)
 
-            println "++++++++++++++++++++++++++++++"+venta
+            println "++++++++++<<<<<<<<<<<<<<<<<<"+venta
 
-        println "++++++++++++++++++++++++++++++"+sw2
+        println "+>>>>>>>>>>>>>>>>>>>>>"+sw2
 
             if(venta.tipo == 'CRE' || venta.tipo == 'PSF') {
+                println("importando venta de credito")
                 importadorDeVentasCredito.importar(venta)
             }
 
@@ -111,14 +112,20 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
         venta.sucursal = buscarSucursal(row.sucursal_id)
         Cliente cliente = Cliente.where {sw2 == row.cliente_id}.find()
         if(!cliente){
+            println("importando cliente" + row.cliente_id)
             cliente = importadorDeClientes.importar(row.cliente_id)
+
+            println("Cliente importado")
         }
         venta.cliente = cliente
         venta.vendedor = buscarVendedor(row.vendedor_id)
+        importarPartidas(venta)
 
+        venta.save failOnError:true, flush:true
+        return venta
 
         try{
-            importarPartidas(venta)
+           importarPartidas(venta)
 
             venta.save failOnError:true, flush:true
             return venta
@@ -137,7 +144,7 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
         List partidas = leerRegistros(QUERY_PARTIDAS1,[venta.sw2])
         venta.partidas.clear()
         partidas.each{ row ->
-            //println('Importando partidas: ' + row.sw2)
+            println('Importando partidas: ' + row.sw2)
             VentaDet det = new  VentaDet()
             det.sucursal = buscarSucursal(row.sucursal_id)
             Producto producto = Producto.where {sw2 == row.producto_id}.find()
@@ -160,7 +167,7 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
                 venta.addToPartidas(det)
 
 
-
+            println("partida generads")
 
 
         }

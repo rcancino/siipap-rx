@@ -29,6 +29,8 @@ class TransformacionDet {
 
     Date lastUpdated
 
+    Date fechaInventario
+
     static belongsTo = [transformacion:Transformacion]
 
     static constraints = {
@@ -40,6 +42,7 @@ class TransformacionDet {
         lastUpdated nullable: true
         inventario nullable: true
     }
+
 
     static mapping ={
         id generator:'uuid'

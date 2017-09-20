@@ -25,16 +25,19 @@ class MovimientoDeAlmacenDet {
 
     Date lastUpdated
 
+    Date fechaInventario
+
     static belongsTo = [movimientoDeAlmacen:MovimientoDeAlmacen]
 
 
     static constraints = {
-        sw2 nullabsle: true
+        sw2 nullable: true
         comentario nullable: true
         tipoCIS nullable: true
         dateCreated nullable: true
         lastUpdated nullable: true
         inventario nullable: true
+        fechaInventario nullable: true
     }
 
 

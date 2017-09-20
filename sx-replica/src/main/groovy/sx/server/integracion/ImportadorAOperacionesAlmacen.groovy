@@ -24,7 +24,7 @@ class ImportadorAOperacionesAlmacen implements Importador, SW2Lookup {
     @Autowired
     ImportadorDeCompras importadorDeCompras
 
-    def importar(){
+    def importar(def fecha){
 
         println "Importando movimientos  "+fecha
         importadorMovimientoAlmacen.importar(fecha)

@@ -29,7 +29,7 @@ class Requisicion {
 
     BigDecimal total = 0.0
 
-    List partidas
+    List partidas = []
 
     String comentario
 

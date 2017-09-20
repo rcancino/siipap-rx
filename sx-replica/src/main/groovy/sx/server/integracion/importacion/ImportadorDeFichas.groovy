@@ -49,7 +49,7 @@ class ImportadorDeFichas implements Importador, SW2Lookup {
             ficha = new Ficha()
             bindData(ficha,row)
             ficha.sucursal = buscarSucursal(row.sucursal_id)
-            ficha.cuenta = buscarCuentaDeBanco(row.cuenta_id)
+            ficha.cuentaDeBanco = buscarCuentaDeBanco(row.cuenta_id)
         }
         if(row.cargoabono_id) {
             logger.info('Vinculando movimiento de cuenta: ' + row.cargoabono_id)

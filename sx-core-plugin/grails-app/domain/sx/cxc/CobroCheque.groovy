@@ -44,6 +44,8 @@ class CobroCheque {
         cobro nullable: true
         vencimiento nullable:true
         ficha nullable:true
+        postFechado nullable: true
+        numero nullable: true
 
     }
 

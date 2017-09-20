@@ -34,6 +34,10 @@ class ImportadorDeCompras implements  Importador, SW2Lookup{
         def errores = [];
 
         ids.each { row ->
+
+
+
+
             try {
                 importar(row.compra_id)
             }
@@ -58,15 +62,20 @@ class ImportadorDeCompras implements  Importador, SW2Lookup{
     }
 
     def importar(String sw2){
+
+        println("Importando desde ele importar por -SW2")
         logger.info('Importando compra ' + sw2)
         String select = QUERY + " where compra_id = ? "
         def row = findRegistro(select, [sw2])
         build(row)
+
     }
 
 
 
     def build(def row){
+
+        println "Importando desde el build"
         def compra = Compra.where{ sw2 == row.sw2}.find()
         if(!compra){
             compra = new Compra()
@@ -76,26 +85,30 @@ class ImportadorDeCompras implements  Importador, SW2Lookup{
         compra.proveedor = buscarProveedor(row.proveedor_id)
         compra.nacional = !row.importacion
         importarPartidas(compra)
-        compra.save failOnError:true, flush:true
-        /*
+
+
         try{
+
+            compra.save failOnError:true, flush:true
         }catch (Exception ex){
-            //ex.printStackTrace()
+            ex.printStackTrace()
             logger.error(ExceptionUtils.getRootCauseMessage(ex))
         }
-        */
+
     }
 
     def importarPartidas(Compra compra){
         logger.info("Importando partidas para compra ${compra.folio}")
         validarProductos(compra)
+
+        if(compra.partidas)
         compra.partidas.clear()
         
         List partidas = leerRegistros(QUERY_PARTIDAS,[compra.sw2])
 
         partidas.each{ row ->
             //logger.info("Importando partida: " + row)
-            //
+            println("Importando partida: " )
             //CompraDet det = compra.partidas.find{ it.sw2 == row.sw2}
             CompraDet det = new  CompraDet()
             Producto producto = Producto.where {sw2 == row.producto_id}.find()
@@ -108,6 +121,7 @@ class ImportadorDeCompras implements  Importador, SW2Lookup{
             det.sucursal = buscarSucursal( row.sucursal_id)
             bindData(det,row)
             compra.addToPartidas(det)
+
         }
     }
 

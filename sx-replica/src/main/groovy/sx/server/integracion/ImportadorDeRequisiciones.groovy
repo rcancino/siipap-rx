@@ -27,14 +27,17 @@ class ImportadorDeRequisiciones implements Importador, SW2Lookup{
         build(row)
     }
 
-    def importar(Date f1 = new Date(), Date f2 = new Date()){
+    def importar(Date f1 , Date f2){
 
         logger.info("Importando requisiciones del ${f1.format('dd/MM/yyyy')} al ${f2.format('dd/MM/yyyy')}" )
 
         List importados = []
         String select = QUERY + " where fecha between date(?) and date(?) and origen in (?,?)"
 
-        leerRegistros(select,[f1,f2,'COMPRAS','GASTOS']).each { row ->
+        def registros=  leerRegistros(select,[f1,f2,'COMPRAS','GASTOS'])
+
+            registros.each { row ->
+            println("Buscando los queryssssss")
             logger.info('Importando requisicion: ' + row.sw2)
             build(row)
         }
@@ -44,14 +47,16 @@ class ImportadorDeRequisiciones implements Importador, SW2Lookup{
     }
 
     def build(def row){
+
+        println "Estoy importando desde el build"
         def requisicion = Requisicion.where{ sw2 == row.sw2}.find()
         if(!requisicion){
-            requisicion = new Requisicion(partidas:[])
+            requisicion = new Requisicion()
         }
         try{
             bindData(requisicion,row)
             requisicion.proveedor = buscarProveedor(row.proveedor_id)
-            importarPartidas(requisicion)
+            importarPartidas(requisicion,row.sw2)
             requisicion.save failOnError:true, flush:true
         }catch (Exception ex) {
             String msg = ExceptionUtils.getRootCauseMessage(ex)
@@ -64,11 +69,29 @@ class ImportadorDeRequisiciones implements Importador, SW2Lookup{
 
 
 
-    def importarPartidas(Requisicion requisicion){
-        List partidas = leerRegistros(QUERY_PARTIDAS,[requisicion.sw2])
+    def importarPartidas(Requisicion requisicion,sw2){
+
+        println "Estoy importando las partidas"
+
+        if(requisicion.partidas){
+
+            println ">>>>Partidas: >>>>>>>>>"+requisicion.partidas.size()
+
+            requisicion.partidas.clear()
+        }
+
+
+
+        List partidas = leerRegistros(QUERY_PARTIDAS,[sw2])
+        println "<<<<<<Partidas: <<<<<<<<<<  " +partidas.size()
+        def a =0
         partidas.each{ row ->
-            logger.info("Importando partida: " + row)
+
+            a=a+1
+            logger.info("Importando partida: " + row  +" Count >>>>  " +a)
+
             RequisicionDet det = new  RequisicionDet()
+
             CuentaPorPagar cxp  = CuentaPorPagar.where{sw2 == row.cxp_id}.find()
             if(!cxp){
                 cxp = importadorDeCxP.importar(row.cxp_id);
@@ -93,7 +116,7 @@ class ImportadorDeRequisiciones implements Importador, SW2Lookup{
         r.fecha,
         r.fechaDePago,
         r.requisicion_id as sw2
-        from sw_trequisicion r join sx_proveedores p on(r.proveedor_id = p.proveedor_id)
+        from sw_trequisicion r  join sx_proveedores p on(r.proveedor_id = p.proveedor_id)
 
     """
     static String QUERY_PARTIDAS ="""

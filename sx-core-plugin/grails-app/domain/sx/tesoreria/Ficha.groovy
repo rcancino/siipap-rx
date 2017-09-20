@@ -59,6 +59,7 @@ class Ficha {
     	ingreso nullable:true
     	cancelada nullable: true
     	fechaCorte nullable: true
+		tipo nullable: true
     }
 
     static mapping ={
