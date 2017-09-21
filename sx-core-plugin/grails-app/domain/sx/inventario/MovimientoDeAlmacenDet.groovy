@@ -25,7 +25,7 @@ class MovimientoDeAlmacenDet {
 
     Date lastUpdated
 
-    Date fechaInventario
+
 
     static belongsTo = [movimientoDeAlmacen:MovimientoDeAlmacen]
 
@@ -37,7 +37,7 @@ class MovimientoDeAlmacenDet {
         dateCreated nullable: true
         lastUpdated nullable: true
         inventario nullable: true
-        fechaInventario nullable: true
+
     }
 
 

@@ -29,7 +29,7 @@ class TransformacionDet {
 
     Date lastUpdated
 
-    Date fechaInventario
+
 
     static belongsTo = [transformacion:Transformacion]
 

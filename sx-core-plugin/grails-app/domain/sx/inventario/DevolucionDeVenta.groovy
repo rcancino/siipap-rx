@@ -40,6 +40,8 @@ class DevolucionDeVenta {
 
     String sw2
 
+    Date fechaInventario
+
 
     static  hasMany = [partidas:DevolucionDeVentaDet]
 
@@ -52,6 +54,7 @@ class DevolucionDeVenta {
         createUser nullable: true
         updateUser nullable: true
         notaDeCredito nullable: true
+        fechaInventario nullable: true
     }
 
     static  mapping ={
