@@ -70,6 +70,12 @@ class UrlMappings {
         "/api/notasDeCredito"(resources: "notaDeCredito")
 
         //Inventario
+        "/api/existencias"(resources: "existencia"){
+            collection {
+                "/sucursal"(controller: 'existencias', action: 'existenciasPorSucursal', method: 'GET')
+            }
+        }
+        get "/api/existencias/sucursales"(controller: 'existencias', action: 'existenciasPorSucursal')
         "/api/inventario"(resources: "inventario")
         "/api/inventario/movimientos"(resources: "movimientoDeAlmacen")
         "/api/inventario/transformaciones"(resources: "transformacion")
