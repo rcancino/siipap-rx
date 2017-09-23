@@ -15,5 +15,7 @@ json g.render(existencia, [excludes:['producto','sucursal']]){
         clave existencia.producto.clave
         descripcion existencia.producto.descripcion
         activo existencia.producto.activo
+        precioContado existencia.producto.precioContado
+        precioCredito existencia.producto.precioCredito
     }
 }

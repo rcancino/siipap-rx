@@ -6,6 +6,7 @@ import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
 
 import sx.core.Folio
+import sx.core.Inventario
 
 @Secured("ROLE_INVENTARIO_USER")
 class TransformacionController extends RestfulController {
@@ -38,5 +39,32 @@ class TransformacionController extends RestfulController {
         resource.createUser = username
         resource.updateUser = username
         return super.saveResource(resource)
+    }
+
+
+    protected Transformacion updateResource(Transformacion resource) {
+        println 'Actualizando transformacion params: ' + params
+
+        if(params.inventariar){
+            resource.partidas.each { det ->
+                Inventario inventario = new Inventario()
+                inventario.sucursal = resource.sucursal
+                inventario.documento = resource.documento
+                inventario.cantidad = det.cantidad
+                inventario.comentario = det.comentario
+                inventario.Fecha = resource.fecha
+                inventario.producto = det.producto
+                inventario.tipo = resource.tipo
+                det.inventario = inventario
+            }
+            resource.fechaInventario = new Date()
+
+        }
+
+        return super.updateResource(resource)
+    }
+
+    def inventariar(Transformacion trs){
+
     }
 }

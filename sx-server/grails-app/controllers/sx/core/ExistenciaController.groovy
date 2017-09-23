@@ -55,10 +55,17 @@ class ExistenciaController extends RestfulController {
         if( params.int('mes')) {
             query = query.where { mes == params.int('mes')}
         }
+        if (params.activos) {
+            query = query.where { producto.activo == true}
+        }
+        if(params.conexistencia) {
+            query = query.where { cantidad > 0}
+        }
         if(params.term) {
             def search = '%' + params.term + '%'
             query = query.where { producto.clave =~ search || producto.descripcion =~ search}
         }
+
         if(params.sucursal) {
             query = query.where { sucursal.id == params.sucursal }
         }
