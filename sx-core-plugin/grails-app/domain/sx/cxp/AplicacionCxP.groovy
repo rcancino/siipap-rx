@@ -29,7 +29,7 @@ abstract class  AplicacionCxP {
 
     Date lastUpdated
 
-    static belontsTo = [abono: AbonoCxP]
+    static belongsTo = [abono: AbonoCxP]
 
     static constraints = {
         comentario nullable:true

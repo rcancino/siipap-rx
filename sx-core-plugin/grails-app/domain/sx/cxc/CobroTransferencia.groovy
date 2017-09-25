@@ -11,6 +11,7 @@ import sx.tesoreria.MovimientoDeCuenta
 class CobroTransferencia {
 
     String id
+
     Banco bancoOrigen
 
     CuentaDeBanco cuentaDestino

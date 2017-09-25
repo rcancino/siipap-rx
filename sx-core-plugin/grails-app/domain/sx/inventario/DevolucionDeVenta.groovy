@@ -55,6 +55,7 @@ class DevolucionDeVenta {
         updateUser nullable: true
         notaDeCredito nullable: true
         fechaInventario nullable: true
+
     }
 
     static  mapping ={

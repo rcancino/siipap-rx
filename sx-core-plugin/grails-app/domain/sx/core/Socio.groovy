@@ -5,6 +5,7 @@ import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode(includes='id')
 class Socio {
+
 	String id
 
     String clave="NX"

@@ -36,13 +36,13 @@ class Envio {
 
     String	documento
 
-    Date	fecha_de_documento
+    Date	fechaDocumento
 
-    BigDecimal	total_documento	 = 0
+    BigDecimal	totalDocumento	 = 0
 
     String	nombre
 
-    String	tipo_de_documento
+    String	tipoDocumento
 
     BigDecimal	arriboLatitud	 = 0
 
@@ -54,7 +54,7 @@ class Envio {
 
     String	area
 
-    String	formaDePago
+    String	formaPago
 
     Boolean	entregado	 = false
 

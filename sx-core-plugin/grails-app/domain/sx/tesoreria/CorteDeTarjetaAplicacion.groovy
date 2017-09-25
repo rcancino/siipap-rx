@@ -24,7 +24,7 @@ class CorteDeTarjetaAplicacion {
 	Boolean	debitoCredito	 = true
 
 
-	Boolean	visa_Master	 = true
+	Boolean	visaMaster	 = true
 
 	String	sw2
 

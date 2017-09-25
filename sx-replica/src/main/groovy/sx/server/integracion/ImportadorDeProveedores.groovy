@@ -56,7 +56,7 @@ class ImportadorDeProveedores implements Importador{
             
         }
 
-        def message = "Proveedores iportados importadas: $importados (${tipo})"
+        def message = "Proveedores importados: $importados (${tipo})"
         if(errores){
             message + "Errores importando proveedores: "+ errores.join(',')
         }

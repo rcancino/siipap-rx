@@ -15,11 +15,11 @@ class Surtido {
 
     String	comentario
 
-    Boolean	EntregaLocal	 = true
+    Boolean	entregaLocal	 = true
 
     Boolean	parcial	 = false
 
-    Long	Documento	 = 0
+    Long	documento	 = 0
 
     String	tipoDeVenta
 

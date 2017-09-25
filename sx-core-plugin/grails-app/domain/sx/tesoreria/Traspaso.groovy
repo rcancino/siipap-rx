@@ -28,6 +28,7 @@ class Traspaso {
 	String comentario
 	
 	Date dateCreated
+
 	Date lastUpdated
 	
 	static hasMany = [movimientos:MovimientoDeCuenta]

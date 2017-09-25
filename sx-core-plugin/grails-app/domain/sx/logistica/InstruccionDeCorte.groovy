@@ -34,7 +34,7 @@ class InstruccionDeCorte {
 
     String	instruccionEmpacado
 
-    BigDecimal	ImporteEmpacado	 = 0
+    BigDecimal	importeEmpacado	 = 0
 
 
     static constraints = {

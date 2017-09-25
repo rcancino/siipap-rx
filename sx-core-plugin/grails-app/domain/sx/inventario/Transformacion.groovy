@@ -14,7 +14,7 @@ class Transformacion {
 
     String	tipo
 
-    Long	Documento	 = 0
+    Long	documento	 = 0
 
     Date	fecha
 

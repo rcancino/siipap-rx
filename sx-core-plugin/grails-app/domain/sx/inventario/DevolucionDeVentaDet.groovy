@@ -6,7 +6,7 @@ import sx.core.Inventario
 import sx.core.Producto
 import sx.core.VentaDet
 
-@ToString(includes = ["cantidad"],includeNames=true,includePackage=false)
+@ToString(includes = ["id,cantidad"],includeNames=true,includePackage=false)
 @EqualsAndHashCode(includes = 'id')
 class DevolucionDeVentaDet {
 
@@ -25,7 +25,7 @@ class DevolucionDeVentaDet {
 
     BigDecimal	costoDev	 = 0
 
-    BigDecimal	ImporteCosto	 = 0
+    BigDecimal	importeCosto	 = 0
 
     String	comentario
 

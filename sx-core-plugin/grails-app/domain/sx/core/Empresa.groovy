@@ -44,6 +44,7 @@ class Empresa {
     String passwordPac
 
     Date dateCreated
+
     Date lastUpdated
 
 

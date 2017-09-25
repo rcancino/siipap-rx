@@ -125,7 +125,8 @@ class ImportadorMovimientoAlmacen implements Importador,SW2Lookup {
             i.PRODUCTO_ID as producto_id,
             i.CANTIDAD as cantidad,
             i.COMENTARIO as comentario,
-            i.INVENTARIO_ID as sw2
+            i.INVENTARIO_ID as sw2,
+            case when i.tipo_cis = 'PELERIA' then 'PAPELERIA' else i.tipo_cis end  as tipoCIS
         FROM sx_inventario_mov  i
         where i.MOVI_ID=?
     """

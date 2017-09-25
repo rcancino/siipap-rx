@@ -23,7 +23,7 @@ class DevolucionDeCompraDet {
 
     BigDecimal	costoDec	 = 0
 
-    BigDecimal	ImporteCosto	 = 0
+    BigDecimal	importeCosto	 = 0
 
     String	comentario
 

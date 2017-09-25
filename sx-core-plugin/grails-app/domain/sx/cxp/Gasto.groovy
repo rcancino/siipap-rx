@@ -27,11 +27,17 @@ class Gasto {
     String comentario
 
     /*Refactorizar las retenciones **/
+
     BigDecimal tasaIva
+
     BigDecimal retencionIsrTasa=0
+
     BigDecimal retencionIsr=0
+
     BigDecimal retencionIvaTasa=0
+
     BigDecimal retencionIva=0
+
 
     List partidas = []
 
