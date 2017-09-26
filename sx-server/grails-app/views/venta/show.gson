@@ -5,6 +5,10 @@ model {
 }
 
 json g.render(venta, [excludes:['moneda','partidas']]){
+    cliente {
+        id venta.cliente.id
+        nombre venta.cliente.nombre
+    }
     moneda venta.moneda.currencyCode
     partidas g.render(venta.partidas, [deep:true] )
 
