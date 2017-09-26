@@ -33,8 +33,10 @@ class TransformacionController extends RestfulController {
 
     // @Override
     protected Transformacion saveResource(Transformacion resource) {
-        def serie = resource.sucursal.clave
-        resource.documento = Folio.nextFolio('TRANSFORMACION',serie)
+        if(resource.id == null) {
+            def serie = resource.sucursal.clave
+            resource.documento = Folio.nextFolio('TRANSFORMACION',serie)
+        }
         def username = getPrincipal().username
         resource.createUser = username
         resource.updateUser = username
@@ -43,7 +45,6 @@ class TransformacionController extends RestfulController {
 
 
     protected Transformacion updateResource(Transformacion resource) {
-        println 'Actualizando transformacion params: ' + params
 
         if(params.inventariar){
             resource.partidas.each { det ->

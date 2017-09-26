@@ -79,10 +79,13 @@ class UrlMappings {
         "/api/inventario"(resources: "inventario")
         "/api/inventario/movimientos"(resources: "movimientoDeAlmacen")
         "/api/inventario/transformaciones"(resources: "transformacion")
+        "/api/inventario/devoluciones"(resources: "devolucionDeVenta")
+        "/api/inventario/devoluciones/buscarVenta"(controller: 'devolucionDeVenta', action: 'buscarVenta', method: 'GET')
+
         "/api/inventario/kardex"(controller: "inventario", action: "kardex" )
         "/api/inventario/saveInventario"(controller: "inventario", action: "saveInventario" , method: 'POST')
         "/api/inventario/traslados"(resources: "traslado")
-        "/api/inventario/devolucionVenta"(resources: "devolucionDeVenta")
+
 
 
         // Security
