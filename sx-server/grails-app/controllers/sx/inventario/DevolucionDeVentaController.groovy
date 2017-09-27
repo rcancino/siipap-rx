@@ -41,7 +41,7 @@ class DevolucionDeVentaController extends RestfulController {
         def username = getPrincipal().username
         if(resource.id == null) {
             def serie = resource.sucursal.clave
-            resource.documento = Folio.nextFolio('TRANSFORMACION',serie)
+            resource.documento = Folio.nextFolio('RMD',serie)
             resource.createUser = username
         }
         resource.updateUser = username
