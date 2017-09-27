@@ -47,6 +47,8 @@ class VentaDet {
 
     BigDecimal	importeCortes = 0
 
+	BigDecimal devuelto
+
 	String	sw2
 
     Date dateCreated
@@ -65,6 +67,7 @@ class VentaDet {
     static mapping = {
         id generator:'uuid'
         producto index: 'VENTADET_IDX2'
+        devuelto formula:'(select COALESCE(sum(x.cantidad),0) from devolucion_de_venta_det x where x.venta_det_id=id)'
     }
 
     static belongsTo = [venta:Venta]

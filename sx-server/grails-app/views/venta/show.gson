@@ -4,10 +4,14 @@ model {
     Venta venta
 }
 
-json g.render(venta, [excludes:['moneda','partidas']]){
+json g.render(venta, [excludes:['moneda','partidas','sucursal']]){
     cliente {
         id venta.cliente.id
         nombre venta.cliente.nombre
+    }
+    sucursal {
+        id venta.sucursal.id
+        nombre venta.sucursal.nombre
     }
     moneda venta.moneda.currencyCode
     partidas g.render(venta.partidas, [deep:true] )

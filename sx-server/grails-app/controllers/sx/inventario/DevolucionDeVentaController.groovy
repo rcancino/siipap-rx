@@ -51,7 +51,6 @@ class DevolucionDeVentaController extends RestfulController {
 
     public buscarVenta(VentaSearchCommand command){
         println 'Buscando venta con: ' + command
-        // println 'Parms: ' + params
 
         command.validate()
         if (command.hasErrors()) {
