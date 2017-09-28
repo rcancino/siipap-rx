@@ -81,7 +81,7 @@ class UrlMappings {
         "/api/inventario/transformaciones"(resources: "transformacion")
         "/api/inventario/devoluciones"(resources: "devolucionDeVenta")
         "/api/inventario/devoluciones/buscarVenta"(controller: 'devolucionDeVenta', action: 'buscarVenta', method: 'GET')
-
+        "/api/inventario/decs"(resources: "devolucionDeCompra")
         "/api/inventario/kardex"(controller: "inventario", action: "kardex" )
         "/api/inventario/saveInventario"(controller: "inventario", action: "saveInventario" , method: 'POST')
         "/api/inventario/traslados"(resources: "traslado")
