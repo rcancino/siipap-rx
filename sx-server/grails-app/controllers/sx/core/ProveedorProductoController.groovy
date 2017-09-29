@@ -1,7 +1,9 @@
 package sx.core
 
 import grails.rest.RestfulController
+import grails.plugin.springsecurity.annotation.Secured
 
+@Secured("ROLE_COMPRAS_USER")
 class ProveedorProductoController extends RestfulController{
 
     static responseFormats = ['json']
