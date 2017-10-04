@@ -50,8 +50,7 @@ class DevolucionDeVentaController extends RestfulController {
 
 
     public buscarVenta(VentaSearchCommand command){
-        println 'Buscando venta con: ' + command
-
+       
         command.validate()
         if (command.hasErrors()) {
             respond command.errors, view:'create' // STATUS CODE 422
@@ -70,6 +69,23 @@ class DevolucionDeVentaController extends RestfulController {
         forward controller: 'venta', action: 'show', id: res.id
     }
 
+    protected DevolucionDeVenta updateResource(DevolucionDeVenta resource) {
+        if(params.inventariar){
+            resource.partidas.each { det ->
+                Inventario inventario = new Inventario()
+                inventario.sucursal = resource.sucursal
+                inventario.documento = resource.documento
+                inventario.cantidad = det.cantidad
+                inventario.comentario = det.comentario
+                inventario.Fecha = resource.fecha
+                inventario.producto = det.producto
+                inventario.tipo = 'RMD'
+                det.inventario = inventario
+            }
+            resource.fechaInventario = new Date()
+        }
+        return super.updateResource(resource)
+    }
 
 }
 

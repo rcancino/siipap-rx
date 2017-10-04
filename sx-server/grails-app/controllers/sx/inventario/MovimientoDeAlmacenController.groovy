@@ -5,6 +5,7 @@ import grails.rest.*
 import grails.plugin.springsecurity.annotation.Secured
 
 import sx.core.Folio
+import sx.core.Inventario
 
 @Secured("ROLE_INVENTARIO_USER")
 class MovimientoDeAlmacenController extends RestfulController {
@@ -27,19 +28,40 @@ class MovimientoDeAlmacenController extends RestfulController {
 
             query = query.where {documento >=  documento}
         }
-        if(params.comentario){
-            query = query.where {comentario =~ params.comentario}
-        }
+        
         return query.list(params)
     }
 
     // @Override
     protected MovimientoDeAlmacen saveResource(MovimientoDeAlmacen resource) {
-        def serie = resource.sucursal.clave
-        resource.documento = Folio.nextFolio('MOVIMIENTO',serie)
         def username = getPrincipal().username
-        resource.createUser = username
+        if(resource.id == null) {
+            def serie = resource.sucursal.clave
+            resource.documento = Folio.nextFolio('MOVIMIENTO',serie)
+            resource.createUser = username
+        }
         resource.updateUser = username
         return super.saveResource(resource)
+    }
+
+    protected MovimientoDeAlmacen updateResource(MovimientoDeAlmacen resource) {
+
+        if(params.inventariar){
+            resource.partidas.each { det ->
+                Inventario inventario = new Inventario()
+                inventario.sucursal = resource.sucursal
+                inventario.documento = resource.documento
+                inventario.cantidad = det.cantidad
+                inventario.comentario = det.comentario
+                inventario.Fecha = resource.fecha
+                inventario.producto = det.producto
+                inventario.tipo = resource.tipo
+                det.inventario = inventario
+            }
+            resource.fechaInventario = new Date()
+
+        }
+
+        return super.updateResource(resource)
     }
 }
