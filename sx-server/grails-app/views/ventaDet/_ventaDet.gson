@@ -1,0 +1,7 @@
+import sx.core.VentaDet
+
+model {
+    VentaDet ventaDet
+}
+
+json g.render(ventaDet)

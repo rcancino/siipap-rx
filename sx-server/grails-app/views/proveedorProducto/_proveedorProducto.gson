@@ -4,7 +4,7 @@ model {
     ProveedorProducto proveedorProducto
 }
 
-json g.render(proveedorProducto, [excludes: ['proveedor','producto'],deep:true]){
+json g.render(proveedorProducto, [excludes: ['proveedor'],deep:true]){
     /*producto  {
         id proveedorProducto.id
         clave proveedorProducto.producto.clave

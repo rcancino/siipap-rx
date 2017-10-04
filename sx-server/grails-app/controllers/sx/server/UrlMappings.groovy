@@ -30,6 +30,7 @@ class UrlMappings {
         "/api/contabilidad/polizas"(resources:"poliza")
 
         // Tesoreria
+        "/api/tesoreria/cuentas"(resources: "cuentaDeBanco")
         "/api/tesoreria/requisiciones"(resources:"requisicion"){
             "/partidas"(resources:"requisicionDet")
         }
@@ -69,13 +70,23 @@ class UrlMappings {
         "/api/notasDeCredito"(resources: "notaDeCredito")
 
         //Inventario
+        "/api/existencias"(resources: "existencia"){
+            collection {
+                "/sucursal"(controller: 'existencias', action: 'existenciasPorSucursal', method: 'GET')
+            }
+        }
+
         "/api/inventario"(resources: "inventario")
+        "/api/inventario/movimientos"(resources: "movimientoDeAlmacen")
+        "/api/inventario/transformaciones"(resources: "transformacion")
+        "/api/inventario/devoluciones"(resources: "devolucionDeVenta")
+        "/api/inventario/devoluciones/buscarVenta"(controller: 'devolucionDeVenta', action: 'buscarVenta', method: 'GET')
+        "/api/inventario/decs"(resources: "devolucionDeCompra")
         "/api/inventario/kardex"(controller: "inventario", action: "kardex" )
         "/api/inventario/saveInventario"(controller: "inventario", action: "saveInventario" , method: 'POST')
         "/api/inventario/traslados"(resources: "traslado")
-        "/api/inventario/devolucionVenta"(resources: "devolucionDeVenta")
-        "/api/inventario/movimientoAlmacen"(resources: "movimientoDeAlmacen")
-        "/api/inventario/transformacion"(resources: "transformacion")
+
+
 
         // Security
         "/api/security/users"(resources: "user")

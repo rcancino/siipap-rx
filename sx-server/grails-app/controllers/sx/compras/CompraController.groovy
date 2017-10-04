@@ -16,10 +16,16 @@ class CompraController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
+
         def query = Compra.where {}
-        
+        if(params.sucursal) {
+            query = query.where { sucursal.id == params.sucursal}
+        }
         if(params.pendientes){
             query = query.where {pendiente == true}
+        }
+        if( params.folio) {
+            query = query.where {folio >= params.int('folio') }
         }
         return query.list(params)
     }

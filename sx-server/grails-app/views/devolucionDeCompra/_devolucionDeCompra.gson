@@ -4,5 +4,5 @@ model{
     DevolucionDeCompra devolucionDeCompra
 }
 
-json g.render(devolucionDeCompra, [excludes:['dateCreated','lastUpdated']])
+json g.render(devolucionDeCompra)
 

@@ -19,5 +19,4 @@ class LineaController extends RestfulController{
     }
 
 
-
 }

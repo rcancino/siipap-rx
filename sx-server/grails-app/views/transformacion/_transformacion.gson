@@ -4,4 +4,9 @@ model {
     Transformacion transformacion
 }
 
-json g.render(transformacion, [excludes:['dateCreated','lastUpdated']])
+json g.render(transformacion) {
+    sucursal {
+        id transformacion.sucursal.id
+        nombre: transformacion.sucursal.nombre
+    }
+}

@@ -1,7 +1,10 @@
 package sx.core
 
 import grails.rest.RestfulController
+import grails.plugin.springsecurity.annotation.Secured
 
+@Secured("IS_AUTHENTICATED_ANONYMOUSLY")
+//@Secured(["hasRole('ROLE_ADMIN')"])
 class ClaseController extends RestfulController{
 
     static responseFormats = ['json']
