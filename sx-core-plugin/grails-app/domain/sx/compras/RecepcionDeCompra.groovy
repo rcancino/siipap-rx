@@ -41,6 +41,8 @@ class RecepcionDeCompra {
 
     String sw2
 
+    Date fechaInventario
+
 
     static hasMany =[partidas:RecepcionDeCompraDet]
 
@@ -53,6 +55,7 @@ class RecepcionDeCompra {
         lastUpdated nullable: true
         createUser nullable: true
         updateUser nullable: true
+        fechaInventario nullable: true
     }
 
 
