@@ -119,7 +119,7 @@ class ImportadorDeRecepcionDeCompras implements Importador, SW2Lookup {
 
     static String QUERY  = """
     SELECT
-        e.DOCUMENTO as folio,
+        e.DOCUMENTO as documento,
         e.REMISION as remision,
         e.COMPRA_ID as compra_id,
         e.SUCURSAL_ID as sucursal_id,
@@ -130,7 +130,6 @@ class ImportadorDeRecepcionDeCompras implements Importador, SW2Lookup {
         e.CREADO_USR as createUser,
         e.MODIFICADO_USR as updateUser
     FROM sx_entrada_compras e
-
     """
 
 

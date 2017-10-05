@@ -33,6 +33,7 @@ class ImportadorDeInventario implements Importador, SW2Lookup{
             inventario.kilos=det.producto.kilos
             inventario.nacional=true
             inventario.sw2=det.sw2
+            inventario.comentario=det.comentario
 
             inventario.save failOnError: true, flush: true
 

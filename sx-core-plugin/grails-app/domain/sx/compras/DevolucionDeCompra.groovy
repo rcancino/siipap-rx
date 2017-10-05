@@ -37,6 +37,8 @@ class DevolucionDeCompra {
 
     String sw2
 
+    RecepcionDeCompra recepcionDeCompra
+
     static hasMany = [partidas:DevolucionDeCompraDet]
 
     static constraints = {
@@ -50,6 +52,7 @@ class DevolucionDeCompra {
         createUser nullable: true
         updateUser nullable: true
         sw2 nullable: true
+        recepcionDeCompra nullable: true
     }
 
     static  mapping ={
