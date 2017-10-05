@@ -13,8 +13,6 @@ class DevolucionDeCompraDet {
 
     AnalisisDevolucionCompra analisisDevolucion
 
-    CompraDet	compraDet
-
     Inventario inventario
 
     Producto producto
@@ -29,6 +27,8 @@ class DevolucionDeCompraDet {
 
     String sw2
 
+    RecepcionDeCompraDet recepcionDeCompraDet
+
     Date dateCreated
 
     Date lastUpdated
@@ -40,7 +40,8 @@ class DevolucionDeCompraDet {
         comentario nullable: true
         inventario nullable: true
         sw2 nullable: true
-        compraDet nullable: true
+        recepcionDeCompraDet nullable: true
+
         analisisDevolucion nullable: true
     }
 
