@@ -78,6 +78,7 @@ class RecepcionDeCompraController extends  RestfulController{
 
     protected RecepcionDeCompra updateResource(RecepcionDeCompra resource) {
         if(params.inventariar){
+            def renglon = 1;
             resource.partidas.each { det ->
                 Inventario inventario = new Inventario()
                 inventario.sucursal = resource.sucursal
@@ -88,6 +89,8 @@ class RecepcionDeCompraController extends  RestfulController{
                 inventario.producto = det.producto
                 inventario.tipo = resource.tipo
                 det.inventario = inventario
+                det.renglon = renglon
+                renglon++
             }
             resource.fechaInventario = new Date()
         }
