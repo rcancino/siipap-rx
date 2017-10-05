@@ -15,11 +15,11 @@ json g.render(devolucionDeCompra, [deep:true,excludes:['partidas','proveedor','r
         nombre devolucionDeCompra.sucursal.nombre
     }
     recepcionDeCompra {
-        id devolucionDeCompra.recepcionDeCompra.id
-        documento devolucionDeCompra.recepcionDeCompra.documento
-        fecha devolucionDeCompra.recepcionDeCompra.fecha
-        remision devolucionDeCompra.recepcionDeCompra.remision
-        fechaRemision devolucionDeCompra.recepcionDeCompra.fechaRemision
+        id devolucionDeCompra?.recepcionDeCompra?.id
+        documento devolucionDeCompra?.recepcionDeCompra?.documento
+        fecha devolucionDeCompra?.recepcionDeCompra?.fecha
+        remision devolucionDeCompra?.recepcionDeCompra?.remision
+        fechaRemision devolucionDeCompra?.recepcionDeCompra?.fechaRemision
     }
 }
 
