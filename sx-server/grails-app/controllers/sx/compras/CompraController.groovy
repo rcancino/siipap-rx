@@ -26,7 +26,7 @@ class CompraController extends RestfulController{
             query = query.where {pendiente == true}
         }
         if( params.folio) {
-            query = query.where {folio >= params.int('folio') }
+            query = query.where {folio == params.int('folio') }
         }
         return query.list(params)
     }
