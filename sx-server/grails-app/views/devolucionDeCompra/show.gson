@@ -1,19 +1,19 @@
 import sx.compras.DevolucionDeCompra
 
-model{
+model {
     DevolucionDeCompra devolucionDeCompra
 }
 
-json g.render(devolucionDeCompra, [excludes:['sucursal','proveedor'] ]){
+json g.render(devolucionDeCompra, [deep:true,excludes:['partidas','proveedor']]){
+    partidas g.render(devolucionDeCompra.partidas, [deep:true, excludes:['devolucion']] )
     proveedor {
         id devolucionDeCompra.proveedor.id
         nombre devolucionDeCompra.proveedor.nombre
     }
-    sucursal {
+    sucursal  {
         id devolucionDeCompra.sucursal.id
         nombre devolucionDeCompra.sucursal.nombre
     }
-
 }
 
 

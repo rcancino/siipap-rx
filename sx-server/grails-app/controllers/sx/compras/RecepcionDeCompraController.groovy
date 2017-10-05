@@ -9,6 +9,7 @@ import sx.core.Folio
 import sx.core.Inventario
 
 
+
 @Secured("ROLE_INVENTARIO_USER")
 class RecepcionDeCompraController extends  RestfulController{
 
@@ -40,10 +41,13 @@ class RecepcionDeCompraController extends  RestfulController{
 
    @Override
     protected List listAllResources(Map params) {
-
+        println ' Buscando coms: '+params
         params.sort = 'lastUpdated'
         params.order = 'desc'
         def query = RecepcionDeCompra.where {}
+        if(params.sucursal){
+            query = query.where {sucursal.id ==  params.sucursal}   
+        }
         if(params.documento) {
             def documento = params.int('documento')
 
@@ -62,8 +66,11 @@ class RecepcionDeCompraController extends  RestfulController{
         def username = getPrincipal().username
         if(resource.id == null) {
             def serie = resource.sucursal.clave
-            resource.documento = Folio.nextFolio('DECS',serie)
+            resource.documento = Folio.nextFolio('COMS',serie)
             resource.createUser = username
+        }
+        resource.partidas.each {
+            it.comentario = resource.comentario
         }
         resource.updateUser = username
         return super.saveResource(resource)
@@ -86,6 +93,25 @@ class RecepcionDeCompraController extends  RestfulController{
         }
 
         return super.updateResource(resource)
+    }
+
+    public buscarCompra(CompraParaComSearchCommand command){
+       
+        command.validate()
+        if (command.hasErrors()) {
+            respond command.errors, view:'create' // STATUS CODE 422
+            return
+        }
+        def q = Compra.where{sucursal == command.sucursal && folio == command.folio }
+        
+        Compra res = q.find()
+
+        if (res == null) {
+            notFound()
+            return
+        }
+        // respond res, status: 200
+        forward controller: 'compra', action: 'show', id: res.id
     }
 }
 
@@ -110,4 +136,18 @@ class RecepcionesFiltro {
     /*String toString(){
         return "$fechaInicial al $fechaFinal ${proveedor?.nombre}"
     }*/
+}
+
+class CompraParaComSearchCommand {
+
+    Sucursal sucursal
+    Long folio
+
+    String toString(){
+        return "$sucursal $folio"
+    }
+
+    static constraints = {
+        
+    }
 }
