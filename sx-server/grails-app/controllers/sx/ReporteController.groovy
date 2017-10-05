@@ -6,16 +6,16 @@ import grails.rest.*
 import grails.converters.*
 
 class ReporteController {
-	static responseFormats = ['json', 'xml']
+
+	// static responseFormats = ['json', 'xml']
 
     def jasperService
 
-    def index() {
+    def run(ReportConfig config) {
 
-        def repParams = [:]
-        repParams['ID'] = ''
+        def repParams = params
 
-        println "Generando  Reporte..."
+        println "Generando  Reporte... con params: " + params
 
         def reportDef= new JasperReportDef(
                 name: 'MovGenerico',
@@ -25,5 +25,14 @@ class ReporteController {
         ByteArrayOutputStream pdfStream = jasperService.generateReport(reportDef)
         render (file: pdfStream.toByteArray(), contentType: 'application/pdf', filename: 'MovimientoGenerico')
 
+    }
+}
+
+class  ReportConfig {
+    
+    String name;
+
+    static constraints = {
+        
     }
 }

@@ -4,7 +4,12 @@ import grails.rest.RestfulController
 import groovy.transform.ToString
 import sx.core.Proveedor
 import sx.core.Sucursal
+import grails.plugin.springsecurity.annotation.Secured
+import sx.core.Folio
+import sx.core.Inventario
 
+
+@Secured("ROLE_INVENTARIO_USER")
 class RecepcionDeCompraController extends  RestfulController{
 
     static responseFormats = ['json']
@@ -14,7 +19,7 @@ class RecepcionDeCompraController extends  RestfulController{
     }
 
 
-    def index(RecepcionesFiltro filtro){
+    /*def index(RecepcionesFiltro filtro){
         log.info('Buscando con filtro: ' + filtro)
         params.max = filtro.registros ?:10
         def query  = RecepcionDeCompra.where {}
@@ -30,23 +35,57 @@ class RecepcionDeCompraController extends  RestfulController{
             query = query.where {proveedor == filtro.proveedor}
         }
         respond query.list(params)
+    }*/
+
+
+   @Override
+    protected List listAllResources(Map params) {
+
+        params.sort = 'lastUpdated'
+        params.order = 'desc'
+        def query = RecepcionDeCompra.where {}
+        if(params.documento) {
+            def documento = params.int('documento')
+
+            query = query.where {documento >=  documento}
+        }
+        if(params.remision) {
+            def remision = params.remision
+            query = query.where {remision >=  remision}
+        }
+        
+        return query.list(params)
     }
 
+    // @Override
+    protected RecepcionDeCompra saveResource(RecepcionDeCompra resource) {
+        def username = getPrincipal().username
+        if(resource.id == null) {
+            def serie = resource.sucursal.clave
+            resource.documento = Folio.nextFolio('DECS',serie)
+            resource.createUser = username
+        }
+        resource.updateUser = username
+        return super.saveResource(resource)
+    }
 
-    @Override
-    protected List listAllResources(Map params) {
-        log.info('Cargando recepciones con parametros: ' + params)
-        def query = RecepcionDeCompra.where {}
-        params.max = params.registros ?:10
-        params.sort = params.sort ?:'folio'
-        params.order = params.order ?:'desc'
-
-        if(params.term){
-            def search = '%' + params.term + '%'
-            query = query.where { proveedor.nombre =~ search }
+    protected RecepcionDeCompra updateResource(RecepcionDeCompra resource) {
+        if(params.inventariar){
+            resource.partidas.each { det ->
+                Inventario inventario = new Inventario()
+                inventario.sucursal = resource.sucursal
+                inventario.documento = resource.documento
+                inventario.cantidad = det.cantidad
+                inventario.comentario = det.comentario
+                inventario.fecha = resource.fecha
+                inventario.producto = det.producto
+                inventario.tipo = resource.tipo
+                det.inventario = inventario
+            }
+            resource.fechaInventario = new Date()
         }
 
-        return query.list(params)
+        return super.updateResource(resource)
     }
 }
 

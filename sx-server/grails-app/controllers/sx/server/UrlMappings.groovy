@@ -86,7 +86,7 @@ class UrlMappings {
         "/api/inventario/saveInventario"(controller: "inventario", action: "saveInventario" , method: 'POST')
         "/api/inventario/traslados"(resources: "traslado")
 
-
+        "/api/reporte"(controller: 'reporte', action: 'run')
 
         // Security
         "/api/security/users"(resources: "user")

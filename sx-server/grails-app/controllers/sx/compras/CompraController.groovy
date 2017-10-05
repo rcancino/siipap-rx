@@ -19,7 +19,8 @@ class CompraController extends RestfulController{
 
         def query = Compra.where {}
         if(params.sucursal) {
-            query = query.where { sucursal.id == params.sucursal}
+            query = query.where { sucursal.id == params.sucursal }
+            //query = query.where { sucursal.id == params.sucursal || sucursal.nombre =='OFICINAS'}
         }
         if(params.pendientes){
             query = query.where {pendiente == true}

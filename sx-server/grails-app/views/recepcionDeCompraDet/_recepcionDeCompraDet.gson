@@ -4,4 +4,10 @@ model {
     RecepcionDeCompraDet recepcionDeCompraDet
 }
 
-json g.render(recepcionDeCompraDet, [excludes:['datecreated','lastUpdated']])
+json g.render(recepcionDeCompraDet, [excludes:['producto']]){
+	producto {
+        id recepcionDeCompraDet.producto.id
+        clave recepcionDeCompraDet.producto.clave
+        descripcion recepcionDeCompraDet.producto.descripcion
+    }
+}
