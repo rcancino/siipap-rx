@@ -35,13 +35,27 @@ class Inventario {
 
     String sw2
 
+    Integer renglon
+
+    Date dateCreated
+
+    Date lastUpdated
+
+    String createUser
+
+    String updateUser
+
 
     static constraints = {
         tipo nullable: true
         comentario nullable: true
         sw2 nullable: true
         tipoVenta nullable: true
-
+        renglon nullable: true
+        dateCreated nullable: true
+        lastUpdated nullable: true
+        createUser nullable: true
+        updateUser nullable: true
     }
 
     static mapping ={
