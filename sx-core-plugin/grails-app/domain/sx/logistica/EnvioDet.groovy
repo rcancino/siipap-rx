@@ -20,9 +20,9 @@ class EnvioDet {
 
     BigDecimal	valor	 = 0
 
-    String	instruccionDeEntregaParcial
+    String	instruccionEntregaParcial
 
-    Long	partidasIdx	 = 0
+
 
 
     static  mapping ={

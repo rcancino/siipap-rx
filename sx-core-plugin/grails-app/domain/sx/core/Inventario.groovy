@@ -9,7 +9,7 @@ class Inventario {
 
     Producto	producto
 
-    Date	Fecha
+    Date	fecha
 
     Long	documento	 = 0
 

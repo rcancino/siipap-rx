@@ -7,7 +7,9 @@ import groovy.transform.EqualsAndHashCode
 class SatBanco {
 
     String clave
+
     String nombreCorto
+
     String razonSocial
 
 

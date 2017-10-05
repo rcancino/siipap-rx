@@ -12,12 +12,17 @@ import grails.validation.Validateable
 class Acuse {
 
     URL url
+
     String uuid
+
     String estado
+
     String codigoEstatus
+
     ComprobanteFiscal comprobanteFiscal
 
     Date dateCreated
+
     Date lastUpdated
 
     static constraints = {

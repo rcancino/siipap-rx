@@ -7,6 +7,7 @@ package sx.tesoreria
  * Created by rcancino on 06/04/17.
  */
 class MovimientoDeTesoreria {
+
     String id
 
     static mapping = {

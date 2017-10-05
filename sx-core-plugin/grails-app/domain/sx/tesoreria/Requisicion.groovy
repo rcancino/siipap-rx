@@ -40,6 +40,7 @@ class Requisicion {
     Autorizacion autorizacion
 
     Date dateCreated
+
     Date lastUpdated
 
     static hasMany = [partidas: RequisicionDet]

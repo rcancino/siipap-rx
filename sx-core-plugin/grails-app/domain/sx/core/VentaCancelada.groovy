@@ -21,6 +21,7 @@ class VentaCancelada {
     String sw2
 
 	Date dateCreated
+
 	Date lastUpdated
 
 	static constraints = {

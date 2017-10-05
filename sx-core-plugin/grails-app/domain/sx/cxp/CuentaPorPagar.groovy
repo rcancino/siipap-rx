@@ -66,6 +66,7 @@ class CuentaPorPagar {
     Long sw2
 
     Date dateCreated
+
     Date lastUpdated
 
     static hasMany =[gastos: Gasto]

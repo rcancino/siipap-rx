@@ -18,6 +18,7 @@ class PolizaFolio {
     Long folio=0
 
     Date dateCreated
+
     Date lastUpdated
 
     static constraints = {

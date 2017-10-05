@@ -69,8 +69,6 @@ class ImportadorDeTransFormaciones implements Importador,SW2Lookup{
 
             }catch(Exception e) {
                 logger.error(ExceptionUtils.getRootCauseMessage(e))
-
-                movimiento.save failOnError:true,flush:true
             }
 
 

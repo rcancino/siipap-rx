@@ -51,10 +51,6 @@ class  Cobro {
         tipo inList:['CAM','MOS','CRE','CHE','JUR']
         referencia nullable:true
         sw2 nullable:true, unique:true
-        cheque nullable: true
-        deposito nullable: true
-        transferencia nullable: true
-        tarjeta nullable: true
         dateCreated nullable: true
         lastUpdated nullable: true
         createUser nullable: true

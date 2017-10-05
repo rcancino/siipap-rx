@@ -6,9 +6,13 @@ import groovy.transform.EqualsAndHashCode
 class SatCuenta {
 
     String codigo
+
     String nombre
+
     String tipo
+
     Integer nivel
+
 
 
     static constraints = {

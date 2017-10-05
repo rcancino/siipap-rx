@@ -26,6 +26,7 @@ class SaldoPorCuentaDeBanco {
 	Date cierre
 	
 	Date dateCreated
+
 	Date lastUpdated
 
     static constraints = {
