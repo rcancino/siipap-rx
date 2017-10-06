@@ -44,7 +44,7 @@ class CompraDet {
 
     BigDecimal depurado = 0.0
 
-    BigDecimal recibido = 0.0
+    BigDecimal recibido
 
     String comentario
 
@@ -61,6 +61,7 @@ class CompraDet {
 
     static mapping = {
         id generator: 'uuid'
+        recibido formula:'(select COALESCE(sum(x.cantidad),0) from recepcion_de_compra_det x where x.compra_det_id=id)'
     }
 
     static belongsTo = [compra:Compra]

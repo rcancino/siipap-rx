@@ -4,6 +4,7 @@ import org.apache.commons.lang.exception.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowire
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import sx.cfdi.Cfdi
 import sx.core.Producto
 import sx.core.Sucursal
 import sx.inventario.SolicitudDeTraslado
@@ -23,6 +24,9 @@ class ImportadorDeTraslados implements Importador,SW2Lookup {
 
     @Autowired
     ImportadorDeSolicitudDeTraslado importadorDeSolicitudDeTraslado
+
+    @Autowired
+    ImportadorDeCfdi importadorDeCfdi
 
 
     def importar(Date f1){
@@ -77,18 +81,16 @@ class ImportadorDeTraslados implements Importador,SW2Lookup {
             importarPartidas(traslado)
 
             try {
-
+                Cfdi cfdi=importadorDeCfdi.importar(traslado_id)
+                traslado.cfdiId=cfdi.id
                 traslado.save failOnError:true,flush:true
-
                 importadorDeInventario.crearInventario(traslado,traslado.tipo)
+
 
             }catch(Exception e) {
                 logger.error(ExceptionUtils.getRootCauseMessage(e))
 
-                movimiento.save failOnError:true,flush:true
             }
-
-
 
 
         }
@@ -131,7 +133,7 @@ class ImportadorDeTraslados implements Importador,SW2Lookup {
         fecha,
         tipo as tipo,
         PORINVENTARIO as porInventario,
-        COMENTARIO,
+        case when comentario is null then CHOFER else concat(COMENTARIO,"--",CHOFER) end as comentario,
         TRASLADO_ID as sw2,
         SOL_ID as sol_id,
         t.CREADO_USR as createUser,
@@ -140,7 +142,6 @@ class ImportadorDeTraslados implements Importador,SW2Lookup {
         t.MODIFICADO as lastUpdated
     FROM sx_traslados t
     where TRASLADO_ID= ?
-
     """
 
     String QUERY_ROW="""
@@ -151,7 +152,6 @@ class ImportadorDeTraslados implements Importador,SW2Lookup {
         i.INVENTARIO_ID as sw2
     FROM sx_inventario_trd I
     where TRASLADO_ID= ?
-
     """
 
 

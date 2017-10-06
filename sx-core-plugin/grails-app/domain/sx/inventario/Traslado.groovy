@@ -28,6 +28,8 @@ class Traslado {
 
     String	comentario
 
+    String cfdiId
+
     List partidas =[]
 
     Date dateCreated
@@ -57,6 +59,7 @@ class Traslado {
         updateUser nullable: true
         porInventario nullable: true
         fechaInventario nullable: true
+        cfdiId nullable: true
     }
 
     static mapping = {
