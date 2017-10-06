@@ -38,7 +38,7 @@ class SolicitudDeTrasladoController extends  RestfulController{
   protected SolicitudDeTraslado saveResource(SolicitudDeTraslado resource) {
     def username = getPrincipal().username
     if(resource.id == null) {
-      def serie = resource.sucursal.clave
+      def serie = resource.sucursalSolicita.clave
       resource.documento = Folio.nextFolio('SOLS',serie)
       resource.createUser = username
     }
