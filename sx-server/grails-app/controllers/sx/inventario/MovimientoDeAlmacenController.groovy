@@ -22,7 +22,9 @@ class MovimientoDeAlmacenController extends RestfulController {
         params.sort = 'lastUpdated'
         params.order = 'desc'
         def query = MovimientoDeAlmacen.where {}
-
+        if(params.sucursal){
+            query = query.where {sucursal.id ==  params.sucursal}   
+        }
         if(params.documento) {
             def documento = params.int('documento')
 

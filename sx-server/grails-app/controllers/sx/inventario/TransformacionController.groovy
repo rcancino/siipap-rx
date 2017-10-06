@@ -19,10 +19,13 @@ class TransformacionController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
-
+        println ' Buscando tranforacmiones...' + params
         params.sort = 'lastUpdated'
         params.order = 'desc'
         def query = Transformacion.where {}
+        if(params.sucursal){
+            query = query.where {sucursal.id ==  params.sucursal}   
+        }
         if(params.documento) {
             def documento = params.int('documento')
 
