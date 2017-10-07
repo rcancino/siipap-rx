@@ -24,6 +24,7 @@ class Sector {
 
     String updateUser
 
+    static  hasMany = [partidas:SectorDet]
 
     static constraints = {
         responsable1 nullable: true

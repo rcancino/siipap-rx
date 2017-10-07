@@ -27,6 +27,8 @@ class Conteo {
 
     String	contador2
 
+    static  hasMany = [partidas:ConteoDet]
+
     static constraints = {
         auditor1 nullable: true
         auditor2 nullable: true

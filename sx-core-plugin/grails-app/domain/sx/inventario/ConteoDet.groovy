@@ -16,9 +16,9 @@ class ConteoDet {
 
     Long	indice	 = 0
 
-    static constraints = {
+    static  belongsTo = [conteo:Conteo]
 
-        
+    static constraints = {
     }
 
     static mapping= {

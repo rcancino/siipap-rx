@@ -17,6 +17,9 @@ class SectorDet {
     Long	indice	 = 0
 
 
+    static  belongsTo = [sector:Sector]
+
+
     static constraints = {
         comentario nullable: true
     }
