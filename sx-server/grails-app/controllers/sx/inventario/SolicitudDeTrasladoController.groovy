@@ -28,6 +28,9 @@ class SolicitudDeTrasladoController extends  RestfulController{
     if(params.sucursal){
       query = query.where {sucursalSolicita.id ==  params.sucursal}   
     }
+    if( params.sucursalAtiende) {
+      query = query.where {sucursalAtiende.id ==  params.sucursalAtiende}    
+    }
     if(params.documento) {
       def documento = params.int('documento')
       query = query.where {documento ==  documento}
