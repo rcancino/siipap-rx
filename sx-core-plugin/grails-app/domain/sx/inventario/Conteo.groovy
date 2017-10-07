@@ -1,0 +1,42 @@
+package sx.inventario
+
+import sx.core.Sucursal
+
+class Conteo {
+
+
+    String	id
+
+    Long	documento	 = 0
+
+    Sucursal sucursal
+
+    Date	fecha
+
+    Sector	sector
+
+    String	auditor1
+
+    String	auditor2
+
+    String	capturista
+
+    String	comentario
+
+    String	contador1
+
+    String	contador2
+
+    static constraints = {
+        auditor1 nullable: true
+        auditor2 nullable: true
+        comentario nullable: true
+        contador1 nullable: true
+        contador2 nullable: true
+        capturista nullable: true
+    }
+
+    static  mapping = {
+        id generator: 'uuid'
+    }
+}
