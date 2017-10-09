@@ -24,12 +24,16 @@ class Sector {
 
     String updateUser
 
+    List partidas = [];
+
     static  hasMany = [partidas:SectorDet]
 
     static constraints = {
         responsable1 nullable: true
         responsable2 nullable: true
         comentario nullable: true
+        updateUser nullable: true
+        createUser nullable: true
     }
 
     static mapping ={
