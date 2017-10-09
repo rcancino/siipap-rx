@@ -38,5 +38,6 @@ class Sector {
 
     static mapping ={
         id generator:'uuid'
+        partidas cascade: "all-delete-orphan"
     }
 }

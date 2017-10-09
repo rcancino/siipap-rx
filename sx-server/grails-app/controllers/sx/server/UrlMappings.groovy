@@ -96,10 +96,9 @@ class UrlMappings {
 
         // Sectores
         "/api/inventario/sectores"(resources: "sector")
-        "/api/inventario/sectores/generarConteo"(controller: "sector", action: 'generarConteo', method: 'POST')
-
         // Conteos
         "/api/inventario/conteos"(resources: "conteo")
+        "/api/inventario/conteos/generarConteo"(controller: "conteo", action: 'generarConteo', method: 'POST')
 
         "/api/reporte"(controller: 'reporte', action: 'run')
 

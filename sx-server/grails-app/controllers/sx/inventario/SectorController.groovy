@@ -47,48 +47,47 @@ class SectorController extends RestfulController {
     }
 
     protected Sector updateResource(Sector resource) {
+        resource.partidas = resource.partidas.sort { it.indice}
         def username = getPrincipal().username
         resource.updateUser = username
-        this.fixIndice resource
         return super.updateResource(resource)
     }
 
-    private fixIndice(Sector sector){
-        def renglon = 1;
-        sector.partidas.each { det ->
-            det.indice = renglon++;
+    
 
-        }
-        return sector
-    }
-
-    @Transactional
-    def generarConteo() {
-        def username = getPrincipal().username
-        def result = [:]
-        def sectores = Sector.list([sort:'sectorFolio', order:'asc']);
-        sectores.each { sector ->
-            Conteo conteo = Conteo.where{ sector == sector}.find()
-            if(!conteo){
-                conteo = new Conteo([
-                sucursal: sector.sucursal,
-                documento: sector.sectorFolio,
-                fecha: new Date(),
-                sector: sector,
-                createUser: username
-                ])
-            }
-            conteo.partidas.clear()
-            sector.partidas.each { det ->
-                conteo.addToPartidas(new ConteoDet([producto: det.producto]))
-            }
-            conteo.updateUser = username
-            conteo.save failOnError: true, flush:true
-        }
-        result.message = 'Conteos generados exitosamente'
-        result.conteos = sectores.size
-        respond(result, status: 200)
-    }
+    // @Transactional
+    // def generarConteo() {
+    //     def username = getPrincipal().username
+    //     def today = new Date()
+    //     def result = [:]
+    //     def sectores = Sector.list([sort:'sectorFolio', order:'asc']);
+    //     def conteos = [];
+    //     sectores.each { sector ->
+    //         Conteo conteo = Conteo.where{ sector == sector && fecha == today}.find()
+    //          // println "Encontro conteo para sector ${sector.sectorFolio} y fecha ${today}"
+    //         if( !conteo ){
+    //             println "No encontro conteo para sector ${sector.sectorFolio} y fecha ${today}"
+    //             conteo = new Conteo([
+    //             sucursal: sector.sucursal,
+    //             documento: sector.sectorFolio,
+    //             fecha: new Date(),
+    //             sector: sector,
+    //             createUser: username
+    //             ])
+    //             sector.partidas.each { det ->
+    //                 conteo.addToPartidas(new ConteoDet([producto: det.producto]))
+    //             }
+    //             conteo.updateUser = username
+    //             conteo.save failOnError: true, flush:true
+    //             conteos << conteo
+    //         }   
+            
+    //     }
+    //     result.message = 'Conteos generados exitosamente'
+    //     result.conteos = conteos
+    //     // println 'Res: '+ result
+    //     respond(result, status: 200)
+    // }
     
 
 }

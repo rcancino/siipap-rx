@@ -37,6 +37,7 @@ class Conteo {
 
     List partidas = []
 
+
     static  hasMany = [partidas:ConteoDet]
 
     static constraints = {
@@ -52,5 +53,6 @@ class Conteo {
 
     static  mapping = {
         id generator: 'uuid'
+        fecha type: 'date'
     }
 }

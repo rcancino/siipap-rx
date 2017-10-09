@@ -38,16 +38,43 @@ class ConteoController extends RestfulController {
     protected Conteo updateResource(Conteo resource) {
         def username = getPrincipal().username
         resource.updateUser = username
-        this.fixIndice resource
         return super.updateResource(resource)
     }
 
-    private fixIndice(Conteo conteo){
-        def renglon = 1;
-        conteo.partidas.each { det ->
-            det.indice = renglon++;
+    
+
+    @Transactional
+    def generarConteo() {
+        def username = getPrincipal().username
+        def today = new Date()
+        def result = [:]
+        def sectores = Sector.list([sort:'sectorFolio', order:'asc']);
+        def conteos = [];
+        sectores.each { sector ->
+            Conteo conteo = Conteo.where{ sector == sector && fecha == today}.find()
+             // println "Encontro conteo para sector ${sector.sectorFolio} y fecha ${today}"
+            if( !conteo ){
+                println "No encontro conteo para sector ${sector.sectorFolio} y fecha ${today}"
+                conteo = new Conteo([
+                sucursal: sector.sucursal,
+                documento: sector.sectorFolio,
+                fecha: new Date(),
+                sector: sector,
+                createUser: username
+                ])
+                sector.partidas.each { det ->
+                    conteo.addToPartidas(new ConteoDet([producto: det.producto]))
+                }
+                conteo.updateUser = username
+                conteo.save failOnError: true, flush:true
+                conteos << conteo
+            }   
+            
         }
-        return conteo
+        result.message = 'Conteos generados exitosamente'
+        result.conteos = conteos
+        // println 'Res: '+ result
+        respond(result, status: 200)
     }
     
 

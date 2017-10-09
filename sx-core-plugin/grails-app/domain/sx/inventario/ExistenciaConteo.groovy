@@ -18,7 +18,7 @@ class ExistenciaConteo {
 
     BigDecimal	cantidad	 = 0
 
-    Conteo	conteo
+    BigDecimal	conteo
 
     BigDecimal	Diferencia	 = 0
 
@@ -34,6 +34,7 @@ class ExistenciaConteo {
 
     Boolean	conteoParcial	 = false
 
+    
     static constraints = {
         fijado nullable: true
     }
