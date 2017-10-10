@@ -4,4 +4,12 @@ model {
     CompraDet compraDet
 }
 
-json g.render(compraDet, [excludes:['dateCreated','lastUpdated','version','compra']])
+json g.render(compraDet, [excludes:['compra','sucursal','producto']]){
+	pendiente compraDet.solicitado - compraDet.depurado - compraDet.recibido
+	producto {
+        id compraDet.producto.id
+        clave compraDet.producto.clave
+        descripcion compraDet.producto.descripcion
+        kilos compraDet.producto.kilos
+    }
+}

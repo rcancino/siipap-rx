@@ -46,6 +46,8 @@ class CompraDet {
 
     BigDecimal recibido
 
+    BigDecimal porRecibir
+
     String comentario
 
     String sw2
@@ -65,4 +67,11 @@ class CompraDet {
     }
 
     static belongsTo = [compra:Compra]
+
+    static transients = ['porRecibir']
+
+    public BigDecimal getPorRecibir() {
+        return this.solicitado - this.depurado - this.recibido
+    }
+
 }
