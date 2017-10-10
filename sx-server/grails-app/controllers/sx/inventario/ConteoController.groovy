@@ -18,11 +18,12 @@ class ConteoController extends RestfulController {
     protected List listAllResources(Map params) {
         params.sort = 'lastUpdated'
         params.order = 'desc'
+        params.max = 500
         def query = Conteo.where {}
         if(params.sucursal) {
             query = query.where { sucursal.id == params.sucursal}
         }
-        return query.list(params)
+        return query.list(params).sort {it.sector.sectorFolio}
     }
 
     // @Override

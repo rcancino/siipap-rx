@@ -22,8 +22,8 @@ class SectorController extends RestfulController {
     @Override
     protected List listAllResources(Map params) {
 
-        params.sort = 'lastUpdated'
-        params.order = 'desc'
+        params.sort = 'sectorFolio'
+        params.order = 'asc'
         def query = Sector.where {}
         if(params.documento) {
             def documento = params.int('documento')
