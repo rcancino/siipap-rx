@@ -16,7 +16,8 @@ class CompraController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
-
+        params.sort = 'lastUpdated'
+        params.order = 'desc'
         def query = Compra.where {}
         if(params.sucursal) {
             query = query.where { sucursal.id == params.sucursal }

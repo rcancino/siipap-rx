@@ -57,6 +57,7 @@ class DevolucionDeCompra {
 
     static  mapping ={
         id generator: 'uuid'
+        partidas cascade: "all-delete-orphan"
         sucursal index: 'SUCURSAL_IDX'
         proveedor index: 'PROVEEDOR_ID'
         fecha index: 'FECHA_IDX'
