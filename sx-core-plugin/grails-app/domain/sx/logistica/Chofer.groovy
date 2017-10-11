@@ -1,6 +1,6 @@
-package sx.embarques
+package sx.logistica
 
-class ProveedorDeFlete {
+class Chofer {
 
     String id
 

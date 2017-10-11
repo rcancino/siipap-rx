@@ -2,7 +2,7 @@ package sx.inventario
 
 import sx.core.Inventario
 import sx.core.Sucursal
-import sx.embarques.Chofer
+
 
 class Traslado {
 
@@ -13,8 +13,6 @@ class Traslado {
     Inventario inventario
 
     Sucursal sucursal
-
-    Chofer chofer
 
     String	tipo
 

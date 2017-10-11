@@ -1,4 +1,4 @@
-package sx.embarques
+package sx.logistica
 
 import sx.core.Venta
 import sx.logistica.Envio

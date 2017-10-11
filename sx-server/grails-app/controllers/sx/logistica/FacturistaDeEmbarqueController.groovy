@@ -7,37 +7,25 @@ import grails.plugin.springsecurity.annotation.Secured
 
 import sx.core.Sucursal
 
-@Secured("ROLE_INVENTARIO_USER")
-class EmbarqueController extends RestfulController {
+@Secured("ROLE_EMBARQUES_USER")
+class FacturistaDeEmbarqueController extends RestfulController {
     
     static responseFormats = ['json']
 
-    EmbarqueController() {
-        super(Embarque)
+    FacturistaDeEmbarqueController() {
+        super(FacturistaDeEmbarque)
     }
 
     @Override
     protected List listAllResources(Map params) {
         params.sort = 'lastUpdated'
         params.order = 'desc'
-        def query = Embarque.where {}
-        if(params.sucursal){
-            query = query.where {sucursal.id ==  params.sucursal}   
-        }
-        if(params.documento) {
-            def documento = params.int('documento')
-            query = query.where {documento >=  documento}
-        }
-        return query.list(params)
+        return FacturistaDeEmbarque.list(params)
     }
 
     protected Embarque saveResource(Embarque resource) {
         def username = getPrincipal().username
-        if(resource.id == null) {
-            def serie = resource.sucursal.clave
-            resource.documento = Folio.nextFolio('EMBARQUES',serie)
-            resource.createUser = username
-        }
+        resource.createUser = username
         resource.updateUser = username
         return super.saveResource(resource)
     }

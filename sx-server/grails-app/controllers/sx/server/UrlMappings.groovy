@@ -86,9 +86,11 @@ class UrlMappings {
 
         "/api/inventario/devoluciones"(resources: "devolucionDeVenta")
         "/api/inventario/devoluciones/buscarVenta"(controller: 'devolucionDeVenta', action: 'buscarVenta', method: 'GET')
+        
         // Decs
         "/api/inventario/decs"(resources: "devolucionDeCompra")
         "/api/inventario/decs/buscarCom"(controller: 'devolucionDeCompra', action: 'buscarCom', method: 'GET')
+        
         // Sols
         "/api/inventario/sols"(resources: "solicitudDeTraslado")
         "/api/inventario/sols/buscarSolicitudPendiente"(controller: 'solicitudDeTraslado', action: 'buscarSolicitudPendiente', method: 'GET')
@@ -99,11 +101,18 @@ class UrlMappings {
 
         // Sectores
         "/api/inventario/sectores"(resources: "sector")
+        
         // Conteos
         "/api/inventario/conteos"(resources: "conteo")
         "/api/inventario/conteos/generarConteo"(controller: "conteo", action: 'generarConteo', method: 'POST')
         "/api/inventario/conteos/generarExistencias"(controller: "conteo", action: ' generarExistencias', method: 'GET')
         "/api/inventario/conteos/limpiarExistencias"(controller: "conteo", action: ' limpiarExistencias', method: 'GET')
+        
+        // Embarques
+        "/api/embarques/facturistas"(resources: 'facturistaDeEmbarque')
+        "/api/embarques/transportes"(resources: 'transporte')
+        "/api/embarques/choferes"(resources: "chofer")
+        "/api/embarques/embarques"(resources: "embarque")
         
 
         "/api/report"(controller: 'reporte', action: 'run', method: 'GET')

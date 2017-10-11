@@ -16,6 +16,9 @@ class BootStrap {
         def inventarioUser = Role.findOrSaveWhere(authority: 'ROLE_INVENTARIO_USER')
         def inventarioManager = Role.findOrSaveWhere(authority: 'ROLE_INVENTARIO_MANAGER')
 
+        def embarquesUserRole = Role.findOrSaveWhere(authority: 'ROLE_EMBARQUES_USER')
+        def embarquesManagerRole = Role.findOrSaveWhere(authority: 'ROLE_EMBARQUES_MANAGER')
+
 
       def admin=User.findByUsername('admin')
       
@@ -56,20 +59,36 @@ class BootStrap {
       }
 
 
-        if(!UserRole.exists(admin.id, inventarioUser.id)) {
-            UserRole.create admin, inventarioUser
-            UserRole.withSession {
-                it.flush()
-                it.clear()
-            }
-        }
-        if(!UserRole.exists(admin.id, inventarioManager.id)) {
-            UserRole.create admin, inventarioManager
-            UserRole.withSession {
-                it.flush()
-                it.clear()
-            }
-        }
+      if(!UserRole.exists(admin.id, inventarioUser.id)) {
+          UserRole.create admin, inventarioUser
+          UserRole.withSession {
+              it.flush()
+              it.clear()
+          }
+      }
+      if(!UserRole.exists(admin.id, inventarioManager.id)) {
+          UserRole.create admin, inventarioManager
+          UserRole.withSession {
+              it.flush()
+              it.clear()
+          }
+      }
+
+      if(!UserRole.exists(admin.id, embarquesUserRole.id)) {
+          UserRole.create admin, embarquesUserRole
+          UserRole.withSession {
+              it.flush()
+              it.clear()
+          }
+      }
+
+      if(!UserRole.exists(admin.id, embarquesManagerRole.id)) {
+          UserRole.create admin, embarquesManagerRole
+          UserRole.withSession {
+              it.flush()
+              it.clear()
+          }
+      }
 
     }
     def destroy = {

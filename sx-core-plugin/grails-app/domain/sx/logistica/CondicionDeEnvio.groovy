@@ -1,4 +1,4 @@
-package sx.embarques
+package sx.logistica
 
 import sx.core.Direccion
 import sx.core.DireccionEntrega
