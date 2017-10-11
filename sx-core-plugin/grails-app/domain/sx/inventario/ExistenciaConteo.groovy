@@ -18,9 +18,9 @@ class ExistenciaConteo {
 
     BigDecimal	cantidad	 = 0
 
-    Conteo	conteo
+    BigDecimal	conteo = 0
 
-    BigDecimal	Diferencia	 = 0
+    BigDecimal	diferencia	 = 0
 
     BigDecimal	ajuste	 = 0
 
@@ -34,11 +34,14 @@ class ExistenciaConteo {
 
     Boolean	conteoParcial	 = false
 
+    
     static constraints = {
         fijado nullable: true
+        sectores nullable:true
     }
 
     static  mapping ={
         id generator: 'uuid'
+        fecha type: 'date'
     }
 }

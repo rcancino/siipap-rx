@@ -14,7 +14,7 @@ class SectorDet {
 
     String	comentario
 
-    Long	indice	 = 0
+    BigDecimal	indice	 = 0.0
 
 
     static  belongsTo = [sector:Sector]
@@ -22,6 +22,7 @@ class SectorDet {
 
     static constraints = {
         comentario nullable: true
+        indice(scale:2)
     }
 
 

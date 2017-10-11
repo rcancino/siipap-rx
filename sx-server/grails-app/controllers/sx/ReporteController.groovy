@@ -4,19 +4,19 @@ import grails.plugins.jasper.JasperExportFormat
 import grails.plugins.jasper.JasperReportDef
 import grails.rest.*
 import grails.converters.*
+import grails.plugin.springsecurity.annotation.Secured
 
+@Secured("IS_AUTHENTICATED_ANONYMOUSLY")
 class ReporteController {
-	static responseFormats = ['json', 'xml']
+
+	// static responseFormats = ['json', 'xml']
 
     def jasperService
 
-    def index() {
-
-        def repParams = [:]
-        repParams['ID'] = ''
-
-        println "Generando  Reporte..."
-
+    def run(ReportConfig config) {
+        // println "Generando  Reporte... con params: " + params
+        def repParams = params
+        println "Reporte: " + config
         def reportDef= new JasperReportDef(
                 name: 'MovGenerico',
                 fileFormat: JasperExportFormat.PDF_FORMAT,
@@ -24,6 +24,21 @@ class ReporteController {
         )
         ByteArrayOutputStream pdfStream = jasperService.generateReport(reportDef)
         render (file: pdfStream.toByteArray(), contentType: 'application/pdf', filename: 'MovimientoGenerico')
+        
+    }
+}
 
+class  ReportConfig {
+    
+    String name
+    Map params = [:]
+    Map data = [:]
+    String fileName
+
+    static constraints = {
+    }
+
+    String toString(){
+        return "Reporte ${name}"
     }
 }

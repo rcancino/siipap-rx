@@ -5,6 +5,9 @@ import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
 
+
+import grails.transaction.Transactional
+
 import sx.core.Folio
 
 @Secured("ROLE_INVENTARIO_USER")
@@ -19,15 +22,13 @@ class SectorController extends RestfulController {
     @Override
     protected List listAllResources(Map params) {
 
-        params.sort = 'lastUpdated'
-        params.order = 'desc'
+        params.sort = 'sectorFolio'
+        params.order = 'asc'
+        params.max = 1000
         def query = Sector.where {}
         if(params.documento) {
             def documento = params.int('documento')
             query = query.where {sectorFolio >=  documento}
-        }
-        if(params.sucursal) {
-            query = query.where { sucursal.id == params.sucursal}
         }
         return query.list(params)
     }
@@ -37,11 +38,17 @@ class SectorController extends RestfulController {
         def username = getPrincipal().username
         if(resource.id == null) {
             def serie = resource.sucursal.clave
-            resource.documento = Folio.nextFolio('SECTOR',serie)
             resource.createUser = username
         }
         resource.updateUser = username
         return super.saveResource(resource)
+    }
+
+    protected Sector updateResource(Sector resource) {
+        resource.partidas = resource.partidas.sort { it.indice}
+        def username = getPrincipal().username
+        resource.updateUser = username
+        return super.updateResource(resource)
     }
 
 }

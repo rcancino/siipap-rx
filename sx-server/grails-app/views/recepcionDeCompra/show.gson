@@ -4,8 +4,8 @@ model {
     RecepcionDeCompra recepcionDeCompra
 }
 
-json g.render(recepcionDeCompra, [deep:true,excludes:['dateCreated','lastUpdated','partidas','sw2','proveedor']]){
-    partidas g.render(recepcionDeCompra.partidas, [deep:true, excludes:['recepcion','lastUpdated']] )
+json g.render(recepcionDeCompra, [deep:true,excludes:['partidas','proveedor']]){
+    partidas g.render(recepcionDeCompra.partidas, [deep:true, excludes:['recepcion']] )
     proveedor {
         id recepcionDeCompra.proveedor.id
         nombre recepcionDeCompra.proveedor.nombre

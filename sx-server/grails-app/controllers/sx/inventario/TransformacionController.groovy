@@ -13,16 +13,21 @@ class TransformacionController extends RestfulController {
 
     static responseFormats = ['json']
 
+    def reporteService
+
     TransformacionController() {
         super(Transformacion)
     }
 
     @Override
     protected List listAllResources(Map params) {
-
+        println ' Buscando tranforacmiones...' + params
         params.sort = 'lastUpdated'
         params.order = 'desc'
         def query = Transformacion.where {}
+        if(params.sucursal){
+            query = query.where {sucursal.id ==  params.sucursal}   
+        }
         if(params.documento) {
             def documento = params.int('documento')
 
@@ -54,7 +59,7 @@ class TransformacionController extends RestfulController {
                 inventario.documento = resource.documento
                 inventario.cantidad = det.cantidad
                 inventario.comentario = det.comentario
-                inventario.Fecha = resource.fecha
+                inventario.fecha = resource.fecha
                 inventario.producto = det.producto
                 inventario.tipo = resource.tipo
                 det.inventario = inventario
@@ -69,4 +74,14 @@ class TransformacionController extends RestfulController {
     def inventariar(Transformacion trs){
 
     }
+
+    def print() {
+        println 'Generando impresion para trs: '+ params
+        def pdf = this.reporteService.run('Transformacion', params)
+        def fileName = "Transformacion.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+        
+    }
+
+    
 }

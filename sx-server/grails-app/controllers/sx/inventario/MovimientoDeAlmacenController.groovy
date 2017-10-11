@@ -19,15 +19,16 @@ class MovimientoDeAlmacenController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
-
         params.sort = 'lastUpdated'
         params.order = 'desc'
         def query = MovimientoDeAlmacen.where {}
-
+        if(params.sucursal){
+            query = query.where {sucursal.id ==  params.sucursal}   
+        }
         if(params.documento) {
             def documento = params.int('documento')
 
-            query = query.where {documento >=  documento}
+            query = query.where {documento ==  documento}
         }
         
         return query.list(params)
@@ -54,7 +55,7 @@ class MovimientoDeAlmacenController extends RestfulController {
                 inventario.documento = resource.documento
                 inventario.cantidad = det.cantidad
                 inventario.comentario = det.comentario
-                inventario.Fecha = resource.fecha
+                inventario.fecha = resource.fecha
                 inventario.producto = det.producto
                 inventario.tipo = resource.tipo
                 det.inventario = inventario

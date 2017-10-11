@@ -27,6 +27,17 @@ class Conteo {
 
     String	contador2
 
+    Date dateCreated
+
+    Date lastUpdated
+
+    String createUser
+
+    String updateUser
+
+    List partidas = []
+
+
     static  hasMany = [partidas:ConteoDet]
 
     static constraints = {
@@ -36,9 +47,12 @@ class Conteo {
         contador1 nullable: true
         contador2 nullable: true
         capturista nullable: true
+        updateUser nullable: true
+        createUser nullable: true
     }
 
     static  mapping = {
         id generator: 'uuid'
+        fecha type: 'date'
     }
 }

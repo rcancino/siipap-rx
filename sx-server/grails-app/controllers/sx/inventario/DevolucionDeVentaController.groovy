@@ -77,7 +77,7 @@ class DevolucionDeVentaController extends RestfulController {
                 inventario.documento = resource.documento
                 inventario.cantidad = det.cantidad
                 inventario.comentario = det.comentario
-                inventario.Fecha = resource.fecha
+                inventario.fecha = resource.fecha
                 inventario.producto = det.producto
                 inventario.tipo = 'RMD'
                 det.inventario = inventario

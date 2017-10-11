@@ -4,9 +4,9 @@ model {
     Transformacion transformacion
 }
 
-json g.render(transformacion) {
+json g.render(transformacion,[excludes:['sucursal'] ]) {
     sucursal {
-        id transformacion.sucursal.id
-        nombre: transformacion.sucursal.nombre
+      id transformacion.sucursal.id
+      nombre: transformacion.sucursal.nombre
     }
 }

@@ -58,6 +58,8 @@ class UrlMappings {
         "/api/compras/recepciones"(resources: "recepcionDeCompra") {
             "/partidas"(resource: "recepcionDeCompraDet")
         }
+        "/api/compras/recepciones/buscarCompra"(controller: 'recepcionDeCompra', action: 'buscarCompra', method: 'GET')
+
         "/api/compras/devolucionCompra"(resources: "devolucionDeCompra")
 
         // Ventas
@@ -78,15 +80,33 @@ class UrlMappings {
 
         "/api/inventario"(resources: "inventario")
         "/api/inventario/movimientos"(resources: "movimientoDeAlmacen")
+        
         "/api/inventario/transformaciones"(resources: "transformacion")
+        "/api/inventario/transformaciones/print"(controller: "transformacion", action: 'print', method: 'GET')
+
         "/api/inventario/devoluciones"(resources: "devolucionDeVenta")
         "/api/inventario/devoluciones/buscarVenta"(controller: 'devolucionDeVenta', action: 'buscarVenta', method: 'GET')
+        // Decs
         "/api/inventario/decs"(resources: "devolucionDeCompra")
+        "/api/inventario/decs/buscarCom"(controller: 'devolucionDeCompra', action: 'buscarCom', method: 'GET')
+        // Sols
+        "/api/inventario/sols"(resources: "solicitudDeTraslado")
+        "/api/inventario/sols/buscarSolicitudPendiente"(controller: 'solicitudDeTraslado', action: 'buscarSolicitudPendiente', method: 'GET')
+        
         "/api/inventario/kardex"(controller: "inventario", action: "kardex" )
         "/api/inventario/saveInventario"(controller: "inventario", action: "saveInventario" , method: 'POST')
         "/api/inventario/traslados"(resources: "traslado")
 
+        // Sectores
+        "/api/inventario/sectores"(resources: "sector")
+        // Conteos
+        "/api/inventario/conteos"(resources: "conteo")
+        "/api/inventario/conteos/generarConteo"(controller: "conteo", action: 'generarConteo', method: 'POST')
+        "/api/inventario/conteos/generarExistencias"(controller: "conteo", action: ' generarExistencias', method: 'GET')
+        "/api/inventario/conteos/limpiarExistencias"(controller: "conteo", action: ' limpiarExistencias', method: 'GET')
+        
 
+        "/api/report"(controller: 'reporte', action: 'run', method: 'GET')
 
         // Security
         "/api/security/users"(resources: "user")
