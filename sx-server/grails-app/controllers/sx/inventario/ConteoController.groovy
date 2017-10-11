@@ -4,6 +4,8 @@ import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
+import sx.core.Sucursal
+import sx.core.Existencia
 
 @Secured("ROLE_INVENTARIO_USER")
 class ConteoController extends RestfulController {
@@ -75,6 +77,52 @@ class ConteoController extends RestfulController {
         result.message = 'Conteos generados exitosamente'
         result.conteos = conteos
         // println 'Res: '+ result
+        respond(result, status: 200)
+    }
+
+    @Transactional
+    def generarExistencias(Sucursal sucursal) {
+        // println 'Params: ' + params
+        assert sucursal.id, 'Debe indicar la sucursal para genera existencias conteo'
+
+        def hoy = new Date()
+        def result = [:]
+
+        def found = ExistenciaConteo.where { fecha == hoy && sucursal == sucursal}.find()
+        
+        if(found) {
+            result.message = 'Existencias ya generadas'
+            respond(result, status: 200)
+            return 
+        }
+
+        
+        def ejercicio = hoy[Calendar.YEAR]
+        def mes = hoy[Calendar.MONTH] 
+        def existencias = Existencia.where {sucursal == sucursal && anio == ejercicio && mes == mes }
+        existencias = existencias.where {producto.activo == true && producto.inventariable == true}.list()
+        
+        existencias.each {
+            def ex = new ExistenciaConteo()
+            ex.existencia = it
+            ex.sucursal = it.sucursal
+            ex.producto = it.producto
+            ex.fecha = hoy
+            ex.cantidad = it.cantidad
+            ex.save failOnError: true , flush:true
+            //println 'Existencia conteo generada: ' + ex.producto.clave
+        }
+        result.message = "${existencias.size()} exitencias generadas exitosamente"
+        result.existencias = existencias.size()
+        respond(result, status: 200)
+    }
+
+    @Transactional
+    def limpiarExistencias(Sucursal sucursal){
+        def hoy = new Date()
+        ExistenciaConteo.where { fecha == hoy && sucursal == sucursal && fijado == null}.deleteAll()
+        Map result = [:]
+        result.message = "Existenicas para conteo eliminadas exitosamente "
         respond(result, status: 200)
     }
     

@@ -44,7 +44,7 @@ class CompraDet {
 
     BigDecimal depurado = 0.0
 
-    BigDecimal recibido
+    BigDecimal recibido = 0.0
 
     BigDecimal porRecibir
 

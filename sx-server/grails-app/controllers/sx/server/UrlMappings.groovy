@@ -99,8 +99,11 @@ class UrlMappings {
         // Conteos
         "/api/inventario/conteos"(resources: "conteo")
         "/api/inventario/conteos/generarConteo"(controller: "conteo", action: 'generarConteo', method: 'POST')
+        "/api/inventario/conteos/generarExistencias"(controller: "conteo", action: ' generarExistencias', method: 'GET')
+        "/api/inventario/conteos/limpiarExistencias"(controller: "conteo", action: ' limpiarExistencias', method: 'GET')
+        
 
-        "/api/reporte"(controller: 'reporte', action: 'run')
+        "/api/report"(controller: 'reporte', action: 'run', method: 'GET')
 
         // Security
         "/api/security/users"(resources: "user")
