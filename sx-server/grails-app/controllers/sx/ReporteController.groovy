@@ -14,13 +14,9 @@ class ReporteController {
     def jasperService
 
     def run(ReportConfig config) {
-
-        // params.ID = '402880e55ea4c4d4015ea4dd71d9050e'
+        // println "Generando  Reporte... con params: " + params
         def repParams = params
-
-        println "Generando  Reporte... con params: " + params
         println "Reporte: " + config
-       
         def reportDef= new JasperReportDef(
                 name: 'MovGenerico',
                 fileFormat: JasperExportFormat.PDF_FORMAT,
@@ -28,22 +24,18 @@ class ReporteController {
         )
         ByteArrayOutputStream pdfStream = jasperService.generateReport(reportDef)
         render (file: pdfStream.toByteArray(), contentType: 'application/pdf', filename: 'MovimientoGenerico')
-        /*
-        render(contentType: "application/json") {
-            reportTask(title: 'Reporte title', fecha: 'fecha')
-        }
-        */
-
-
+        
     }
 }
 
 class  ReportConfig {
     
-    String name;
+    String name
+    Map params = [:]
+    Map data = [:]
+    String fileName
 
     static constraints = {
-        
     }
 
     String toString(){

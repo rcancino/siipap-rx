@@ -37,6 +37,8 @@ class DevolucionDeCompra {
 
     String sw2
 
+    Date fechaInventario
+
     RecepcionDeCompra recepcionDeCompra
 
     static hasMany = [partidas:DevolucionDeCompraDet]
@@ -60,6 +62,6 @@ class DevolucionDeCompra {
         partidas cascade: "all-delete-orphan"
         sucursal index: 'SUCURSAL_IDX'
         proveedor index: 'PROVEEDOR_ID'
-        fecha index: 'FECHA_IDX'
+        fecha type: 'date', index: 'FECHA_IDX'
     }
 }

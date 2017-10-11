@@ -26,10 +26,8 @@
 	<parameter name="COMPANY" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
-	<parameter name="TRANSFORMACION" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[
-SELECT T.id as TRANSFORMACION_ID,T.tipo as CLASE,T.DOCUMENTO,T.FECHA,T.SUCURSAL_ID,T.COMENTARIO,T.tipo as CLASE
+	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
+	<queryString><![CDATA[SELECT T.id as TRANSFORMACION_ID,T.tipo as CLASE,T.DOCUMENTO,T.FECHA,T.SUCURSAL_ID,T.COMENTARIO,T.tipo as CLASE
 ,p.KILOS,t.fecha
 ,(a.CANTIDAD)AS CANTIDAD,p.UNIDAD as UNIDAD_ID,a.partidas_idx+1 as RENGLON,p.CLAVE,p.DESCRIPCION,a.COMENTARIO AS COM_ART,t.tipo as TRTIP,t.FECHA,b.NOMBRE
 ,CASE WHEN T.POR_INVENTARIO IS TRUE THEN '*** POR INVENTARIO ***' ELSE  '' END  AS POR_INV
@@ -37,7 +35,7 @@ FROM transformacion T
 JOIN transformacion_det a ON(A.TRANSFORMACION_ID=T.ID)
 join producto p on (a.producto_id=p.id)
 join sucursal b on (t.SUCURSAL_ID=b.ID) 
-where T.ID=$P{TRANSFORMACION}  and t.sucursal_id=$P{SUCURSAL}]]></queryString>
+where T.ID=$P{ID}  ]]></queryString>
 
 	<field name="TRANSFORMACION_ID" class="java.lang.String"/>
 	<field name="CLASE" class="java.lang.String"/>

@@ -41,7 +41,6 @@ class RecepcionDeCompraController extends  RestfulController{
 
    @Override
     protected List listAllResources(Map params) {
-        println ' Buscando coms: '+params
         params.sort = 'lastUpdated'
         params.order = 'desc'
         def query = RecepcionDeCompra.where {}
@@ -87,9 +86,10 @@ class RecepcionDeCompraController extends  RestfulController{
                 inventario.comentario = det.comentario
                 inventario.fecha = resource.fecha
                 inventario.producto = det.producto
-                inventario.tipo = resource.tipo
+                inventario.tipo = 'COM'
+                inventario.renglon = renglon
                 det.inventario = inventario
-                det.renglon = renglon
+                
                 renglon++
             }
             resource.fechaInventario = new Date()

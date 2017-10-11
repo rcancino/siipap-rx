@@ -13,6 +13,8 @@ class TransformacionController extends RestfulController {
 
     static responseFormats = ['json']
 
+    def reporteService
+
     TransformacionController() {
         super(Transformacion)
     }
@@ -72,4 +74,14 @@ class TransformacionController extends RestfulController {
     def inventariar(Transformacion trs){
 
     }
+
+    def print() {
+        println 'Generando impresion para trs: '+ params
+        def pdf = this.reporteService.run('Transformacion', params)
+        def fileName = "Transformacion.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+        
+    }
+
+    
 }

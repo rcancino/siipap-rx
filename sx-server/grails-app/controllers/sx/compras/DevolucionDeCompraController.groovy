@@ -18,7 +18,6 @@ class DevolucionDeCompraController extends RestfulController {
     }
 
     protected List listAllResources(Map params) {
-    	println 'Buscando decs con: '+params
         params.sort = 'lastUpdated'
         params.order = 'desc'
         def query = DevolucionDeCompra.where {}
@@ -51,6 +50,7 @@ class DevolucionDeCompraController extends RestfulController {
 
     protected DevolucionDeCompra updateResource(DevolucionDeCompra resource) {
         if(params.inventariar){
+            def renglon = 1;
             resource.partidas.each { det ->
                 Inventario inventario = new Inventario()
                 inventario.sucursal = resource.sucursal
@@ -59,7 +59,8 @@ class DevolucionDeCompraController extends RestfulController {
                 inventario.comentario = det.comentario
                 inventario.fecha = resource.fecha
                 inventario.producto = det.producto
-                inventario.tipo = resource.tipo
+                inventario.tipo = 'DEC'
+                inventario.renglon = renglon++
                 det.inventario = inventario
             }
             resource.fechaInventario = new Date()
