@@ -1,7 +1,7 @@
 import sx.logistica.FacturistaDeEmbarque
 
 model {
-	Facturista facturistaDeEmbarque
+	FacturistaDeEmbarque facturistaDeEmbarque
 }
 
 json g.render(facturistaDeEmbarque)
