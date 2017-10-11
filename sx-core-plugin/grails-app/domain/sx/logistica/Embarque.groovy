@@ -27,6 +27,18 @@ class Embarque {
 
     BigDecimal	valor	 = 0
 
+    List partidas = []
+
+    Date dateCreated
+
+    Date lastUpdated
+
+    String createUser
+
+    String updateUser
+
+
+    static hasMany = [partidas : Envio ]
 
     static constraints = {
         cerrado  nullable: true
@@ -39,5 +51,6 @@ class Embarque {
 
     static mapping= {
         id generator: 'uuid'
+        partidas cascade: "all-delete-orphan"
     }
 }

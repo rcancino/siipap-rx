@@ -12,7 +12,7 @@ class EnvioDet {
 
     VentaDet ventaDet
 
-    VentaParcialDet	parcialDet	 = null
+    VentaParcialDet	parcialDet
 
     Producto producto
 
@@ -22,14 +22,20 @@ class EnvioDet {
 
     String	instruccionEntregaParcial
 
+    Date dateCreated
+
+    Date lastUpdated
+
 
 
 
     static  mapping ={
         id generator:'uuid'
+
     }
 
     static constraints = {
         instruccionDeEntregaParcial nullable: true
+        parcialDet nullable: true
     }
 }
