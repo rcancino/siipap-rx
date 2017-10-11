@@ -34,19 +34,12 @@ class Existencia {
 
     BigDecimal	cantidad	 = 0
 
-    BigDecimal	recorte	 = 0
-
-    String	recorteComentario
-
-    Date	recorteFecha
-
     String sw2
 
 
     static constraints = {
 
-        recorteComentario nullable: true
-        recorteFecha nullable:  true
+
         pedidosPendiente nullable: true
         entradaCompra nullable: true
         devolucionCompra nullable: true
@@ -55,7 +48,6 @@ class Existencia {
         movimientoAlmacen nullable: true
         traslado nullable: true
         transformacion nullable: true
-        recorte nullable: true
         sw2 nullable: true
     }
 
