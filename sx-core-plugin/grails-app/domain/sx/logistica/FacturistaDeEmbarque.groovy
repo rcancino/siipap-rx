@@ -21,9 +21,12 @@ class FacturistaDeEmbarque {
 
     String updateUser
 
+    String sw2
+
     static constraints = {
         createUser nullable: true
         updateUser nullable: true
+        sw2 nullable:  true
     }
 
     static mapping= {

@@ -9,7 +9,7 @@ class Transporte {
 
     String descripcion
 
-    String placas
+    String placa
 
     String marca
 
@@ -31,6 +31,8 @@ class Transporte {
 
     String updateUser
 
+    String sw2
+
     static constraints = {
         createUser nullable: true
         updateUser nullable: true
@@ -39,6 +41,9 @@ class Transporte {
         marca nullable:true
         modelo nullable:true
         anio nullable: true
+        sw2 nullable: true
+        chofer nullable: true
+        facturista nullable: true
     }
 
     static mapping= {
