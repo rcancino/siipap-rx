@@ -11,7 +11,7 @@ json g.render(embarque, [excludes:['partidas'] ]){
     }
     chofer {
     	id embarque.chofer.id
-    	// nombre embarque.chofer.nombre
+    	nombre embarque.chofer.nombre
     }
     
 }

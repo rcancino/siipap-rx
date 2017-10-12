@@ -18,9 +18,16 @@ class ChoferController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
-        params.sort = 'lastUpdated'
-        params.order = 'desc'
-        return Chofer.list(params)
+        println 'Buscando choferes.....' +  params
+        def query = Chofer.where {}
+        params.sort = params.sort ?:'nombre'
+        params.order = params.order ?:'asc'
+        params.max = params.max ?: 200
+        if(params.term){
+            def search = '%' + params.term + '%'
+            query = query.where { nombre =~ search }
+        }
+        return query.list(params)
     }
 
     protected Chofer saveResource(Chofer resource) {

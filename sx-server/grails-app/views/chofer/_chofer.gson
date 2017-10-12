@@ -1,7 +1,6 @@
 import sx.logistica.Chofer
 
 model {
-	chofer Chofer
+	Chofer chofer 
 }
-
 json g.render(chofer)

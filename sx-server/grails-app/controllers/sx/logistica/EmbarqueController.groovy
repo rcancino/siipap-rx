@@ -1,10 +1,10 @@
 package sx.logistica
 
-
 import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
 
+import sx.core.Folio
 import sx.core.Sucursal
 
 @Secured("ROLE_INVENTARIO_USER")
@@ -18,8 +18,8 @@ class EmbarqueController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
-        params.sort = 'lastUpdated'
-        params.order = 'desc'
+        params.sort = 'documento'
+        params.order = 'asc'
         def query = Embarque.where {}
         if(params.sucursal){
             query = query.where {sucursal.id ==  params.sucursal}   
@@ -43,6 +43,7 @@ class EmbarqueController extends RestfulController {
     }
 
     protected Embarque updateResource(Embarque resource) {
+        println 'Actualizando '
         resource.updateUser = getPrincipal().username
         return super.updateResource(resource)
     }
