@@ -13,18 +13,30 @@ class EnvioComision {
 
     BigDecimal	valor	 = 0
 
-    Date	fecha_comision
+    Date	fechaComision
 
-    String	comentario_de_comision
+    String	comentarioDeComision
 
-    BigDecimal	comision_por_tonelada	 = 0
+    BigDecimal	comisionPorTonelada	 = 0
 
-    BigDecimal	importe_comision	 = 0
+    BigDecimal	importeComision	 = 0
+
+    BigDecimal	comision	 = 0
+
+    Date dateCreated
+
+    Date lastUpdated
+
+    String createUser
+
+    String updateUser
+
+
 
 
     static constraints = {
-        fecha_comision nullable:true
-        comentario_de_comision nullable: true
+        fechaComision nullable:true
+        comentarioDeComision nullable: true
     }
 
     static  mapping = {

@@ -22,9 +22,7 @@ class Envio {
 
     Boolean	parcial	 = false
 
-    BigDecimal	comision	 = 0
 
-    BigDecimal	valor	 = 0
 
     Date	arribo
 

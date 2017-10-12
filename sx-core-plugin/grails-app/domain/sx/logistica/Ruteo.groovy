@@ -30,7 +30,7 @@ class Ruteo {
 
     String	c_tipo_asentamiento
 
-    String	c_municipoioi
+    String	c_municipio
 
     String	d_zona
 
@@ -39,7 +39,7 @@ class Ruteo {
     Sucursal suc_asignada
 
     static constraints = {
-        sucursal nullable:true
+        suc_asignada nullable:true
     }
 
     static mapping = {
