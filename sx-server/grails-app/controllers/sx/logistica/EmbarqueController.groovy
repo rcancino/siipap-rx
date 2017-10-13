@@ -6,11 +6,18 @@ import grails.plugin.springsecurity.annotation.Secured
 
 import sx.core.Folio
 import sx.core.Sucursal
+import sx.core.Venta
+import grails.transaction.Transactional
+
+
 
 @Secured("ROLE_INVENTARIO_USER")
 class EmbarqueController extends RestfulController {
     
     static responseFormats = ['json']
+
+    
+    def reporteService
 
     EmbarqueController() {
         super(Embarque)
@@ -18,6 +25,8 @@ class EmbarqueController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
+        println 'Buscando embarques :'+params
+        println 'Hora: '+ new Date()
         params.sort = 'documento'
         params.order = 'asc'
         def query = Embarque.where {}
@@ -27,6 +36,9 @@ class EmbarqueController extends RestfulController {
         if(params.documento) {
             def documento = params.int('documento')
             query = query.where {documento >=  documento}
+        }
+        if(params.transito) {
+            query = query.where{regreso == null && salida != null}
         }
         return query.list(params)
     }
@@ -43,9 +55,78 @@ class EmbarqueController extends RestfulController {
     }
 
     protected Embarque updateResource(Embarque resource) {
-        println 'Actualizando '
+        println 'Actualizando embarque: '+ resource
+        resource.partidas.each { 
+            println 'Envio: ' + it
+        }
         resource.updateUser = getPrincipal().username
         return super.updateResource(resource)
     }
 
+    public buscarDocumento(DocumentSearchCommand command){
+        // println 'Buscando documento con: ' + command
+        command.validate()
+        if (command.hasErrors()) {
+            respond command.errors, view:'create' // STATUS CODE 422
+            return
+        }
+        
+        def q = CondicionDeEnvio.where{
+            venta.sucursal == command.sucursal && venta.documento == command.documento && venta.fecha == command.fecha
+        }
+        CondicionDeEnvio res = q.find()
+        if (res == null) {
+            notFound()
+            return
+        }
+        def venta = res.venta
+        def envio = new Envio()
+        envio.cliente = venta.cliente
+        envio.tipoDocumento = venta.tipo
+        envio.origen = venta.id
+        envio.entidad = 'VENTA'
+        envio.documento = venta.documento
+        envio.fechaDocumento = venta.fecha
+        envio.totalDocumento = venta.total
+        envio.formaPago = venta.formaDePago
+        envio.nombre = venta.cliente.nombre
+        envio.kilos = venta.kilos
+        respond envio, status: 200
+    }
+
+    @Transactional
+    def registrarSalida(Embarque res) {
+        if (res == null) {
+            notFound()
+            return
+        }
+        res.salida = new Date()
+        res.save()
+        respond res
+    }
+
+    def print() {
+        // println 'Generando impresion para trs: '+ params
+        def pdf = this.reporteService.run('AsignacionDeEnvio', params)
+        def fileName = "AsignacionDeEnvio.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+    }
+
+    def reporteDeEntregasPorChofer() {
+        def pdf = this.reporteService.run('EntregaPorChofer', params)
+        def fileName = "EntregaPorChofer.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+    }
+
+}
+
+class DocumentSearchCommand {
+    String tipo
+    Date fecha
+    Sucursal sucursal
+    Long documento
+
+    String toString(){
+        "$tipo $documento $fecha $sucursal"
+    }
 }

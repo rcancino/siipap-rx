@@ -6,7 +6,7 @@ class Envio {
 
     String	id
 
-    Embarque	embarque
+    Embarque embarque
 
     Cliente cliente
 
@@ -21,8 +21,6 @@ class Envio {
     BigDecimal	kilos	 = 0
 
     Boolean	parcial	 = false
-
-
 
     Date	arribo
 
@@ -78,6 +76,7 @@ class Envio {
 
     static  hasMany= [partidas : EnvioDet]
 
+    static belongsTo = [embarque: Embarque]
 
     static mapping ={
         id generator:'uuid'
@@ -85,10 +84,10 @@ class Envio {
     }
 
     static constraints = {
-        area inList:['COMPRAS','ALMACEN','MERCANCIAS','ENCARGADO','DUEÑO','OTRA']
-        formaPago inList: ['EFECTIVO','CHEQUE']
-        motivo inList: ['CERRADO','SALIO_A_COMER','NO_PAGO','DIRECCION_INCORRECTA','ERROR EN MOSTRADOR']
-        reportoPuesto inList: ['ENCARGADO_EMBARQUES','ENCARGADO_SUCURSAL','MOSTRADOR',]
+        area nullable:true //inList:['COMPRAS','ALMACEN','MERCANCIAS','ENCARGADO','DUEÑO','OTRA']
+        formaPago nullable:true
+        motivo nullable: true //inList: ['CERRADO','SALIO_A_COMER','NO_PAGO','DIRECCION_INCORRECTA','ERROR EN MOSTRADOR']
+        reportoPuesto nullable: true //inList: ['ENCARGADO_EMBARQUES','ENCARGADO_SUCURSAL','MOSTRADOR',]
         reportoNombre nullable: true
         arribo nullable: true
         recepcion nullable: true
