@@ -120,6 +120,7 @@ class UrlMappings {
         "/api/embarques/embarques/documentosEnTransito"(controller: "embarque", action: 'documentosEnTransito', method: 'GET')
         "/api/embarques/embarques/enviosPendientes"(controller: "embarque", action: 'enviosPendientes', method: 'GET')
 
+        "/api/embarques/envios"(resources: 'envio')
         
 
 

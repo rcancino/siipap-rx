@@ -44,7 +44,7 @@ JOIN condicion_de_envio I ON(I.venta_id=F.origen)
 JOIN venta v on(v.id=F.origen)
 JOIN cuenta_por_cobrar x on(x.id=v.cuenta_por_cobrar_id)
 JOIN cliente y on(y.id=x.cliente_id)
-JOIN envio_comision z on(z.envio_id=f.id)
+LEFT JOIN envio_comision z on(z.envio_id=f.id)
 WHERE E.ID=$P{ID}
 ORDER BY F.fecha_documento,F.nombre]]></queryString>
 
