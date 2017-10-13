@@ -26,10 +26,12 @@ class CondicionDeEnvio {
 
     BigDecimal	longitud	 = 0
 
+    Date asignado
 
     Direccion direccion
 
     static constraints = {
+        asignado: nullable:true
     }
 
     static embedded = ['direccion']

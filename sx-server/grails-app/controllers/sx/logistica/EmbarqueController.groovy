@@ -25,10 +25,9 @@ class EmbarqueController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
-        println 'Buscando embarques :'+params
-        println 'Hora: '+ new Date()
         params.sort = 'documento'
-        params.order = 'asc'
+        params.order = 'desc'
+        params.max = 500
         def query = Embarque.where {}
         if(params.sucursal){
             query = query.where {sucursal.id ==  params.sucursal}   
@@ -55,16 +54,22 @@ class EmbarqueController extends RestfulController {
     }
 
     protected Embarque updateResource(Embarque resource) {
-        println 'Actualizando embarque: '+ resource
-        resource.partidas.each { 
-            println 'Envio: ' + it
+        /*
+        resources.partidas.each { it ->
+            condicion = CondicionDeEnvio.where{venta.id == it.origen}.find()
+            if(condicion) {
+                condicion.asignado = new Date()
+            } 
+            condicion.save()
         }
+        */
         resource.updateUser = getPrincipal().username
         return super.updateResource(resource)
     }
 
     public buscarDocumento(DocumentSearchCommand command){
-        // println 'Buscando documento con: ' + command
+        println 'Buscando documento con: ' + params
+        println 'Buscando documento con: ' + command
         command.validate()
         if (command.hasErrors()) {
             respond command.errors, view:'create' // STATUS CODE 422
@@ -79,6 +84,7 @@ class EmbarqueController extends RestfulController {
             notFound()
             return
         }
+        // println 'Condicion encontrada: ' + res.venta
         def venta = res.venta
         def envio = new Envio()
         envio.cliente = venta.cliente
@@ -118,6 +124,21 @@ class EmbarqueController extends RestfulController {
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
     }
 
+    def documentosEnTransito() {
+        def envios = Envio.where{ embarque.regreso ==null && embarque.salida != null}.list()
+        println 'Envios pendientes: ' + envios
+        respond envios
+    }
+
+
+    def enviosPendientes() {
+        def q = CondicionDeEnvio.where{
+            asignado == null
+        }
+        def  list = q.find().list()
+        respond list 
+    }
+
 }
 
 class DocumentSearchCommand {
@@ -127,6 +148,6 @@ class DocumentSearchCommand {
     Long documento
 
     String toString(){
-        "$tipo $documento $fecha $sucursal"
+        "Tipo:$tipo Docto:$documento Fecha:${fecha.format('dd/MM/yyyy')} Sucursal:$sucursal"
     }
 }
