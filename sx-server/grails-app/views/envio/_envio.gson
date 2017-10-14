@@ -12,6 +12,10 @@ json g.render(envio, [excludes:['partidas','embarque'] ]){
 	    	salida envio.embarque.salida
 	    	regreso envio.embarque.regreso
 	    	cliente envio.nombre
+	    	chofer {
+	    		id envio.embarque.chofer.id
+	    		nombre envio.embarque.chofer.nombre
+	    	}
     	}
 
 	    chofer {

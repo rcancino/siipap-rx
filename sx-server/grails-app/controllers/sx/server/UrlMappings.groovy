@@ -119,6 +119,8 @@ class UrlMappings {
         "/api/embarques/embarques/reporteDeEntregasPorChofer"(controller: "embarque", action: 'reporteDeEntregasPorChofer', method: 'GET')
         "/api/embarques/embarques/documentosEnTransito"(controller: "embarque", action: 'documentosEnTransito', method: 'GET')
         "/api/embarques/embarques/enviosPendientes"(controller: "embarque", action: 'enviosPendientes', method: 'GET')
+        "/api/embarques/embarques/buscarVenta"(controller: 'embarque', action: 'buscarVenta', method: 'GET')
+        "/api/embarques/embarques/buscarPartidasDeVenta"(controller: 'embarque', action: 'buscarPartidasDeVenta', method: 'GET')
 
         "/api/embarques/envios"(resources: 'envio')
         

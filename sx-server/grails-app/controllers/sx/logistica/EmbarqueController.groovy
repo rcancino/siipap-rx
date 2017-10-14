@@ -100,6 +100,43 @@ class EmbarqueController extends RestfulController {
         respond envio, status: 200
     }
 
+    public buscarVenta(DocumentSearchCommand command){
+        command.validate()
+        if (command.hasErrors()) {
+            respond command.errors, view:'create' // STATUS CODE 422
+            return
+        }
+        
+        def q = CondicionDeEnvio.where{
+            venta.sucursal == command.sucursal && venta.documento == command.documento && venta.fecha == command.fecha
+        }
+        CondicionDeEnvio res = q.find()
+        if (res == null) {
+            notFound()
+            return
+        }
+        respond res.venta, status: 200
+    }
+
+    public buscarPartidasDeVenta(DocumentSearchCommand command){
+        command.validate()
+        if (command.hasErrors()) {
+            respond command.errors, view:'create' // STATUS CODE 422
+            return
+        }
+        
+        def q = CondicionDeEnvio.where{
+            venta.sucursal == command.sucursal && venta.documento == command.documento && venta.fecha == command.fecha
+        }
+        CondicionDeEnvio res = q.find()
+        if (res == null) {
+            notFound()
+            return
+        }
+        respond res.venta.partidas, status: 200
+    }
+
+
     @Transactional
     def registrarSalida(Embarque res) {
         if (res == null) {
