@@ -18,7 +18,6 @@ class ChoferController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
-        println 'Buscando choferes.....' +  params
         def query = Chofer.where {}
         params.sort = params.sort ?:'nombre'
         params.order = params.order ?:'asc'

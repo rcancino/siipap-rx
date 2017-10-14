@@ -156,6 +156,7 @@ class EmbarqueController extends RestfulController {
     }
 
     def reporteDeEntregasPorChofer() {
+        println 'Ejecutando reporte: ' + params;
         def pdf = this.reporteService.run('EntregaPorChofer', params)
         def fileName = "EntregaPorChofer.pdf"
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
