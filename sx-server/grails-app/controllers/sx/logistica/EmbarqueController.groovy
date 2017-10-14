@@ -148,6 +148,22 @@ class EmbarqueController extends RestfulController {
         respond res
     }
 
+    @Transactional
+    def registrarRegreso(Embarque res) {
+        if (res == null) {
+            notFound()
+            return
+        }
+        def found = res.partidas.find { it.recepcion == null}
+        if(found ) {
+            respond([message: 'Faltan envios por recibir no se puede marcar regreso'], status: 422)
+            return
+        }
+        res.regreso = new Date()
+        res.save()
+        respond res
+    }
+
     def print() {
         // println 'Generando impresion para trs: '+ params
         def pdf = this.reporteService.run('AsignacionDeEnvio', params)
