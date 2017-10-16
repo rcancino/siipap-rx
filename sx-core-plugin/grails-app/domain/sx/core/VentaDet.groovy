@@ -49,6 +49,8 @@ class VentaDet {
 
 	BigDecimal devuelto
 
+  BigDecimal enviado = 0
+
 	String	sw2
 
     Date dateCreated
@@ -68,6 +70,7 @@ class VentaDet {
         id generator:'uuid'
         producto index: 'VENTADET_IDX2'
         devuelto formula:'(select COALESCE(sum(x.cantidad),0) from devolucion_de_venta_det x where x.venta_det_id=id)'
+        enviado formula:'(select COALESCE(sum(abs(x.cantidad)),0) from envio_det x where x.venta_det_id=id)'
     }
 
     static belongsTo = [venta:Venta]

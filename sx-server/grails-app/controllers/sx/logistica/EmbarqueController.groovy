@@ -54,11 +54,17 @@ class EmbarqueController extends RestfulController {
     }
 
     protected Embarque updateResource(Embarque resource) {
+        // Actualizar la condicion asignado
         /*
         resources.partidas.each { it ->
             condicion = CondicionDeEnvio.where{venta.id == it.origen}.find()
             if(condicion) {
-                condicion.asignado = new Date()
+                def venta = it.venta
+                def pendiente = venta.partidas.sum {det -> (det.cantidad.abs() - det.enviado)}
+                if(pendiente <= 0) {
+                    condicion.asignado = resource.fecha    
+                }
+                
             } 
             condicion.save()
         }
@@ -86,6 +92,9 @@ class EmbarqueController extends RestfulController {
         }
         // println 'Condicion encontrada: ' + res.venta
         def venta = res.venta
+        // determinando si la venta ya tiene envios
+        def isParcial = venta.partidas.find { it.enviado} ? true : false
+        println 'El envio debe ser parcial: ' + isParcial
         def envio = new Envio()
         envio.cliente = venta.cliente
         envio.tipoDocumento = venta.tipo
@@ -97,6 +106,7 @@ class EmbarqueController extends RestfulController {
         envio.formaPago = venta.formaDePago
         envio.nombre = venta.cliente.nombre
         envio.kilos = venta.kilos
+        envio.parcial = isParcial
         respond envio, status: 200
     }
 

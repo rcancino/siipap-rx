@@ -4,11 +4,16 @@ model {
     EnvioDet envioDet
 }
 
-json g.render(envioDet, [excludes:['producto']]){
+json g.render(envioDet, [excludes:['producto','ventaDet']]){
   producto {
-    id sectorDet.producto.id
-    clave sectorDet.producto.clave
-    descripcion sectorDet.producto.descripcion
-    kilos sectorDet.producto.kilos
+    id envioDet.producto.id
+    clave envioDet.producto.clave
+    descripcion envioDet.producto.descripcion
+    kilos envioDet.producto.kilos
+   }
+   ventaDet {
+    id envioDet.ventaDet.id
+    cantidad envioDet.ventaDet.cantidad
+    enviado envioDet.ventaDet.enviado
    }
 }

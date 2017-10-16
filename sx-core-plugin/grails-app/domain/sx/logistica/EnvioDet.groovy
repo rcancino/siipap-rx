@@ -35,7 +35,7 @@ class EnvioDet {
     }
 
     static constraints = {
-        instruccionDeEntregaParcial nullable: true
+        instruccionEntregaParcial nullable: true
         parcialDet nullable: true
     }
 }
