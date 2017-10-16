@@ -20,6 +20,8 @@ class TrasladoDet {
 
     Long	cortes	 = 0
 
+    BigDecimal  kilos     = 0
+
     String	cortesInstruccion
 
     String	comentario

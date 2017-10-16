@@ -3,12 +3,12 @@ package sx.logistica
 import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
+import grails.transaction.Transactional
 
 import sx.core.Folio
 import sx.core.Sucursal
 import sx.core.Venta
-import grails.transaction.Transactional
-
+import sx.inventario.Traslado
 
 
 @Secured("ROLE_INVENTARIO_USER")
@@ -39,6 +39,9 @@ class EmbarqueController extends RestfulController {
         if(params.transito) {
             query = query.where{regreso == null && salida != null}
         }
+        if(params.regresos) {
+            query = query.where{regreso != null }
+        }
         return query.list(params)
     }
 
@@ -54,36 +57,73 @@ class EmbarqueController extends RestfulController {
     }
 
     protected Embarque updateResource(Embarque resource) {
+        println 'Actualizando embarque ' + resource
         // Actualizar la condicion asignado
-        /*
-        resources.partidas.each { it ->
-            condicion = CondicionDeEnvio.where{venta.id == it.origen}.find()
-            if(condicion) {
-                def venta = it.venta
-                def pendiente = venta.partidas.sum {det -> (det.cantidad.abs() - det.enviado)}
-                if(pendiente <= 0) {
-                    condicion.asignado = resource.fecha    
+        
+        resource.partidas.each { 
+            if(it.entidad == 'VENTA'){ 
+                def ventaId = it.origen
+                def parcial = it.parcial
+                println "Actualizando condicion de venta atendido ${ventaId} Parcial: ${parcial}" 
+                def condicion = CondicionDeEnvio.where{venta.id == ventaId}.find()
+                if(!parcial){
+                    condicion.asignado = resource.fecha
+                    condicion.save()
+                } else {
+                    condicion.parcial = true
+                    condicion.save()
                 }
                 
-            } 
-            condicion.save()
+                /*
+                if(condicion) {
+                    def venta = it.venta
+                    def pendiente = venta.partidas.sum {det -> (det.cantidad.abs() - det.enviado)}
+                    println 'Pendientes: '+pendientes
+                    
+                    if(pendiente <= 0) {
+                        condicion.asignado = resource.fecha    
+                    }
+                    
+                }
+                */
+            }
+            
         }
-        */
+        
         resource.updateUser = getPrincipal().username
         return super.updateResource(resource)
     }
 
     public buscarDocumento(DocumentSearchCommand command){
-        println 'Buscando documento con: ' + params
-        println 'Buscando documento con: ' + command
         command.validate()
         if (command.hasErrors()) {
             respond command.errors, view:'create' // STATUS CODE 422
             return
         }
-        
+        def envio = null
+        if(command.tipo == 'VENTA'){
+            envio = cargarEnvioParaVenta(command)
+        } else if ( command.tipo == 'TRASLADO') {
+            envio = cargarEnvioParaTraslado(command)
+        } else {
+            envio = buscarDevolucion(command)
+        }
+        if(envio == null){
+            respond command.errors, view:'create' // STATUS CODE 422
+            return
+        }
+        respond envio, status: 200
+    }
+
+
+    private cargarEnvioParaVenta(DocumentSearchCommand command){
         def q = CondicionDeEnvio.where{
-            venta.sucursal == command.sucursal && venta.documento == command.documento && venta.fecha == command.fecha
+            venta.sucursal == command.sucursal && 
+            venta.documento == command.documento &&
+            venta.fecha == command.fecha
+        }
+        q = q.where {
+            asignado == null || (asignado != null && parcial == true)
         }
         CondicionDeEnvio res = q.find()
         if (res == null) {
@@ -107,7 +147,50 @@ class EmbarqueController extends RestfulController {
         envio.nombre = venta.cliente.nombre
         envio.kilos = venta.kilos
         envio.parcial = isParcial
-        respond envio, status: 200
+        return envio
+    }
+
+    private buscarTraslado(sucursal, documento, fecha) {
+
+        def q = Traslado.where{
+            sucursal == sucursal && 
+            documento == documento && 
+            fecha == fecha &&
+            tipo == 'TPS'
+        }
+        return q.find()
+    }
+
+    private cargarEnvioParaTraslado(DocumentSearchCommand command) {
+        println 'Cargando envio para  traslado con: ' + command
+        /*
+        def q = Traslado.where{
+            sucursal == command.sucursal && 
+            documento == command.documento && 
+            fecha == command.fecha &&
+            tipo == 'TPS'
+        }
+        */
+        def traslado = buscarTraslado(command.sucursal, command.documento. command.fecha)
+        if(!traslado) {
+            return null
+        }
+        def envio = new Envio()
+        envio.tipoDocumento = 'TPS'
+        envio.origen = traslado.id
+        envio.entidad = 'TRASLADO'
+        envio.documento = traslado.documento
+        envio.fechaDocumento = traslado.fecha
+        envio.totalDocumento = 0.0
+        envio.formaPago = 'EFECTIVO'
+        envio.nombre = traslado.solicitudDeTraslado.createUser?:'NA'
+        envio.kilos = traslado.kilos
+        envio.parcial = false
+        return envio
+    }
+
+    private buscarDevolucion(DocumentSearchCommand command){
+
     }
 
     public buscarVenta(DocumentSearchCommand command){
@@ -181,9 +264,14 @@ class EmbarqueController extends RestfulController {
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
     }
 
-    def reporteDeEntregasPorChofer() {
-        println 'Ejecutando reporte: ' + params;
-        def pdf = this.reporteService.run('EntregaPorChofer', params)
+    def reporteDeEntregasPorChofer(EntregasPorChofferReport command) {
+        
+        def repParams = [:]
+        repParams['CHOFER'] = command.chofer.id
+        repParams['SUCURSAL'] = command.sucursal.id
+        repParams['FECHA'] = command.fecha.format('yyyy/MM/dd')
+        println 'Ejecutando reporte de engregas por chofer con parametros: ' + repParams
+        def pdf = this.reporteService.run('EntregaPorChofer', repParams)
         def fileName = "EntregaPorChofer.pdf"
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
     }
@@ -197,9 +285,9 @@ class EmbarqueController extends RestfulController {
 
     def enviosPendientes() {
         def q = CondicionDeEnvio.where{
-            asignado == null
+            asignado == null || (asignado != null && parcial == true)
         }
-        def  list = q.find().list()
+        def  list = q.list()
         respond list 
     }
 
@@ -213,5 +301,15 @@ class DocumentSearchCommand {
 
     String toString(){
         "Tipo:$tipo Docto:$documento Fecha:${fecha.format('dd/MM/yyyy')} Sucursal:$sucursal"
+    }
+}
+
+class EntregasPorChofferReport {
+    Date fecha
+    Chofer chofer
+    Sucursal sucursal
+
+    String toString(){
+        return "$fecha ${chofer.nombre} ${sucursal.nombre}"
     }
 }

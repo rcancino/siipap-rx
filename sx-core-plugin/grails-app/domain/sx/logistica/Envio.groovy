@@ -93,6 +93,7 @@ class Envio {
         recepcion nullable: true
         recibio nullable: true
         comentario nullable: true
+        cliente nullable: true
 
     }
 

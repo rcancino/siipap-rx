@@ -26,6 +26,8 @@ class CondicionDeEnvio {
 
     BigDecimal	longitud	 = 0
 
+    Boolean parcial = false
+
     Date asignado
 
     Direccion direccion

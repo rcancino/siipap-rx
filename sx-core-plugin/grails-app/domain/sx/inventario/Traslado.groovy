@@ -24,6 +24,8 @@ class Traslado {
 
     String	clasificacionVale
 
+    BigDecimal  kilos     = 0
+
     String	comentario
 
     String cfdiId
@@ -42,6 +44,8 @@ class Traslado {
 
     Date fechaInventario
 
+    Date asignado
+
     static hasMany = [partidas:TrasladoDet]
 
     static constraints = {
@@ -58,6 +62,7 @@ class Traslado {
         porInventario nullable: true
         fechaInventario nullable: true
         cfdiId nullable: true
+        asignado nullable: true
     }
 
     static mapping = {
