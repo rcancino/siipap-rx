@@ -22,63 +22,47 @@ class EnvioController extends RestfulController {
         super(Envio)
     }
 
-    // @Override
-    // protected List listAllResources(Map params) {
-    //     params.sort = 'documento'
-    //     params.order = 'desc'
-    //     params.max = 500
-    //     def query = Embarque.where {}
-    //     if(params.sucursal){
-    //         query = query.where {sucursal.id ==  params.sucursal}   
-    //     }
-    //     if(params.documento) {
-    //         def documento = params.int('documento')
-    //         query = query.where {documento >=  documento}
-    //     }
-    //     if(params.transito) {
-    //         query = query.where{regreso == null && salida != null}
-    //     }
-    //     return query.list(params)
-    // }
-
-    // protected Embarque saveResource(Embarque resource) {
-    //     def username = getPrincipal().username
-    //     if(resource.id == null) {
-    //         def serie = resource.sucursal.clave
-    //         resource.documento = Folio.nextFolio('EMBARQUES',serie)
-    //         resource.createUser = username
-    //     }
-    //     resource.updateUser = username
-    //     return super.saveResource(resource)
-    // }
+    
 
     protected Envio updateResource(Envio resource) {
-        /*
-        resources.partidas.each { it ->
-            condicion = CondicionDeEnvio.where{venta.id == it.origen}.find()
-            if(condicion) {
-                condicion.asignado = new Date()
-            } 
-            condicion.save()
-        }
-        */
-        // resource.updateUser = getPrincipal().username
+        
         return super.updateResource(resource)
+    }
+
+
+    def buscarPartidasParaEnvio(EnvioPartidasSearchCommand command){
+        command.validate()
+        if (command.hasErrors()) {
+            respond command.errors, view:'create' // STATUS CODE 422
+            return
+        }
+        def q = CondicionDeEnvio.where{
+            venta.sucursal == command.sucursal && venta.documento == command.documento && venta.fecha == command.fecha
+        }
+        CondicionDeEnvio res = q.find()
+        if (res == null) {
+            notFound()
+            return
+        }
+        // println 'Condicion encontrada: ' + res.venta
+        def venta = res.venta
+        respond venta.partidas
     }
 
     
 
-    // @Transactional
-    // def registrarSalida(Embarque res) {
-    //     if (res == null) {
-    //         notFound()
-    //         return
-    //     }
-    //     res.salida = new Date()
-    //     res.save()
-    //     respond res
-    // }
 
+}
 
+class EnvioPartidasSearchCommand {
+    
+    String tipo
+    Date fecha
+    Sucursal sucursal
+    Long documento
+
+    String toString(){
+        "Tipo:$tipo Docto:$documento Fecha:${fecha.format('dd/MM/yyyy')} Sucursal:$sucursal"
+    }
 }
 
