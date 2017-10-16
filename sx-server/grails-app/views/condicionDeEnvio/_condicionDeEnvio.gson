@@ -21,5 +21,6 @@ json g.render(condicionDeEnvio, [excludes:['venta'] ]){
         lastUpdated condicionDeEnvio.venta.lastUpdated
     }
     retraso condicionDeEnvio.venta.lastUpdated
+    documento condicionDeEnvio.venta.documento
     
 }

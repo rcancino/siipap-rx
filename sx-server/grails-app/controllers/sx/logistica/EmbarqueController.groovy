@@ -9,6 +9,7 @@ import sx.core.Folio
 import sx.core.Sucursal
 import sx.core.Venta
 import sx.inventario.Traslado
+import sx.inventario.DevolucionDeVenta
 
 
 @Secured("ROLE_INVENTARIO_USER")
@@ -226,7 +227,8 @@ class EmbarqueController extends RestfulController {
             notFound()
             return
         }
-        respond res.venta.partidas, status: 200
+        def partidas = res.venta.partidas.findAll { it.producto.inventariable == true}
+        respond partidas, status: 200
     }
 
 
@@ -289,6 +291,32 @@ class EmbarqueController extends RestfulController {
         }
         def  list = q.list()
         respond list 
+    }
+
+    def buscarTrasladosPendientes() {
+        def sucursal = params.sucursal
+        if (sucursal == null) {
+            notFound()
+            return
+        }
+        params.max = 300
+        params.sort =  'lastUpdated'
+        params.order = 'desc'
+        def list = Traslado.where { tipo == 'TPS' && sucursal.id == sucursal && asignado == null}.list(params)
+        respond list, status: 200
+    }
+
+    def buscarDevolucionesPendientes() {
+        def sucursal = params.sucursal
+        if (sucursal == null) {
+            notFound()
+            return
+        }
+        params.max = 300
+        params.sort =  'lastUpdated'
+        params.order = 'desc'
+        def list = DevolucionDeVenta.where { sucursal.id == sucursal && fechaInventario == null && asignado == null }.list(params)
+        respond list, status: 200
     }
 
 }
