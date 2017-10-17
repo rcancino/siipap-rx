@@ -327,6 +327,8 @@ class EmbarqueController extends RestfulController {
         }
         def embarque = res.embarque
         res.condiciones.each { cn ->
+            
+            CondicionDeEnvio condicion = CondicionDeEnvio.get(cn.id)
             def venta = Venta.get(cn.venta.id)
             def isParcial = cn.parcial
             def envio = new Envio()
@@ -342,7 +344,26 @@ class EmbarqueController extends RestfulController {
             envio.kilos = venta.kilos
             envio.parcial = isParcial
             embarque.addToPartidas(envio)
+            condicion.asignado = new Date()
+            condicion.save()
         }
+
+        // resource.partidas.each { 
+        //     if(it.entidad == 'VENTA'){ 
+        //         def ventaId = it.origen
+        //         def parcial = it.parcial
+        //         println "Actualizando condicion de venta atendido ${ventaId} Parcial: ${parcial}" 
+        //         def condicion = CondicionDeEnvio.where{venta.id == ventaId}.find()
+        //         if(!parcial){
+        //             condicion.asignado = resource.fecha
+        //             condicion.save()
+        //         } else {
+        //             condicion.parcial = true
+        //             condicion.save()
+        //         }
+        //     }
+            
+        // }
         respond embarque, status:200
     }
 

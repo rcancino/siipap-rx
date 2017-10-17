@@ -13,5 +13,6 @@ json g.render(embarque, [excludes:['partidas'] ]){
     	id embarque.chofer.id
     	nombre embarque.chofer.nombre
     }
+    numeroDePartidas embarque.partidas.size()
     
 }

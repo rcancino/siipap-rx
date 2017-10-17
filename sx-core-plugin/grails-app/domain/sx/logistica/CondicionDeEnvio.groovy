@@ -32,8 +32,17 @@ class CondicionDeEnvio {
 
     Direccion direccion
 
+    String zona
+    String municipio
+    String grupo
+    
+
     static constraints = {
-        asignado: nullable:true
+        asignado nullable: true
+        zona nullable: true, maxSize:20
+        municipio nullable: true, maxSize: 100
+        grupo nullable: true, maxSize:10
+
     }
 
     static embedded = ['direccion']
