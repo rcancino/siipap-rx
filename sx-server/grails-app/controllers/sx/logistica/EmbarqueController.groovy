@@ -319,6 +319,33 @@ class EmbarqueController extends RestfulController {
         respond list, status: 200
     }
 
+     @Transactional
+    def asignarFacturas(AsignacionDeFacturas res) {
+        if (res == null) {
+            notFound()
+            return
+        }
+        def embarque = res.embarque
+        res.condiciones.each { cn ->
+            def venta = Venta.get(cn.venta.id)
+            def isParcial = cn.parcial
+            def envio = new Envio()
+            envio.cliente = venta.cliente
+            envio.tipoDocumento = venta.tipo
+            envio.origen = venta.id
+            envio.entidad = 'VENTA'
+            envio.documento = venta.documento
+            envio.fechaDocumento = venta.fecha
+            envio.totalDocumento = venta.total
+            envio.formaPago = venta.formaDePago
+            envio.nombre = venta.cliente.nombre
+            envio.kilos = venta.kilos
+            envio.parcial = isParcial
+            embarque.addToPartidas(envio)
+        }
+        respond embarque, status:200
+    }
+
 }
 
 class DocumentSearchCommand {
@@ -340,4 +367,10 @@ class EntregasPorChofferReport {
     String toString(){
         return "$fecha ${chofer.nombre} ${sucursal.nombre}"
     }
+}
+
+class AsignacionDeFacturas {
+    Embarque embarque
+    List condiciones
+
 }

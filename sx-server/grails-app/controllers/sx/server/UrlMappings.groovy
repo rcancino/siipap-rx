@@ -124,6 +124,7 @@ class UrlMappings {
         "/api/embarques/embarques/buscarPartidasDeVenta"(controller: 'embarque', action: 'buscarPartidasDeVenta', method: 'GET')
         "/api/embarques/embarques/buscarTrasladosPendientes"(controller: 'embarque', action: 'buscarTrasladosPendientes', method: 'GET')
         "/api/embarques/embarques/buscarDevolucionesPendientes"(controller: 'embarque', action: 'buscarDevolucionesPendientes', method: 'GET')
+        "/api/embarques/embarques/asignarFacturas"(controller: 'embarque', action: 'asignarFacturas', method: 'PUT')
 
 
         "/api/embarques/envios"(resources: 'envio')
