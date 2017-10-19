@@ -55,6 +55,8 @@ class Cliente {
 
 	}
 
+	static hasOne = [credito: ClienteCredito]
+
     static embedded = ['direccion']
 
 	static mapping={

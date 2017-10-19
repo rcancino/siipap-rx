@@ -4,7 +4,7 @@ class ClienteCredito {
 
     String	id
 
-    Cliente cliente
+    // Cliente cliente
 
     Boolean	creditoActivo	 = true
 
@@ -38,14 +38,12 @@ class ClienteCredito {
 
 
     static constraints = {
-
         cobrador nullable:true
         socio nullable: true
         sw2 nullable: true
-
-
-
     }
+
+    static belongsTo = [cliente: Cliente]
 
     static mapping= {
         id generator: 'uuid'
