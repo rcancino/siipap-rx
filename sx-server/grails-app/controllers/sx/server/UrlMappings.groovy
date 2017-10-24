@@ -63,8 +63,9 @@ class UrlMappings {
         "/api/compras/devolucionCompra"(resources: "devolucionDeCompra")
 
         // Ventas
+        "/api/ventas"(resources:"venta")
         "/api/ventas/listas"(resources: "listaDePreciosVenta")
-        "/api/core/ventas"(resources:"venta")
+        
 
         // CXC
         "/api/notasDeCargo"(resources: "notaDeCargo")
@@ -77,6 +78,7 @@ class UrlMappings {
                 "/sucursal"(controller: 'existencias', action: 'existenciasPorSucursal', method: 'GET')
             }
         }
+        "/api/existencias/$producto/$year/$month"(controller: 'existencia', action: 'buscarExistencias')
 
         "/api/inventario"(resources: "inventario")
         "/api/inventario/movimientos"(resources: "movimientoDeAlmacen")

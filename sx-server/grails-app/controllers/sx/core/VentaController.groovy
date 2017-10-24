@@ -15,8 +15,6 @@ class VentaController extends RestfulController{
 
 
     def index(VentasFiltro filtro) {
-        println 'Ventas con params: ' + params
-        println 'Ventas filtro: ' + filtro
         params.max = params.registros ?:10
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
@@ -35,6 +33,17 @@ class VentaController extends RestfulController{
             query = query.where { cliente == filtro.cliente}
         }
         respond query.list(params)
+    }
+
+    protected Venta saveResource(Venta resource) {
+        def username = getPrincipal().username
+        if(resource.id == null) {
+            def serie = resource.sucursal.nombre
+            resource.documento = Folio.nextFolio('VENTAS',serie)
+            resource.createUser = username
+        }
+        resource.updateUser = username
+        return super.saveResource(resource)
     }
 
 

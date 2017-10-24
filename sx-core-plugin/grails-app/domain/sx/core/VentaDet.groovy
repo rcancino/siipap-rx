@@ -3,6 +3,8 @@ package sx.core
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
+@ToString(includes = 'producto,cantidad,subtotal', includeNames = true, includePackage = false)
+@EqualsAndHashCode(includes = 'id')
 class VentaDet {
 
 	String	id
@@ -23,7 +25,7 @@ class VentaDet {
 
 	BigDecimal	precio = 0
 
-    BigDecimal	importe = 0
+  BigDecimal	importe = 0
 
 	BigDecimal	desctoOriginal = 0
 
@@ -45,7 +47,7 @@ class VentaDet {
 
 	Boolean	cortado = false
 
-    BigDecimal	importeCortes = 0
+  BigDecimal	importeCortes = 0
 
 	BigDecimal devuelto
 
@@ -53,26 +55,24 @@ class VentaDet {
 
 	String	sw2
 
-    Date dateCreated
+  Date dateCreated
 
-    Date lastUpdated
+  Date lastUpdated
 
 
-    static constraints = {
-        sw2 nullable:true
+  static constraints = {
+    sw2 nullable:true
+	  comentario nullable: true
+    inventario nullable: true
+  }
 
-		comentario nullable: true
-        inventario nullable: true
+  static mapping = {
+    id generator:'uuid'
+    producto index: 'VENTADET_IDX2'
+    devuelto formula:'(select COALESCE(sum(x.cantidad),0) from devolucion_de_venta_det x where x.venta_det_id=id)'
+    enviado formula:'(select COALESCE(sum(abs(x.cantidad)),0) from envio_det x where x.venta_det_id=id)'
+  }
 
-    }
-
-    static mapping = {
-        id generator:'uuid'
-        producto index: 'VENTADET_IDX2'
-        devuelto formula:'(select COALESCE(sum(x.cantidad),0) from devolucion_de_venta_det x where x.venta_det_id=id)'
-        enviado formula:'(select COALESCE(sum(abs(x.cantidad)),0) from envio_det x where x.venta_det_id=id)'
-    }
-
-    static belongsTo = [venta:Venta]
+  static belongsTo = [venta:Venta]
 
 }
