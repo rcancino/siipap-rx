@@ -3,122 +3,114 @@ package sx.core
 import groovy.transform.ToString
 import sx.cxc.CuentaPorCobrar
 
-
 @ToString( includes = "sucursal,documento,fecha,total",includeNames=true,includePackage=false)
 class Venta {
 
+  String id
 
-    String id
+  Cliente cliente
 
-    Cliente	cliente
+  Vendedor vendedor
 
-    Vendedor	vendedor
+  Sucursal sucursal
 
-    Sucursal sucursal
+  Sucursal sucursalVenta
 
-    Sucursal	sucursalVenta
+  String tipo
 
-    String	tipo
+  Long documento = 0
 
-    Long	documento	 = 0
+  BigDecimal importe  = 0
 
-    BigDecimal	importe	 = 0
+  BigDecimal descuento = 0
 
-    BigDecimal	impuesto	 = 0
+  BigDecimal descuentoImporte = 0
 
-    BigDecimal	total	 = 0
+  BigDecimal subTotal = 0
 
-    BigDecimal	descuento	 = 0
+  BigDecimal impuesto = 0
 
-    BigDecimal	descuentoOriginal	 = 0
+  BigDecimal total = 0
 
-    BigDecimal	cargosPorManiobra	 = 0
+  BigDecimal descuentoOriginal = 0
 
-    BigDecimal	comisionTarjeta	 = 0
+  BigDecimal cargosPorManiobra = 0
 
-    BigDecimal	comisionTarjetaImporte	 = 0
+  BigDecimal comisionTarjeta = 0
 
-    String	formaDePago
+  BigDecimal comisionTarjetaImporte = 0
 
-    Currency moneda = Currency.getInstance('MXN')
+  String  formaDePago
 
-    BigDecimal	tipoDeCambio	 = 1
+  Currency moneda = Currency.getInstance('MXN')
 
-    BigDecimal	kilos	 = 0
+  BigDecimal  tipoDeCambio = 1
 
-    Date	puesto
+  BigDecimal  kilos = 0
 
-    Date	facturar
+  Date puesto
 
-    Boolean	vale = false
+  Date facturar
 
-    Sucursal	sucursalVale
+  Boolean vale = false
 
-    String	clasificacionVale = 'SIN_VALE'
+  Sucursal sucursalVale
 
-    Date	impreso
+  String  clasificacionVale = 'SIN_VALE'
 
-    String	comprador
+  Date    impreso
 
-    String	atencion
+  String  comprador
 
-    Boolean parcial = false
+  String  atencion
 
-    String	comentario
+  Boolean parcial = false
 
-    String	sw2
+  String  comentario
 
-    Date fecha
+  String  sw2
 
-    Date dateCreated
+  Date fecha
 
-    Date lastUpdated
+  Date dateCreated
 
-    String createUser
+  Date lastUpdated
 
-    String updateUser
+  String createUser
 
-    CuentaPorCobrar cuentaPorCobrar
+  String updateUser
 
-    List partidas = []
+  CuentaPorCobrar cuentaPorCobrar
 
+  List partidas = []
 
+  static constraints = {
+    tipo  inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
+    documento maxSize: 20
+    puesto nullable: true
+    tipoDeCambio(scale:6)
+    impreso nullable:true
+    atencion inList:['MOSTRADOR','TELEFONICA','ND']
+    clasificacionVale nullable:true,maxSize:30
+    comentario nullable:true
+    facturar nullable:true
+    comprador nullable:true
+    sucursalVenta nullable:true
+    cuentaPorCobrar nullable: true
+    sucursalVale nullable:true
+    clasificacionVale inList: ['SIN_VALE','ENVIA_SUCURSAL','PASA_CAMIONETA','RECOGE_CLIENTE','EXISTENCIA_VENTA']
+    createUser nullable:true, maxSize: 100
+    updateUser nullable:true, maxSize: 100
+    sw2 nullable:true
+  }
 
+  static mapping = {
+    partidas cascade: "all-delete-orphan"
+    id generator:'uuid'
+    fecha type:'date' ,index: 'VENTA_IDX1'
+    cliente index: 'VENTA_IDX3'
+  }
 
-    static constraints = {
-        tipo  inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
-        documento maxSize: 20
-        puesto nullable: true
-        tipoDeCambio(scale:6)
-        impreso nullable:true
-        atencion inList:['MOSTRADOR','TELEFONICA','ND']
-        clasificacionVale nullable:true,maxSize:30
-        comentario nullable:true
-        facturar nullable:true
-        comprador nullable:true
-        sw2 nullable:true
-        createUser nullable:true, maxSize: 100
-        updateUser nullable:true, maxSize: 100
-        sucursalVale nullable:true
-        sucursalVenta nullable:true
-        clasificacionVale inList: ['SIN_VALE','ENVIA_SUCURSAL','PASA_CAMIONETA','RECOGE_CLIENTE','EXISTENCIA_VENTA']
-        cuentaPorCobrar nullable: true
-        vale nullable: true
-        updateUser nullable: true
-
-    }
-
-    static mapping = {
-        partidas cascade: "all-delete-orphan"
-        id generator:'uuid'
-        fecha type:'date' ,index: 'VENTA_IDX1'
-        cliente index: 'VENTA_IDX3'
-
-
-    }
-
-    static hasMany =[partidas:VentaDet]
-
-
+  static hasMany =[partidas:VentaDet]
 
 }

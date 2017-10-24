@@ -46,7 +46,6 @@ class Cliente {
 
 		rfc maxSize:13
 		sw2 nullable:true
-		vendedor nullable:true
 		dateCreated nullable:true
 		lastUpdated nullable:true
         sucursal nullable: true

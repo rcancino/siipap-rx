@@ -7,62 +7,64 @@ import groovy.transform.ToString
 @EqualsAndHashCode(includes = 'id')
 class VentaDet {
 
-	String	id
+  String  id
 
-	Producto	producto
+  Producto    producto
 
-	Sucursal	sucursal
+  Sucursal    sucursal
 
-	Venta	venta
+  Venta   venta
 
-	Inventario	inventario
+  Inventario  inventario
 
-	BigDecimal	cantidad = 0
+  BigDecimal  cantidad = 0
 
-	BigDecimal	precioLista = 0
+  BigDecimal  precio = 0
 
-	BigDecimal	precioOriginal = 0
+  BigDecimal  importe = 0
 
-	BigDecimal	precio = 0
+  BigDecimal  descuento = 0
 
-  BigDecimal	importe = 0
+  BigDecimal  descuentoImporte = 0
 
-	BigDecimal	desctoOriginal = 0
+  BigDecimal  subtotal = 0
 
-	BigDecimal	descuento = 0
+  BigDecimal impuesto = 0
 
-	BigDecimal	importeDescuento = 0
+  BigDecimal impuestoTasa = 0.16
 
-	BigDecimal	importeNeto = 0
+  BigDecimal total = 0
 
-	BigDecimal	subtotal = 0
+  Boolean nacional = true
 
-	Boolean	nacional = true
+  BigDecimal  kilos = 0
 
-	BigDecimal	kilos = 0
+  String  comentario
 
-	String	comentario
+  Boolean conVale = false
 
-	Boolean	conVale = false
+  Boolean cortado = false
 
-	Boolean	cortado = false
+  BigDecimal  precioLista = 0
 
-  BigDecimal	importeCortes = 0
+  BigDecimal  precioOriginal = 0
 
-	BigDecimal devuelto
+  BigDecimal  desctoOriginal = 0
+
+  BigDecimal  importeCortes = 0
+
+  BigDecimal devuelto
 
   BigDecimal enviado = 0
 
-	String	sw2
+  String  sw2
 
   Date dateCreated
-
   Date lastUpdated
-
 
   static constraints = {
     sw2 nullable:true
-	  comentario nullable: true
+      comentario nullable: true
     inventario nullable: true
   }
 
