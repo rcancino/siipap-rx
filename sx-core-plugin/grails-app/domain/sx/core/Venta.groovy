@@ -82,6 +82,8 @@ class Venta {
 
   CuentaPorCobrar cuentaPorCobrar
 
+  Boolean cod = false;
+
   List partidas = []
 
   static constraints = {

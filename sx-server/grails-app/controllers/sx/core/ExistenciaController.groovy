@@ -71,7 +71,6 @@ class ExistenciaController extends RestfulController {
     }
 
     def buscarExistencias(BuscarExistenciasCommand command) {
-        println 'Buscando existencias ' + command
         def existencias = Existencia.where { 
             producto == command.producto && 
             anio == command.year && 

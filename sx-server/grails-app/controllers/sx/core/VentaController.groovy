@@ -46,6 +46,35 @@ class VentaController extends RestfulController{
         return super.saveResource(resource)
     }
 
+    protected Venta updateResource(Venta resource) {
+        println 'Acutalizando pedido: ' + resource
+        println 'Partidas detectadas: ' + resource.partidas
+        def username = getPrincipal().username
+        resource.updateUser = username
+        return super.updateResource(resource)
+    }
+
+    def pendientes(Sucursal sucursal) {
+        if (sucursal == null) {
+            notFound()
+            return
+        }
+        params.max = params.registros ?:10
+        params.sort = params.sort ?:'lastUpdated'
+        params.order = params.order ?:'desc'
+        def ventas = Venta.where{ sucursal == sucursal && facturar == null}.list(params)
+        respond ventas
+    }
+
+    def findManiobra() {
+        def found = Producto.where{ clave == 'MANIOBRA'}.find()
+        if(found == null ){
+            notFound()
+            return
+        }
+        respond found
+    }
+
 
     /*def queryForResource(Serializable id) {
         return Venta.get(id)

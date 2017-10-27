@@ -4,6 +4,6 @@ model{
     Cliente cliente
 }
 
-json g.render(cliente, [excludes:['partidas']]){
-  credito g.render(cliente.credito)
+json g.render(cliente, [excludes:['credito']]){
+  credito g.render(cliente.credito )
 }
