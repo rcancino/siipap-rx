@@ -68,6 +68,8 @@ class UrlMappings {
         "/api/ventas/findManiobra"( controller: 'venta', action: 'findManiobra')
         "/api/ventas/listas"(resources: "listaDePreciosVenta")
         
+        "/api/solicitudesDeDeposito"(resources:"solicitudDeDeposito")
+        "/api/solicitudesDeDeposito/pendientes/$id"( controller: 'solicitudesDeDeposito', action: 'pendientes')
 
         // CXC
         "/api/notasDeCargo"(resources: "notaDeCargo")
