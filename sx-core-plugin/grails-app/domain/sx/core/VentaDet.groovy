@@ -43,7 +43,8 @@ class VentaDet {
 
   Boolean conVale = false
 
-  Boolean cortado = false
+  // Boolean cortado = false
+  
 
   BigDecimal  precioLista = 0
 
@@ -57,6 +58,8 @@ class VentaDet {
 
   BigDecimal enviado = 0
 
+  // InstruccionCorte corte
+
   String  sw2
 
   Date dateCreated
@@ -64,8 +67,9 @@ class VentaDet {
 
   static constraints = {
     sw2 nullable:true
-      comentario nullable: true
+    comentario nullable: true
     inventario nullable: true
+    corte nullable: true
   }
 
   static mapping = {
@@ -73,8 +77,13 @@ class VentaDet {
     producto index: 'VENTADET_IDX2'
     devuelto formula:'(select COALESCE(sum(x.cantidad),0) from devolucion_de_venta_det x where x.venta_det_id=id)'
     enviado formula:'(select COALESCE(sum(abs(x.cantidad)),0) from envio_det x where x.venta_det_id=id)'
+    
   }
 
   static belongsTo = [venta:Venta]
 
+  static hasOne = [corte: InstruccionCorte]
+  
+
 }
+

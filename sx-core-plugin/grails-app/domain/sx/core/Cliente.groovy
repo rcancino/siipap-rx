@@ -7,7 +7,7 @@ import groovy.transform.EqualsAndHashCode
 @EqualsAndHashCode(includes='nombre,rfc')
 class Cliente {
 
-    static  auditable=true
+  static  auditable=true
 
 	String	id
 
@@ -35,7 +35,7 @@ class Cliente {
 
 	Vendedor	vendedor
 
-    Direccion direccion
+  Direccion direccion
 
 	Date dateCreated
 
@@ -43,23 +43,19 @@ class Cliente {
 
 
 	static constraints = {
-
 		rfc maxSize:13
 		sw2 nullable:true
 		dateCreated nullable:true
 		lastUpdated nullable:true
-        sucursal nullable: true
-        direccion nullable: true
-
-
+    sucursal nullable: true
+    direccion nullable: true
 	}
 
 	static hasOne = [credito: ClienteCredito]
 
-    static embedded = ['direccion']
+  static embedded = ['direccion']
 
 	static mapping={
 		id generator:'uuid'
-		
 	}
 }

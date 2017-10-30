@@ -36,6 +36,12 @@ class VentaController extends RestfulController{
     }
 
     protected Venta saveResource(Venta resource) {
+        println 'Salvando venta' + resource
+        resource.partidas.each {
+            println 'Partida con corte: ' + it.corte
+            if(it.corte)
+                it.corte.ventaDet = it;
+        }
         def username = getPrincipal().username
         if(resource.id == null) {
             def serie = resource.sucursal.nombre
@@ -67,7 +73,8 @@ class VentaController extends RestfulController{
     }
 
     def findManiobra() {
-        def found = Producto.where{ clave == 'MANIOBRA'}.find()
+        def clave = params.clave
+        def found = Producto.where{ clave == clave}.find()
         if(found == null ){
             notFound()
             return

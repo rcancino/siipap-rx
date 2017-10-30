@@ -40,6 +40,8 @@ class Venta {
 
   BigDecimal comisionTarjetaImporte = 0
 
+  BigDecimal corteImporte = 0
+
   String  formaDePago
 
   Currency moneda = Currency.getInstance('MXN')
