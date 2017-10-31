@@ -22,13 +22,17 @@ class SolicitudDeDepositoController extends RestfulController{
         params.sort = 'lastUpdated'
         params.order = 'desc'
         params.max = 50
+        def hoy = new Date()
         def query = SolicitudDeDeposito.where {}
+        
         if(params.sucursal){
             query = query.where {sucursal.id ==  params.sucursal}   
         }
+
         if(params.pendientes) {
-            query = query.where{ cobro == null}
+            query = query.where{ cobro == null || lastUpdated == hoy}
         }
+
         
         return query.list(params)
     }
@@ -36,11 +40,11 @@ class SolicitudDeDepositoController extends RestfulController{
 
     protected SolicitudDeDeposito saveResource(SolicitudDeDeposito resource) {
         println 'Salvando solicitud: ' + resource
-        def username = getPrincipal().username
+        // def username = getPrincipal().username
         if(resource.id == null) {
             def serie = resource.sucursal.nombre
             resource.folio = Folio.nextFolio('SOLICITUDES_DEPOSITO',serie)
-            resource.createUser = username
+            // resource.createUser = username
         }
         // resource.updateUser = username
         resource.total = resource.cheque + resource.efectivo + resource.tarjeta
