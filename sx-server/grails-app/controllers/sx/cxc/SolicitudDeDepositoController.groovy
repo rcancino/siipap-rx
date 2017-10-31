@@ -39,7 +39,7 @@ class SolicitudDeDepositoController extends RestfulController{
     
 
     protected SolicitudDeDeposito saveResource(SolicitudDeDeposito resource) {
-        println 'Salvando solicitud: ' + resource
+        
         // def username = getPrincipal().username
         if(resource.id == null) {
             def serie = resource.sucursal.nombre
