@@ -4,6 +4,7 @@ import grails.rest.RestfulController
 import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
 
+import sx.core.Folio
 import sx.core.Sucursal
 
 @Secured("hasRole('ROLE_POS_USER')")
@@ -14,13 +15,31 @@ class SolicitudDeDepositoController extends RestfulController{
     SolicitudDeDepositoController(){
         super(SolicitudDeDeposito)
     }
+
+    @Override
+    protected List listAllResources(Map params) {
+        // println 'Buscando solicitudes: ' + params
+        params.sort = 'lastUpdated'
+        params.order = 'desc'
+        params.max = 50
+        def query = SolicitudDeDeposito.where {}
+        if(params.sucursal){
+            query = query.where {sucursal.id ==  params.sucursal}   
+        }
+        if(params.pendientes) {
+            query = query.where{ cobro == null}
+        }
+        
+        return query.list(params)
+    }
     
 
     protected SolicitudDeDeposito saveResource(SolicitudDeDeposito resource) {
+        println 'Salvando solicitud: ' + resource
         def username = getPrincipal().username
         if(resource.id == null) {
             def serie = resource.sucursal.nombre
-            resource.documento = Folio.nextFolio('SOLICITUDES_DEPOSITO',serie)
+            resource.folio = Folio.nextFolio('SOLICITUDES_DEPOSITO',serie)
             resource.createUser = username
         }
         resource.updateUser = username

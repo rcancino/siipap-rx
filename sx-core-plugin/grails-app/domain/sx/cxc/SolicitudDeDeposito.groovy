@@ -23,21 +23,21 @@ class SolicitudDeDeposito {
 
     CuentaDeBanco cuenta
 
-    String	tipo
+    String	tipo = 'NORMAL'
 
     Integer	folio	 = 0
 
     Date	fecha
 
-    Date	fecha_deposito
+    Date	fechaDeposito
 
     String	referencia
 
-    BigDecimal	importe_cheque	 = 0
+    BigDecimal	cheque	 = 0
 
-    BigDecimal	importe_efectivo	 = 0
+    BigDecimal	efectivo	 = 0
 
-    BigDecimal	importe_tarjeta	 = 0
+    BigDecimal	tarjeta	 = 0
 
     BigDecimal	total	 = 0
 
@@ -45,7 +45,7 @@ class SolicitudDeDeposito {
 
     Date	cancelacion
 
-    String	comentario_cancelacion
+    String	cancelacionComentario
 
     Boolean	enviado	 = false
 
@@ -59,14 +59,17 @@ class SolicitudDeDeposito {
 
     String updateUser
 
-
-
     static mapping={
         id generator: 'uuid'
     }
 
-
     static constraints = {
         sw2 nullable: true
+        cobro nullable: true
+        cancelacion nullable: true
+        cancelacionComentario nullable: true
+        comentario nullable: true
+        createUser nullable: true
+        updateUser nullable: true
     }
 }

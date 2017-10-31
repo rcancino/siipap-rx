@@ -30,6 +30,7 @@ class UrlMappings {
         "/api/contabilidad/polizas"(resources:"poliza")
 
         // Tesoreria
+        "/api/tesoreria/bancos"(resources: "banco")
         "/api/tesoreria/cuentas"(resources: "cuentaDeBanco")
         "/api/tesoreria/requisiciones"(resources:"requisicion"){
             "/partidas"(resources:"requisicionDet")
@@ -68,8 +69,8 @@ class UrlMappings {
         "/api/ventas/findManiobra"( controller: 'venta', action: 'findManiobra')
         "/api/ventas/listas"(resources: "listaDePreciosVenta")
         
-        "/api/solicitudesDeDeposito"(resources:"solicitudDeDeposito")
-        "/api/solicitudesDeDeposito/pendientes/$id"( controller: 'solicitudesDeDeposito', action: 'pendientes')
+        "/api/tesoreria/solicitudes"(resources:"solicitudDeDeposito")
+        "/api/tesoreria/solicitudes/pendientes/$id"( controller: 'solicitudDeDeposito', action: 'pendientes')
 
         // CXC
         "/api/notasDeCargo"(resources: "notaDeCargo")
