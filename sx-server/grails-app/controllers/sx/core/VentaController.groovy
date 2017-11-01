@@ -3,6 +3,7 @@ package sx.core
 import grails.rest.RestfulController
 import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
+import grails.transaction.Transactional
 
 @Secured("hasRole('ROLE_POS_USER')")
 class VentaController extends RestfulController{
@@ -35,16 +36,31 @@ class VentaController extends RestfulController{
         respond query.list(params)
     }
 
+    @Transactional
+    def mandarFacturar(Venta venta) {
+        if (venta == null) {
+            notFound()
+            return
+        }
+        if (venta.facturar != null ){
+            resond venta
+            return
+        }
+        venta.facturar = new Date()
+        saveResource venta
+        respond venta
+    }
+
     protected Venta saveResource(Venta resource) {
-        println 'Salvando venta' + resource
+        // println 'Salvando venta' + resource
         resource.partidas.each {
-            println 'Partida con corte: ' + it.corte
+            // println 'Partida con corte: ' + it.corte
             if(it.corte)
                 it.corte.ventaDet = it;
         }
         def username = getPrincipal().username
         if(resource.id == null) {
-            def serie = resource.sucursal.nombre
+            def serie = resource.sucursal.nombre + resource.tipo
             resource.documento = Folio.nextFolio('VENTAS',serie)
             resource.createUser = username
         }
@@ -53,8 +69,6 @@ class VentaController extends RestfulController{
     }
 
     protected Venta updateResource(Venta resource) {
-        println 'Acutalizando pedido: ' + resource
-        println 'Partidas detectadas: ' + resource.partidas
         def username = getPrincipal().username
         resource.updateUser = username
         return super.updateResource(resource)

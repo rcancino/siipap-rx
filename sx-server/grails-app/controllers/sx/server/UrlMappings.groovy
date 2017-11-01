@@ -66,6 +66,7 @@ class UrlMappings {
         // Ventas
         "/api/ventas"(resources:"venta")
         "/api/ventas/pendientes/$id"( controller: 'venta', action: 'pendientes')
+        "/api/ventas/mandarFacturar/$id"( controller: 'venta', action: 'mandarFacturar')
         "/api/ventas/findManiobra"( controller: 'venta', action: 'findManiobra')
         "/api/ventas/listas"(resources: "listaDePreciosVenta")
         
