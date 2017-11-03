@@ -5,7 +5,7 @@ model {
 }
 
 json g.render(venta, [excludes:['moneda','partidas','sucursal']]){
-    cliente g.render(venta.cliente, [excludes:['credito']]){
+    cliente g.render(venta.cliente, [excludes:['credito','cuentaPorCobrar']]){
         credito g.render(venta.cliente.credito)
     }
     sucursal {
@@ -14,6 +14,15 @@ json g.render(venta, [excludes:['moneda','partidas','sucursal']]){
     }
     moneda venta.moneda.currencyCode
     partidas g.render(venta.partidas, [deep:true, excludes:['venta']] )
+    if(venta.cuentaPorCobrar){
+        cuentaPorCobrar {
+            id venta.cuentaPorCobrar.id
+            uuid venta.cuentaPorCobrar.uuid
+            cfdi g.render(venta.cuentaPorCobrar.cfdi)
+        }
+    }
+    
+
 
 }
 

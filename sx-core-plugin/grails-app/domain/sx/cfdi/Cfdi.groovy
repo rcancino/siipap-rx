@@ -49,8 +49,6 @@ class Cfdi {
     Date lastUpdated
 
 
-
-
     static constraints = {
         emisorRfc minSize: 12, maxSize:13
         receptorRfc minSize: 12, maxSize:13

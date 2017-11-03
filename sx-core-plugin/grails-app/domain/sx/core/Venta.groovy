@@ -10,6 +10,8 @@ class Venta {
 
   Cliente cliente
 
+  String nombre
+
   Vendedor vendedor
 
   Sucursal sucursal
@@ -86,9 +88,13 @@ class Venta {
 
   Boolean cod = false;
 
+  String cfdiMail
+  String usoDeCfdi
+
   List partidas = []
 
   static constraints = {
+    nombre nullable: true
     tipo  inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
     documento maxSize: 20
     puesto nullable: true
@@ -106,6 +112,8 @@ class Venta {
     createUser nullable:true, maxSize: 100
     updateUser nullable:true, maxSize: 100
     sw2 nullable:true
+    cfdiMail nullable: true
+    usoDeCfdi nullable: true, maxSize:3
   }
 
   static mapping = {

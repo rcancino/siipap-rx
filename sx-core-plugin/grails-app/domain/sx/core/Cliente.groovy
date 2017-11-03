@@ -19,6 +19,8 @@ class Cliente {
 
 	String	nombre
 
+	String email
+
 	Boolean	permiteCheque	 = false
 
 	BigDecimal	chequeDevuelto	 = 0
@@ -49,6 +51,7 @@ class Cliente {
 		lastUpdated nullable:true
     sucursal nullable: true
     direccion nullable: true
+    email nullable: true
 	}
 
 	static hasOne = [credito: ClienteCredito]
