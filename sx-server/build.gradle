@@ -24,6 +24,8 @@ repositories {
     mavenLocal()
     maven { url "https://repo.grails.org/grails/core" }
     maven {url "https://dl.bintray.com/puneetbehl/plugins"}
+    
+    maven {url "http://dl.bintray.com/rcancino/cfdi"}
 }
 
 dependencyManagement {
@@ -77,6 +79,8 @@ dependencies {
     // compile 'org.liquibase:liquibase-core:3.5.3'
     // compile 'org.grails.plugins:audit-logging:2.0.6'
     compile "org.grails.plugins:jasper:2.0.0.RC1"
+
+    compile 'lx.cfdi:v33:1.0.5'
 }
 
 bootRun {
