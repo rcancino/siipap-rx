@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="ventas_diarias"
+		 name="ventas_diariasCHE"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -29,63 +29,49 @@
 	<parameter name="FECHA" isForPrompting="true" class="java.util.Date"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="ORIGEN" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[select 
-a.documento AS docto
-,CASE WHEN (SELECT X.date_created FROM CFDI X WHERE A.CFDI_ID=X.ID) IS NULL THEN A.FECHA ELSE (SELECT date_created FROM CFDI X WHERE A.CFDI_ID=X.ID) END AS fecha
-,B.clave,B.nombre
-,a.moneda,a.tipo_de_cambio as tc,a.importe*a.tipo_de_cambio as importe
-,a.impuesto*a.tipo_de_cambio as impuesto,a.total*a.tipo_de_cambio as total
-,0 as anticipo
-,0 AS anticipo_aplicado
-,a.documento as nfiscal,tipo as ORIGEN,S.NOMBRE,S.CLAVE
-,(SELECT v.kilos FROM venta v where v.cuenta_por_cobrar_id=a.id )as KILOS
-,CASE WHEN (SELECT UUID FROM CFDI C WHERE C.ID=A.CFDI_ID) = NULL THEN '*' ELSE '' END AS TIMBRADA
-FROM  cuenta_por_cobrar A  JOIN sucursal S ON(A.SUCURSAL_ID=S.ID)  JOIN cliente B ON (A.CLIENTE_ID=B.ID)
-WHERE A.TIPO LIKE $P{ORIGEN} AND A.FECHA = $P{FECHA} AND S.ID= $P{SUCURSAL}
-ORDER BY A.documento,a.date_created]]></queryString>
+	<parameter name="ANTICIPO" isForPrompting="true" class="java.lang.String"/>
+	<queryString><![CDATA[select
+u.documento as docto
+,case WHEN A.forma_de_pago='CHECKPLUS' THEN 'C' ELSE 'P' END AS TIPO_PAGO
+,CASE WHEN (SELECT fecha FROM CFDi C WHERE U.CFDI_ID=C.ID) IS NULL THEN A.FECHA ELSE (SELECT date_created FROM CFDi C WHERE U.CFDI_ID=C.ID) END AS fecha
+,c.clave,c.nombre
+,U.IMPORTE as importe,U.impuesto,U.UUID,u.total
+,u.tipo as ORIGEN,S.NOMBRE,S.CLAVE
+FROM VENTA A JOIN SUCURSAL S ON(A.SUCURSAL_ID=S.ID) JOIN cliente C ON(C.ID=A.cliente_id)  JOIN cuenta_por_cobrar U ON (U.ID=a.cuenta_por_cobrar_id) 
+WHERE tipo_documento='VENTA' AND u.tipo='CRE' AND u.FECHA= $P{FECHA} AND S.id=$P{SUCURSAL}
+AND u.forma_de_pago in ('CHEQUE_POSTFECHADO','CHECKPLUS')
+ORDER BY u.documento,U.date_created]]></queryString>
 
 	<field name="docto" class="java.lang.Long"/>
+	<field name="TIPO_PAGO" class="java.lang.String"/>
 	<field name="fecha" class="java.sql.Timestamp"/>
 	<field name="clave" class="java.lang.String"/>
 	<field name="nombre" class="java.lang.String"/>
-	<field name="moneda" class="java.lang.String"/>
-	<field name="tc" class="java.math.BigDecimal"/>
 	<field name="importe" class="java.math.BigDecimal"/>
 	<field name="impuesto" class="java.math.BigDecimal"/>
+	<field name="UUID" class="java.lang.String"/>
 	<field name="total" class="java.math.BigDecimal"/>
-	<field name="anticipo" class="java.lang.Long"/>
-	<field name="anticipo_aplicado" class="java.lang.Long"/>
-	<field name="nfiscal" class="java.lang.Long"/>
 	<field name="ORIGEN" class="java.lang.String"/>
-	<field name="KILOS" class="java.math.BigDecimal"/>
-	<field name="TIMBRADA" class="java.lang.String"/>
 
 	<sortField name="ORIGEN" />
 
-	<variable name="SUBTOTAL_ORIGEN" class="java.lang.Double" resetType="Group" resetGroup="ORIGEN" calculation="Sum">
-		<variableExpression><![CDATA[new Double($F{importe}.doubleValue())]]></variableExpression>
+	<variable name="SUBTOTAL_ORIGEN" class="java.math.BigDecimal" resetType="Group" resetGroup="ORIGEN" calculation="Sum">
+		<variableExpression><![CDATA[$F{importe}]]></variableExpression>
 	</variable>
-	<variable name="IMPUESTO_ORIGEN" class="java.lang.Double" resetType="Group" resetGroup="ORIGEN" calculation="Sum">
-		<variableExpression><![CDATA[ new Double($F{impuesto}.doubleValue())]]></variableExpression>
+	<variable name="IMPUESTO_ORIGEN" class="java.math.BigDecimal" resetType="Group" resetGroup="ORIGEN" calculation="Sum">
+		<variableExpression><![CDATA[$F{impuesto}]]></variableExpression>
 	</variable>
-	<variable name="KILOS_ORIGEN" class="java.math.BigDecimal" resetType="Group" resetGroup="ORIGEN" calculation="Sum">
-		<variableExpression><![CDATA[$F{KILOS}]]></variableExpression>
+	<variable name="SUBTOTAL" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{importe}]]></variableExpression>
 	</variable>
-	<variable name="SUBTOTAL" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double($F{importe}.doubleValue())
-]]></variableExpression>
+	<variable name="TOTAL_ORIGEN" class="java.math.BigDecimal" resetType="Group" resetGroup="ORIGEN" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
 	</variable>
-	<variable name="TOTAL_ORIGEN" class="java.lang.Double" resetType="Group" resetGroup="ORIGEN" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{total}.doubleValue())]]></variableExpression>
+	<variable name="IMPUESTO" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{impuesto}]]></variableExpression>
 	</variable>
-	<variable name="IMPUESTO" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double($F{impuesto}.doubleValue())]]></variableExpression>
-	</variable>
-	<variable name="TOTAL" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{total}.doubleValue())]]></variableExpression>
-	</variable>
-	<variable name="KILOS" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{KILOS}]]></variableExpression>
+	<variable name="TOTAL" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
 	</variable>
 
 		<group  name="ORIGEN" >
@@ -98,7 +84,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 			<band height="13"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="460"
+						x="442"
 						y="3"
 						width="61"
 						height="9"
@@ -107,11 +93,11 @@ ORDER BY A.documento,a.date_created]]></queryString>
 					<textElement textAlignment="Right">
 						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_ORIGEN}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOTAL_ORIGEN}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="351"
+						x="333"
 						y="3"
 						width="55"
 						height="9"
@@ -120,11 +106,11 @@ ORDER BY A.documento,a.date_created]]></queryString>
 					<textElement textAlignment="Right">
 						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{SUBTOTAL_ORIGEN}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{SUBTOTAL_ORIGEN}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="406"
+						x="388"
 						y="3"
 						width="54"
 						height="9"
@@ -133,11 +119,11 @@ ORDER BY A.documento,a.date_created]]></queryString>
 					<textElement textAlignment="Right">
 						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{IMPUESTO_ORIGEN}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{IMPUESTO_ORIGEN}]]></textFieldExpression>
 				</textField>
 				<line direction="TopDown">
 					<reportElement
-						x="357"
+						x="339"
 						y="2"
 						width="48"
 						height="0"
@@ -146,7 +132,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="412"
+						x="394"
 						y="2"
 						width="47"
 						height="0"
@@ -155,7 +141,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="466"
+						x="448"
 						y="2"
 						width="54"
 						height="0"
@@ -164,29 +150,16 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="40"
+						x="22"
 						y="2"
 						width="273"
 						height="0"
 						key="line-20"/>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
-				<textField isStretchWithOverflow="false" pattern="#,##0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="521"
-						y="3"
-						width="50"
-						height="9"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{KILOS_ORIGEN}]]></textFieldExpression>
-				</textField>
 				<line direction="TopDown">
 					<reportElement
-						x="530"
+						x="512"
 						y="2"
 						width="46"
 						height="0"
@@ -195,7 +168,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</line>
 				<staticText>
 					<reportElement
-						x="42"
+						x="24"
 						y="4"
 						width="60"
 						height="9"
@@ -208,7 +181,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="102"
+						x="84"
 						y="4"
 						width="50"
 						height="9"
@@ -235,7 +208,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 			</band>
 		</pageHeader>
 		<columnHeader>
-			<band height="70"  isSplitAllowed="true" >
+			<band height="69"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="391"
@@ -296,33 +269,33 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</line>
 				<staticText>
 					<reportElement
-						x="56"
+						x="22"
 						y="58"
-						width="37"
+						width="47"
 						height="9"
 						key="staticText-6"/>
 					<box></box>
 					<textElement textAlignment="Center">
 						<font fontName="SansSerif" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<text><![CDATA[DOCTO]]></text>
+				<text><![CDATA[FACTURA]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="93"
+						x="69"
 						y="58"
-						width="26"
+						width="32"
 						height="9"
 						key="staticText-7"/>
 					<box></box>
 					<textElement textAlignment="Center">
 						<font fontName="SansSerif" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<text><![CDATA[TIPO]]></text>
+				<text><![CDATA[ORIGEN]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="190"
+						x="172"
 						y="58"
 						width="28"
 						height="9"
@@ -335,7 +308,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="119"
+						x="101"
 						y="58"
 						width="63"
 						height="9"
@@ -360,7 +333,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</line>
 				<staticText>
 					<reportElement
-						x="222"
+						x="204"
 						y="58"
 						width="130"
 						height="9"
@@ -373,7 +346,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="352"
+						x="334"
 						y="58"
 						width="55"
 						height="9"
@@ -386,7 +359,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="407"
+						x="389"
 						y="58"
 						width="54"
 						height="9"
@@ -399,7 +372,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="461"
+						x="443"
 						y="58"
 						width="60"
 						height="9"
@@ -412,7 +385,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="520"
+						x="502"
 						y="58"
 						width="51"
 						height="9"
@@ -487,29 +460,42 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 					<textElement textAlignment="Right">
 						<font isUnderline="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[new String("VENTAS DIARIAS")]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[new String("AUXILIAR DE VENTAS (CHEQUE POST FECHADO)")]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement
+						x="0"
+						y="58"
+						width="22"
+						height="9"
+						key="staticText-43"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font fontName="SansSerif" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
+					</textElement>
+				<text><![CDATA[TIPO]]></text>
+				</staticText>
 			</band>
 		</columnHeader>
 		<detail>
 			<band height="10"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="55"
-						y="-1"
-						width="38"
+						x="21"
+						y="0"
+						width="48"
 						height="10"
 						key="textField"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Left">
 						<font size="7"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{docto}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy HH.mm.ss" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="119"
-						y="-1"
+						x="101"
+						y="0"
 						width="68"
 						height="10"
 						key="textField"/>
@@ -521,7 +507,7 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="190"
+						x="172"
 						y="-1"
 						width="28"
 						height="10"
@@ -534,8 +520,8 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="222"
-						y="-1"
+						x="204"
+						y="0"
 						width="129"
 						height="10"
 						key="textField"/>
@@ -547,8 +533,8 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="351"
-						y="-1"
+						x="333"
+						y="0"
 						width="56"
 						height="10"
 						key="textField"/>
@@ -556,12 +542,12 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 					<textElement textAlignment="Right">
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($F{importe}.doubleValue())]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{importe}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="407"
-						y="-1"
+						x="389"
+						y="0"
 						width="54"
 						height="10"
 						key="textField"/>
@@ -569,12 +555,12 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 					<textElement textAlignment="Right">
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($F{impuesto}.doubleValue())]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{impuesto}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="461"
-						y="-1"
+						x="443"
+						y="0"
 						width="59"
 						height="10"
 						key="textField"/>
@@ -582,26 +568,13 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 					<textElement textAlignment="Right">
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double( $F{total}.doubleValue())]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.000" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="520"
-						y="-1"
-						width="51"
-						height="10"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{KILOS}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{total}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="94"
-						y="-1"
-						width="25"
+						x="70"
+						y="0"
+						width="31"
 						height="10"
 						key="textField"/>
 					<box></box>
@@ -612,48 +585,16 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="1"
-						y="-1"
-						width="23"
-						height="10"
-						key="textField-8">
-							<printWhenExpression><![CDATA[new Boolean($F{moneda}.equals( "USD" ))]]></printWhenExpression>
-						</reportElement>
-					<box></box>
-					<textElement>
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIMBRADA}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.0000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="24"
-						y="-1"
-						width="31"
-						height="10"
-						key="textField-9">
-							<printWhenExpression><![CDATA[new Boolean($F{moneda}.equals( "USD" ))]]></printWhenExpression>
-						</reportElement>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{tc}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.0000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="570"
+						x="0"
 						y="0"
-						width="11"
-						height="10"
-						key="textField-10">
-							<printWhenExpression><![CDATA[new Boolean($F{moneda}.equals( "USD" ))]]></printWhenExpression>
-						</reportElement>
+						width="22"
+						height="9"
+						key="textField-8"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Center">
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIMBRADA}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIPO_PAGO}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
@@ -873,7 +814,7 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 			<band height="16"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="405"
+						x="387"
 						y="5"
 						width="55"
 						height="9"
@@ -882,11 +823,11 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 					<textElement textAlignment="Right">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{IMPUESTO}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{IMPUESTO}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
-						x="264"
+						x="246"
 						y="6"
 						width="75"
 						height="9"
@@ -899,7 +840,7 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="350"
+						x="332"
 						y="5"
 						width="55"
 						height="9"
@@ -908,11 +849,11 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 					<textElement textAlignment="Right">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{SUBTOTAL}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{SUBTOTAL}]]></textFieldExpression>
 				</textField>
 				<line direction="TopDown">
 					<reportElement
-						x="535"
+						x="517"
 						y="4"
 						width="41"
 						height="0"
@@ -921,7 +862,7 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				</line>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="460"
+						x="442"
 						y="5"
 						width="60"
 						height="9"
@@ -930,24 +871,11 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 					<textElement textAlignment="Right">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="520"
-						y="5"
-						width="51"
-						height="9"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{KILOS}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOTAL}]]></textFieldExpression>
 				</textField>
 				<line direction="TopDown">
 					<reportElement
-						x="535"
+						x="517"
 						y="2"
 						width="41"
 						height="0"
@@ -956,7 +884,7 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="480"
+						x="462"
 						y="2"
 						width="41"
 						height="0"
@@ -965,7 +893,7 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="480"
+						x="462"
 						y="4"
 						width="41"
 						height="0"
@@ -974,7 +902,7 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="418"
+						x="400"
 						y="2"
 						width="41"
 						height="0"
@@ -983,7 +911,7 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="418"
+						x="400"
 						y="4"
 						width="41"
 						height="0"
@@ -992,7 +920,7 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="363"
+						x="345"
 						y="2"
 						width="41"
 						height="0"
@@ -1001,7 +929,7 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="363"
+						x="345"
 						y="4"
 						width="41"
 						height="0"

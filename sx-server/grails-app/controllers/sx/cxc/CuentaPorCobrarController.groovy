@@ -3,7 +3,9 @@ package sx.cxc
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
 
-@Secured("hasRole('ROLE_CXC_USER')")
+import sx.core.Sucursal
+
+@Secured("hasRole('ROLE_POS_USER')")
 class CuentaPorCobrarController extends RestfulController{
 
     static responseFormats = ['json']
@@ -32,6 +34,18 @@ class CuentaPorCobrarController extends RestfulController{
         }
 
         return query.list(params)
+    }
+
+    def pendientesCod(Sucursal sucursal) {
+        if (sucursal == null) {
+            notFound()
+            return
+        }
+        params.max = 10
+        params.sort = params.sort ?:'lastUpdated'
+        params.order = params.order ?:'desc'
+        def rows = CuentaPorCobrar.findAll("from CuentaPorCobrar c where c.total-c.pagos > 0 and c.tipo = ? order by dateCreated desc ", ['COD'])
+        respond rows
     }
 
 }

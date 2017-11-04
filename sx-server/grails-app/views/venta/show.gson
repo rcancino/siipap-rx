@@ -19,6 +19,8 @@ json g.render(venta, [excludes:['moneda','partidas','sucursal']]){
             id venta.cuentaPorCobrar.id
             uuid venta.cuentaPorCobrar.uuid
             cfdi g.render(venta.cuentaPorCobrar.cfdi)
+            saldo venta.cuentaPorCobrar.saldo
+            pagos venta.cuentaPorCobrar.pagos
         }
     }
     

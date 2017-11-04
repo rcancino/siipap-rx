@@ -48,7 +48,10 @@ class VentaController extends RestfulController{
           query = query.where {sucursal.id ==  params.sucursal}   
       }
       if (params.facturables) {
-        query = query.where {facturar !=  null && cuentaPorCobrar == null && tipo == params.facturables}
+        query = query.where {facturar !=  null  && cuentaPorCobrar == null}
+        if(params.facturables == 'CRE'){
+          query = query.where {tipo == params.facturables}
+        }
       }
       if (params.facturados) {
         query = query.where {cuentaPorCobrar != null && tipo == params.facturados} 
@@ -130,6 +133,20 @@ class VentaController extends RestfulController{
     pedido = ventaService.facturar(pedido);
     println 'Pedido facturado exitosamente: ' + pedido
     respond pedido
+  }
+
+  def cobradas(Sucursal sucursal) {
+    if (sucursal == null) {
+        notFound()
+        return
+    }
+    params.max = params.registros ?:100
+    params.sort = params.sort ?:'lastUpdated'
+    params.order = params.order ?:'desc'
+    
+    def ventas = Venta.where{ sucursal == sucursal && cuentaPorCobrar != null}.list(params)
+    // println 'Buscando facturas cobradas: ' + sucursal + ' Found: ' + ventas.size()
+    respond ventas
   }
 }
 

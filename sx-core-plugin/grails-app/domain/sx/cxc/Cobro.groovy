@@ -45,16 +45,25 @@ class  Cobro {
 
     String sw2
 
+    List aplicaciones = []
+
     static hasOne = [cheque: CobroCheque, deposito: CobroDeposito, transferencia: CobroTransferencia,tarjeta: CobroTarjeta]
 
+    static hasMany =[aplicaciones: AplicacionDeCobro]
+
     static constraints = {
-        tipo inList:['CAM','MOS','CRE','CHE','JUR']
+        tipo inList:['COD','CON','CRE','CHE','JUR']
         referencia nullable:true
         sw2 nullable:true, unique:true
         dateCreated nullable: true
         lastUpdated nullable: true
         createUser nullable: true
         updateUser nullable: true
+        cheque nullable: true
+        deposito nullable: true
+        transferencia nullable: true
+        tarjeta nullable: true
+        primeraAplicacion nullable: true
     }
 
     static mapping={
@@ -62,7 +71,7 @@ class  Cobro {
         fecha type:'date' ,index: 'COBRO_IDX1'
         cliente index: 'COBRO_IDX2'
         formaDePago index: 'COBRO_IDX3'
+        aplicaciones cascade: "all-delete-orphan"
     }
-
 
 }

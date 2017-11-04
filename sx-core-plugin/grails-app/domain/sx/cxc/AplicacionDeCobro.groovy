@@ -34,16 +34,16 @@ class AplicacionDeCobro {
         sw2 nullable: true
         cobro nullable: true
         notaDeCredito nullable: true
-
+        createUser nullable: true
+        updateUser nullable: true
     }
-
 
     static mapping = {
-
         id generator:'uuid'
         fecha type: 'date'
-
     }
+
+    static belongsTo = [cobro: Cobro]
 }
 
 

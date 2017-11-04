@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="ventas_diarias"
+		 name="fac_pen_camioneta"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -27,201 +27,57 @@
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
 	<parameter name="FECHA" isForPrompting="true" class="java.util.Date"/>
-	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="ORIGEN" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.Long"/>
 	<queryString><![CDATA[select 
-a.documento AS docto
-,CASE WHEN (SELECT X.date_created FROM CFDI X WHERE A.CFDI_ID=X.ID) IS NULL THEN A.FECHA ELSE (SELECT date_created FROM CFDI X WHERE A.CFDI_ID=X.ID) END AS fecha
-,B.clave,B.nombre
-,a.moneda,a.tipo_de_cambio as tc,a.importe*a.tipo_de_cambio as importe
-,a.impuesto*a.tipo_de_cambio as impuesto,a.total*a.tipo_de_cambio as total
-,0 as anticipo
-,0 AS anticipo_aplicado
-,a.documento as nfiscal,tipo as ORIGEN,S.NOMBRE,S.CLAVE
-,(SELECT v.kilos FROM venta v where v.cuenta_por_cobrar_id=a.id )as KILOS
-,CASE WHEN (SELECT UUID FROM CFDI C WHERE C.ID=A.CFDI_ID) = NULL THEN '*' ELSE '' END AS TIMBRADA
-FROM  cuenta_por_cobrar A  JOIN sucursal S ON(A.SUCURSAL_ID=S.ID)  JOIN cliente B ON (A.CLIENTE_ID=B.ID)
-WHERE A.TIPO LIKE $P{ORIGEN} AND A.FECHA = $P{FECHA} AND S.ID= $P{SUCURSAL}
-ORDER BY A.documento,a.date_created]]></queryString>
+'F' AS TIP
+,s.clave AS CVE_SUC,s.nombre as suc
+,CASE WHEN (SELECT c.date_created FROM CFDI C WHERE v.cfdi_id=C.ID) IS NULL THEN v.FECHA ELSE (SELECT date_created FROM CFDI c WHERE v.cfdi_ID=c.ID) END AS fecha
+,v.documento as docto,x.clave,x.nombre,v.uuid as nfiscal,v.tipo_de_cambio as cambio
+,case when (ROUND(TO_DAYS('2017/10/25')-TO_DAYS(v.fecha),0)) < 0 then 0 else  (ROUND(TO_DAYS('2017/10/25')-TO_DAYS(v.fecha),0)) end as dias_vencido
+,v.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where v.id=t.cuenta_por_cobrar_id AND T.FECHA<='2017/10/25'),0)as saldo
+,((v.total-ifnull((select sum(t.importe) from aplicacion_de_cobro t where v.id=t.cuenta_por_cobrar_id AND T.FECHA<='2017/10/25'),0))*V.tipo_de_cambio)AS SALDOTOT
+,CASE WHEN v.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where v.id=t.cuenta_por_cobrar_id AND T.FECHA<='2017/10/25'),0)<>V.TOTAL THEN '*'
+ ELSE '' END AS PAGO
+ from cuenta_por_cobrar v join sucursal s on (s.id=v.sucursal_id) join cliente x on (x.id=v.cliente_id) join venta n on (n.cuenta_por_cobrar_id=v.id) join condicion_de_envio d on (d.venta_id=n.id)
+ where 
+(v.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where v.id=t.cuenta_por_cobrar_id AND T.FECHA<='2017/10/25'),0))>1 and 
+s.ID= '402880fc5e4ec411015e4ec64e70012e'
+and v.tipo='COD' 
+and  V.FECHA<='2017/10/25' AND V.TIPO_DOCUMENTO IN ('NOTA_DE_CARGO','VENTA')
+union 
+select 'N' AS TIP
+,S.clave AS CLAVE,s.nombre as suc
+,CASE WHEN (SELECT date_created FROM CFDI s WHERE a.cfdi_id=s.ID) IS NULL THEN a.FECHA ELSE (SELECT date_created FROM CFDI s WHERE a.cfdi_id=s.ID) END AS fecha
+,A.folio as FOLIO,l.CLAVE,l.NOMBRE,(SELECT UUID FROM cfdi x where x.id=a.cfdi_id) as numero,a.tc 
+,NULL as dias_vencido
+,(a.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where a.id=t.nota_de_credito_id AND T.FECHA<='2017/10/25'),0))as saldo
+,(a.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where a.id=t.nota_de_credito_id AND T.FECHA<='2017/10/25'),0))as saldo2
+,'' AS PAGO
+FROM nota_de_credito A join cliente l on (a.cliente_id=l.id) JOIN sucursal S  ON (a.sucursal_id=s.id)
+where (a.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where t.nota_de_credito_id=a.id AND T.FECHA<='2017/10/25'),0))>1 and  A.tipo like 'DEVOLUCION'
+AND tipo_de_operacion='COD' and A.fecha >='2011/01/01' AND A.FECHA<=$P{FECHA} AND A.SUCURSAL_ID=$P{SUCURSAL}
+ORDER BY 4]]></queryString>
 
-	<field name="docto" class="java.lang.Long"/>
+	<field name="TIP" class="java.lang.String"/>
+	<field name="CVE_SUC" class="java.lang.String"/>
+	<field name="suc" class="java.lang.String"/>
 	<field name="fecha" class="java.sql.Timestamp"/>
+	<field name="docto" class="java.lang.Long"/>
 	<field name="clave" class="java.lang.String"/>
 	<field name="nombre" class="java.lang.String"/>
-	<field name="moneda" class="java.lang.String"/>
-	<field name="tc" class="java.math.BigDecimal"/>
-	<field name="importe" class="java.math.BigDecimal"/>
-	<field name="impuesto" class="java.math.BigDecimal"/>
-	<field name="total" class="java.math.BigDecimal"/>
-	<field name="anticipo" class="java.lang.Long"/>
-	<field name="anticipo_aplicado" class="java.lang.Long"/>
-	<field name="nfiscal" class="java.lang.Long"/>
-	<field name="ORIGEN" class="java.lang.String"/>
-	<field name="KILOS" class="java.math.BigDecimal"/>
-	<field name="TIMBRADA" class="java.lang.String"/>
+	<field name="nfiscal" class="java.lang.String"/>
+	<field name="cambio" class="java.math.BigDecimal"/>
+	<field name="dias_vencido" class="java.lang.Long"/>
+	<field name="saldo" class="java.math.BigDecimal"/>
+	<field name="SALDOTOT" class="java.math.BigDecimal"/>
+	<field name="PAGO" class="java.lang.String"/>
 
-	<sortField name="ORIGEN" />
-
-	<variable name="SUBTOTAL_ORIGEN" class="java.lang.Double" resetType="Group" resetGroup="ORIGEN" calculation="Sum">
-		<variableExpression><![CDATA[new Double($F{importe}.doubleValue())]]></variableExpression>
+	<variable name="TOTAL" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{SALDOTOT}]]></variableExpression>
 	</variable>
-	<variable name="IMPUESTO_ORIGEN" class="java.lang.Double" resetType="Group" resetGroup="ORIGEN" calculation="Sum">
-		<variableExpression><![CDATA[ new Double($F{impuesto}.doubleValue())]]></variableExpression>
+	<variable name="NUMERO _FACTURAS" class="java.lang.Double" resetType="Report" calculation="Count">
+		<variableExpression><![CDATA[$F{docto}]]></variableExpression>
 	</variable>
-	<variable name="KILOS_ORIGEN" class="java.math.BigDecimal" resetType="Group" resetGroup="ORIGEN" calculation="Sum">
-		<variableExpression><![CDATA[$F{KILOS}]]></variableExpression>
-	</variable>
-	<variable name="SUBTOTAL" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double($F{importe}.doubleValue())
-]]></variableExpression>
-	</variable>
-	<variable name="TOTAL_ORIGEN" class="java.lang.Double" resetType="Group" resetGroup="ORIGEN" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{total}.doubleValue())]]></variableExpression>
-	</variable>
-	<variable name="IMPUESTO" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double($F{impuesto}.doubleValue())]]></variableExpression>
-	</variable>
-	<variable name="TOTAL" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{total}.doubleValue())]]></variableExpression>
-	</variable>
-	<variable name="KILOS" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{KILOS}]]></variableExpression>
-	</variable>
-
-		<group  name="ORIGEN" >
-			<groupExpression><![CDATA[$F{ORIGEN}]]></groupExpression>
-			<groupHeader>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-			</groupHeader>
-			<groupFooter>
-			<band height="13"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="460"
-						y="3"
-						width="61"
-						height="9"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_ORIGEN}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="351"
-						y="3"
-						width="55"
-						height="9"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{SUBTOTAL_ORIGEN}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="406"
-						y="3"
-						width="54"
-						height="9"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{IMPUESTO_ORIGEN}]]></textFieldExpression>
-				</textField>
-				<line direction="TopDown">
-					<reportElement
-						x="357"
-						y="2"
-						width="48"
-						height="0"
-						key="line-22"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="412"
-						y="2"
-						width="47"
-						height="0"
-						key="line-29"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="466"
-						y="2"
-						width="54"
-						height="0"
-						key="line-30"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="40"
-						y="2"
-						width="273"
-						height="0"
-						key="line-20"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<textField isStretchWithOverflow="false" pattern="#,##0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="521"
-						y="3"
-						width="50"
-						height="9"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{KILOS_ORIGEN}]]></textFieldExpression>
-				</textField>
-				<line direction="TopDown">
-					<reportElement
-						x="530"
-						y="2"
-						width="46"
-						height="0"
-						key="line-51"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<staticText>
-					<reportElement
-						x="42"
-						y="4"
-						width="60"
-						height="9"
-						key="staticText-42"/>
-					<box></box>
-					<textElement textAlignment="Justified" verticalAlignment="Bottom">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
-					</textElement>
-				<text><![CDATA[TOTAL ORIGEN:]]></text>
-				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="102"
-						y="4"
-						width="50"
-						height="9"
-						key="textField"/>
-					<box></box>
-					<textElement>
-						<font fontName="Arial" size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ORIGEN}]]></textFieldExpression>
-				</textField>
-			</band>
-			</groupFooter>
-		</group>
 		<background>
 			<band height="0"  isSplitAllowed="true" >
 			</band>
@@ -235,13 +91,26 @@ ORDER BY A.documento,a.date_created]]></queryString>
 			</band>
 		</pageHeader>
 		<columnHeader>
-			<band height="70"  isSplitAllowed="true" >
+			<band height="82"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="391"
+						y="25"
+						width="184"
+						height="15"
+						key="staticText-1"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Oblique" isBold="false" isItalic="true" isUnderline="true"/>
+					</textElement>
+				<text><![CDATA[FACTURAS PENDIENTES CAMIONETA]]></text>
+				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="391"
 						y="3"
 						width="184"
-						height="24"
+						height="22"
 						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Right">
@@ -251,7 +120,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</textField>
 				<staticText>
 					<reportElement
-						x="5"
+						x="7"
 						y="42"
 						width="51"
 						height="13"
@@ -265,9 +134,9 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="459"
+						x="450"
 						y="42"
-						width="63"
+						width="76"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -280,13 +149,13 @@ ORDER BY A.documento,a.date_created]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[VENTAS DEL: ]]></text>
+				<text><![CDATA[PERIODO:]]></text>
 				</staticText>
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
 						x="0"
-						y="68"
+						y="80"
 						width="584"
 						height="1"
 						forecolor="#999999"
@@ -296,55 +165,42 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</line>
 				<staticText>
 					<reportElement
-						x="56"
+						x="0"
 						y="58"
 						width="37"
-						height="9"
-						key="staticText-6"/>
-					<box></box>
-					<textElement textAlignment="Center">
-						<font fontName="SansSerif" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
-					</textElement>
-				<text><![CDATA[DOCTO]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="93"
-						y="58"
-						width="26"
-						height="9"
+						height="20"
 						key="staticText-7"/>
 					<box></box>
 					<textElement textAlignment="Center">
 						<font fontName="SansSerif" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<text><![CDATA[TIPO]]></text>
+				<text><![CDATA[FECHA DOCTO]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="190"
+						x="91"
 						y="58"
-						width="28"
-						height="9"
+						width="35"
+						height="20"
 						key="staticText-15"/>
 					<box></box>
 					<textElement textAlignment="Center">
 						<font fontName="SansSerif" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<text><![CDATA[CLAVE]]></text>
+				<text><![CDATA[   CLAVE    CLIENTE]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="119"
+						x="56"
 						y="58"
-						width="63"
-						height="9"
+						width="35"
+						height="20"
 						key="staticText-16"/>
 					<box></box>
 					<textElement textAlignment="Center">
 						<font fontName="SansSerif" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<text><![CDATA[FECHA]]></text>
+				<text><![CDATA[NUMERO DOCTO.]]></text>
 				</staticText>
 				<line direction="TopDown">
 					<reportElement
@@ -360,158 +216,196 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</line>
 				<staticText>
 					<reportElement
-						x="222"
+						x="126"
 						y="58"
-						width="130"
-						height="9"
+						width="161"
+						height="20"
 						key="staticText-31"/>
 					<box></box>
 					<textElement textAlignment="Center">
 						<font fontName="SansSerif" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<text><![CDATA[NOMBRE]]></text>
+				<text><![CDATA[NOMBRE CLIENTE]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="352"
+						x="476"
 						y="58"
-						width="55"
-						height="9"
-						key="staticText-32"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font fontName="SansSerif" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
-					</textElement>
-				<text><![CDATA[SUBTOTAL]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="407"
-						y="58"
-						width="54"
-						height="9"
+						width="39"
+						height="20"
 						key="staticText-37"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Center">
 						<font fontName="SansSerif" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<text><![CDATA[IMPUESTO]]></text>
+				<text><![CDATA[SALDO  FACTURA]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="461"
+						x="514"
 						y="58"
-						width="60"
-						height="9"
-						key="staticText-38"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font fontName="SansSerif" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
-					</textElement>
-				<text><![CDATA[TOTAL]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="520"
-						y="58"
-						width="51"
-						height="9"
+						width="37"
+						height="20"
 						key="staticText-39"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Center">
 						<font fontName="SansSerif" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<text><![CDATA[KILOS]]></text>
+				<text><![CDATA[DIAS VENCIDO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="551"
+						y="58"
+						width="32"
+						height="20"
+						key="staticText-40"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font fontName="SansSerif" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
+					</textElement>
+				<text><![CDATA[ESTADO]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="522"
+						x="526"
 						y="42"
-						width="50"
+						width="49"
 						height="13"
 						key="textField"/>
 					<box></box>
-					<textElement>
+					<textElement textAlignment="Right">
 						<font fontName="Arial" size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="56"
+						x="58"
 						y="42"
-						width="63"
+						width="147"
 						height="13"
 						key="textField"/>
 					<box></box>
 					<textElement>
 						<font fontName="Arial" size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SUCURSAL}.equals("3")?"ANDRADE (3)":$P{SUCURSAL}.equals("12")?"TACUBA (12)":$P{SUCURSAL}.equals("10")?"CALLE 4 (10)":
-$P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (13)":"TODAS"]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="46"
-						y="24"
-						width="100"
-						height="14"
-						key="textField"/>
-					<box></box>
-					<textElement>
-						<font fontName="Arial" size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ORIGEN}.equals("%") ? "TODOS":$F{ORIGEN}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{suc}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
-						x="5"
-						y="24"
-						width="41"
-						height="14"
+						x="323"
+						y="58"
+						width="153"
+						height="20"
 						key="staticText-41"/>
 					<box></box>
-					<textElement textAlignment="Left">
-						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true"/>
+					<textElement textAlignment="Center">
+						<font fontName="SansSerif" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<text><![CDATA[ORIGEN :]]></text>
+				<text><![CDATA[     NUMERO     FISCAL]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<staticText>
 					<reportElement
-						x="321"
-						y="27"
-						width="254"
-						height="15"
-						key="textField-7"/>
+						x="287"
+						y="58"
+						width="36"
+						height="20"
+						key="staticText-43"/>
 					<box></box>
-					<textElement textAlignment="Right">
-						<font isUnderline="true"/>
+					<textElement textAlignment="Center">
+						<font fontName="SansSerif" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[new String("VENTAS DIARIAS")]]></textFieldExpression>
-				</textField>
+				<text><![CDATA[T.C.]]></text>
+				</staticText>
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="10"  isSplitAllowed="true" >
+			<band height="15"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="55"
-						y="-1"
-						width="38"
-						height="10"
+						x="56"
+						y="2"
+						width="35"
+						height="12"
 						key="textField"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Center">
 						<font size="7"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{docto}]]></textFieldExpression>
 				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="91"
+						y="1"
+						width="34"
+						height="12"
+						key="textField"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{clave}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="132"
+						y="2"
+						width="155"
+						height="12"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{nombre}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="322"
+						y="2"
+						width="154"
+						height="12"
+						key="textField"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{nfiscal}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="514"
+						y="2"
+						width="37"
+						height="12"
+						key="textField"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{dias_vencido}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="551"
+						y="2"
+						width="33"
+						height="12"
+						key="textField"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{PAGO}]]></textFieldExpression>
+				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy HH.mm.ss" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="119"
-						y="-1"
-						width="68"
-						height="10"
+						x="1"
+						y="2"
+						width="37"
+						height="12"
 						key="textField"/>
 					<box></box>
 					<textElement>
@@ -521,139 +415,46 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="190"
-						y="-1"
-						width="28"
-						height="10"
-						key="textField"/>
-					<box></box>
-					<textElement>
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{clave}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="222"
-						y="-1"
-						width="129"
-						height="10"
-						key="textField"/>
-					<box></box>
-					<textElement>
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{nombre}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="351"
-						y="-1"
-						width="56"
-						height="10"
-						key="textField"/>
+						x="38"
+						y="2"
+						width="18"
+						height="12"
+						key="textField-7">
+							<printWhenExpression><![CDATA[new Boolean($F{TIP}.equals( new String("N") ))]]></printWhenExpression>
+						</reportElement>
 					<box></box>
 					<textElement textAlignment="Right">
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($F{importe}.doubleValue())]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIP}.concat(  new String (" -") )]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="###0.0000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="407"
-						y="-1"
-						width="54"
-						height="10"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($F{impuesto}.doubleValue())]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="461"
-						y="-1"
-						width="59"
-						height="10"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double( $F{total}.doubleValue())]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.000" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="520"
-						y="-1"
-						width="51"
-						height="10"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{KILOS}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="94"
-						y="-1"
-						width="25"
-						height="10"
-						key="textField"/>
+						x="287"
+						y="2"
+						width="35"
+						height="12"
+						key="textField">
+							<printWhenExpression><![CDATA[new Boolean($F{cambio}.longValue()>1)]]></printWhenExpression>
+						</reportElement>
 					<box></box>
 					<textElement textAlignment="Center">
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ORIGEN}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{cambio}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="1"
-						y="-1"
-						width="23"
-						height="10"
-						key="textField-8">
-							<printWhenExpression><![CDATA[new Boolean($F{moneda}.equals( "USD" ))]]></printWhenExpression>
-						</reportElement>
-					<box></box>
-					<textElement>
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIMBRADA}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.0000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="24"
-						y="-1"
-						width="31"
-						height="10"
-						key="textField-9">
-							<printWhenExpression><![CDATA[new Boolean($F{moneda}.equals( "USD" ))]]></printWhenExpression>
-						</reportElement>
+						x="476"
+						y="2"
+						width="38"
+						height="12"
+						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Right">
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{tc}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.0000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="570"
-						y="0"
-						width="11"
-						height="10"
-						key="textField-10">
-							<printWhenExpression><![CDATA[new Boolean($F{moneda}.equals( "USD" ))]]></printWhenExpression>
-						</reportElement>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIMBRADA}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SALDOTOT}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
@@ -686,8 +487,8 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="6"
-						y="2"
+						x="7"
+						y="1"
 						width="75"
 						height="10"
 						forecolor="#666666"
@@ -728,7 +529,7 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 						mode="Opaque"
 						x="417"
 						y="1"
-						width="77"
+						width="76"
 						height="12"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -746,9 +547,9 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="494"
+						x="493"
 						y="1"
-						width="84"
+						width="82"
 						height="12"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -766,7 +567,7 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 			</band>
 		</pageFooter>
 		<lastPageFooter>
-			<band height="14"  isSplitAllowed="true" >
+			<band height="13"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
@@ -790,8 +591,8 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="6"
-						y="2"
+						x="7"
+						y="1"
 						width="76"
 						height="12"
 						forecolor="#666666"
@@ -852,7 +653,7 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 						mode="Transparent"
 						x="493"
 						y="1"
-						width="85"
+						width="82"
 						height="12"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -870,144 +671,68 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":$P{SUCURSAL}.equals("13")?"5 DE FEBRERO (
 			</band>
 		</lastPageFooter>
 		<summary>
-			<band height="16"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="405"
-						y="5"
-						width="55"
-						height="9"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{IMPUESTO}]]></textFieldExpression>
-				</textField>
+			<band height="15"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
-						x="264"
+						x="365"
 						y="6"
-						width="75"
+						width="89"
 						height="9"
 						key="staticText-33"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
 						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<text><![CDATA[TOTAL:]]></text>
+				<text><![CDATA[TOTAL GENERAL :]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="350"
-						y="5"
-						width="55"
+						x="464"
+						y="6"
+						width="43"
 						height="9"
 						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Right">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{SUBTOTAL}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOTAL}]]></textFieldExpression>
 				</textField>
 				<line direction="TopDown">
 					<reportElement
-						x="535"
-						y="4"
-						width="41"
-						height="0"
-						key="line-48"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="460"
-						y="5"
-						width="60"
-						height="9"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="520"
-						y="5"
-						width="51"
-						height="9"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{KILOS}]]></textFieldExpression>
-				</textField>
-				<line direction="TopDown">
-					<reportElement
-						x="535"
+						x="7"
 						y="2"
-						width="41"
-						height="0"
-						key="line-52"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="480"
-						y="2"
-						width="41"
-						height="0"
-						key="line-53"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="480"
-						y="4"
-						width="41"
-						height="0"
-						key="line-54"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="418"
-						y="2"
-						width="41"
-						height="0"
+						width="568"
+						height="3"
 						key="line-55"/>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
-				<line direction="TopDown">
+				<staticText>
 					<reportElement
-						x="418"
-						y="4"
-						width="41"
-						height="0"
-						key="line-56"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
+						x="7"
+						y="6"
+						width="90"
+						height="9"
+						key="staticText-42"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Bottom">
+						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
+					</textElement>
+				<text><![CDATA[FACTURAS PENDIENTES :]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="###0;###0-" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="363"
-						y="2"
-						width="41"
-						height="0"
-						key="line-57"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="363"
-						y="4"
-						width="41"
-						height="0"
-						key="line-58"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
+						x="98"
+						y="6"
+						width="29"
+						height="9"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{NUMERO _FACTURAS}]]></textFieldExpression>
+				</textField>
 			</band>
 		</summary>
 </jasperReport>

@@ -57,7 +57,9 @@ class CuentaPorCobrar {
 
     String updateUser
 
+    BigDecimal pagos = 0.0
 
+    BigDecimal saldo = 0.0
 
     static constraints = {
         tipoDocumento inList:['VENTA','CHEQUE_DEVUELTO','DEVOLUCION_CLIENTE','NOTA_DE_CARGO']
@@ -76,8 +78,17 @@ class CuentaPorCobrar {
         id generator:'uuid'
         fecha type:'date' ,index: 'CXC_IDX1'
         cliente index: 'CXC_IDX3'
+        pagos formula:'(select COALESCE(sum(x.importe),0) from aplicacion_de_cobro x where x.cuenta_por_cobrar_id=id)'
 
     }
+
+    static transients = ['saldo']
+
+    BigDecimal getSaldo() {
+        return total - pagos
+    }
+
+
 
 
 }

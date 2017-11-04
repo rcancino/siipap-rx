@@ -69,14 +69,20 @@ class UrlMappings {
         "/api/ventas/findManiobra"( controller: 'venta', action: 'findManiobra')
         "/api/ventas/mandarFacturar/$id"( controller: 'venta', action: 'mandarFacturar')
         "/api/ventas/facturar/$id"( controller: 'venta', action: 'facturar')
+        "/api/ventas/cobradas/$id"( controller: 'venta', action: 'cobradas')
+        
+
         "/api/ventas/listas"(resources: "listaDePreciosVenta")
         
         "/api/tesoreria/solicitudes"(resources:"solicitudDeDeposito")
         "/api/tesoreria/solicitudes/pendientes/$id"( controller: 'solicitudDeDeposito', action: 'pendientes')
 
         // CXC
+        "/api/cxc/cobro"(resources: "cobro")
+
         "/api/notasDeCargo"(resources: "notaDeCargo")
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
+        "/api/cuentasPorCobrar/pendientesCod/$id"( controller: 'cuentaPorCobrar', action: 'pendientesCod')
         "/api/notasDeCredito"(resources: "notaDeCredito")
 
         //Inventario
