@@ -43,6 +43,10 @@ class Cliente {
 
 	Date lastUpdated
 
+	String createUser
+
+  String updateUser
+
 
 	static constraints = {
 		rfc maxSize:13
@@ -52,6 +56,10 @@ class Cliente {
     sucursal nullable: true
     direccion nullable: true
     email nullable: true
+    credito nullable: true
+    vendedor nullable: true
+    createUser nullable: true
+		updateUser nullable: true
 	}
 
 	static hasOne = [credito: ClienteCredito]
