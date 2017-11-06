@@ -29,7 +29,7 @@
 	<parameter name="NomReporte" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["REPORTE DE FACTURAS CANCELADAS"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="FECHA" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.Integer"/>
 	<queryString><![CDATA[SELECT
 V.tipo as ORIGEN,V.TIPO

@@ -29,7 +29,7 @@
 	<parameter name="NomReporte" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["REPORTE DE FACTURAS COBRADAS EL:"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="FECHA" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT
 a.id as id,o.id
@@ -282,7 +282,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambipo_por_efectiv
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
 						<font fontName="SansSerif" size="10"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FECHA}]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageHeader>

@@ -26,7 +26,7 @@
 	<parameter name="COMPANY" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
-	<parameter name="FECHA" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.Long"/>
 	<queryString><![CDATA[select 'F' AS TIP
 ,C.TIPO
@@ -288,7 +288,7 @@ AND (v.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 					<textElement textAlignment="Right">
 						<font fontName="Arial" size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FECHA}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement

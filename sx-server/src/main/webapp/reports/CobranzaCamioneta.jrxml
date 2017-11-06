@@ -29,9 +29,8 @@
 	<parameter name="NomReporte" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["COBRANZA CAMIONETA DEL DIA:"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="FECHA" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="SUCURSAL_ID" isForPrompting="true" class="java.lang.Long"/>
 	<parameter name="SALDOAFAVOR" isForPrompting="true" class="java.math.BigDecimal"/>
 	<queryString><![CDATA[SELECT 
 a.id as id
@@ -297,7 +296,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="SansSerif" size="10" isUnderline="true"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FECHA}]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageHeader>
