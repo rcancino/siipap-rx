@@ -16,9 +16,9 @@ class ReporteController {
     def run(ReportConfig config) {
         // println "Generando  Reporte... con params: " + params
         def repParams = params
-        println "Reporte: " + config
+        println "Reporte: " + params
         def reportDef= new JasperReportDef(
-                name: 'MovGenerico',
+                name: repParams.name,
                 fileFormat: JasperExportFormat.PDF_FORMAT,
                 parameters: repParams
         )
