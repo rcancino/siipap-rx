@@ -27,7 +27,7 @@
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
 	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.Long"/>
+	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[select 'F' AS TIP
 ,C.TIPO
 ,v.id as cargo_id,q.id as embarque_id,q.documento as embarque

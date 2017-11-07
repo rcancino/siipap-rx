@@ -28,7 +28,7 @@ class Venta {
 
   BigDecimal descuentoImporte = 0
 
-  BigDecimal subTotal = 0
+  BigDecimal subtotal = 0
 
   BigDecimal impuesto = 0
 

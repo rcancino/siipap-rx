@@ -50,7 +50,7 @@ class VentaDet {
 
   BigDecimal  precioOriginal = 0
 
-  BigDecimal  desctoOriginal = 0
+  BigDecimal  descuentoOriginal = 0
 
   BigDecimal  importeCortes = 0
 
