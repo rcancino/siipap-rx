@@ -161,10 +161,12 @@ class ImportadorDeClientes implements  Importador{
 
                 ComunicacionEmpresa medio=ComunicacionEmpresa.where {sw2==medioRow.sw2 && descripcion==medioRow.descripcion }.find()
 
-            if(!medio)
-                medio =new ComunicacionEmpresa()
-
+            if(!medio){
                 println "importando Medio de Comunicacion para"+cliente.sw2
+                medio =new ComunicacionEmpresa()
+            }else{
+                println "Actualizando Medio de Comunicacion para"+cliente.sw2
+            }
 
                     medio.cliente=cliente
                     medio.activo=medioRow.activo
@@ -175,6 +177,40 @@ class ImportadorDeClientes implements  Importador{
 
 
                 medio.save failOnError:true, flush:true
+        }
+
+    }
+
+    def importarTels(){
+
+        def clientes=Cliente.findAll()
+
+        println("Importando tels")
+
+        clientes.each {cliente ->
+
+            println"Importando tels el cliente "+ cliente.nombre
+
+            def medios=leerRegistros(QUERY_COMUNICACION,[cliente.sw2,cliente.sw2,cliente.sw2]).each{medioRow ->
+
+                ComunicacionEmpresa medio=ComunicacionEmpresa.where {sw2==medioRow.sw2 && descripcion==medioRow.descripcion }.find()
+
+                if(!medio)
+                    medio =new ComunicacionEmpresa()
+
+                println "importando Medio de Comunicacion para"+cliente.sw2
+
+                medio.cliente=cliente
+                medio.activo=medioRow.activo
+                medio.tipo=medioRow.tipo
+                medio.descripcion=medioRow.descripcion
+                medio.cfdi=medioRow.cfdi
+                medio.sw2=medioRow.sw2
+
+
+                medio.save failOnError:true, flush:true
+            }
+
         }
 
     }

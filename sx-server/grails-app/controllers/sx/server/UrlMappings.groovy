@@ -149,6 +149,17 @@ class UrlMappings {
 
         "/api/report"(controller: 'reporte', action: 'run', method: 'GET')
 
+        "/api/report/ventasDiarias"(controller: 'ventas', action: 'ventasDiarias', method: 'GET')
+        "/api/report/cobranzaCod"(controller: 'ventas', action: 'cobranzaCod', method: 'GET')
+        "/api/report/cobranzaEfectivo"(controller: 'ventas', action: 'cobranzaEfectivo', method: 'GET')
+        "/api/report/cobranzaContado"(controller: 'ventas', action: 'cobranzaContado', method: 'GET')
+        "/api/report/facturasCanceladas"(controller: 'ventas', action: 'facturasCanceladas', method: 'GET')
+        "/api/report/aplicacionSaldos"(controller: 'ventas', action: 'aplicacionDeSaldos', method: 'GET')
+        "/api/report/disponiblesSucursal"(controller: 'ventas', action: 'disponiblesSucursal', method: 'GET')
+        "/api/report/facturasPendientesCod"(controller: 'ventas', action: 'facturasPendientesCod', method: 'GET')
+        "/api/report/facturasPendientesCodEmbarques"(controller: 'ventas', action: 'facturasPendientesCodEmbarques', method: 'GET')
+        "/api/report/ventasDiariasCheques"(controller: 'ventas', action: 'ventasDiariasCheques', method: 'GET')
+
         // Security
         "/api/security/users"(resources: "user")
         "/api/security/roles"(resources: "role")
