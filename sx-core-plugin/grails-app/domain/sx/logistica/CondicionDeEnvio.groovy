@@ -1,9 +1,12 @@
 package sx.logistica
 
+import groovy.transform.ToString
+
 import sx.core.Direccion
 import sx.core.DireccionEntrega
 import sx.core.Venta
 
+@ToString( includes = "direccion venta",includeNames=true,includePackage=false)
 class CondicionDeEnvio {
 
     String id
@@ -18,7 +21,7 @@ class CondicionDeEnvio {
 
     Boolean	asegurado	 = false
 
-    Date	fecha_de_entrega
+    Date	fechaDeEntrega = new Date()
 
     String	comentario
 
@@ -38,6 +41,8 @@ class CondicionDeEnvio {
     
 
     static constraints = {
+        condiciones nullable: true
+        comentario nullable: true
         asignado nullable: true
         zona nullable: true, maxSize:20
         municipio nullable: true, maxSize: 100
@@ -50,5 +55,7 @@ class CondicionDeEnvio {
     static  mapping={
         id generator:'uuid'
     }
+
+    // static belongsTo = [venta: Venta]
 
 }

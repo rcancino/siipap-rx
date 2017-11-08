@@ -1,7 +1,9 @@
 package sx.core
 
 import groovy.transform.ToString
+
 import sx.cxc.CuentaPorCobrar
+import sx.logistica.CondicionDeEnvio
 
 @ToString( includes = "sucursal,documento,fecha,total",includeNames=true,includePackage=false)
 class Venta {
@@ -114,6 +116,7 @@ class Venta {
     sw2 nullable:true
     cfdiMail nullable: true
     usoDeCfdi nullable: true, maxSize:3
+    envio nullable: true
   }
 
   static mapping = {
@@ -124,5 +127,7 @@ class Venta {
   }
 
   static hasMany =[partidas:VentaDet]
+
+  static hasOne = [envio: CondicionDeEnvio]
 
 }
