@@ -86,7 +86,7 @@ class VentaController extends RestfulController{
     def username = getPrincipal().username
     if(resource.id == null) {
         def serie = resource.sucursal.nombre + resource.tipo
-        resource.documento = Folio.nextFolio('VENTAS',serie)
+        resource.documento = Folio.nextFolio('VENTAS','PEDIDOS')
         resource.createUser = username
     }
     if(resource.cliente.rfc != 'XAXX010101000') resource.nombre = resource.cliente.nombre

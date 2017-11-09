@@ -20,6 +20,13 @@ json g.render(venta, [excludes:['sucursal','cliente','vendedor','moneda','partid
     }
     moneda venta.moneda.currencyCode
     envio g.render(venta.envio, [excludes: ['venta']])
+    if(venta.cuentaPorCobrar) {
+        cuentaPorCobrar {
+            id venta.cuentaPorCobrar.id
+            documento venta.cuentaPorCobrar.documento
+            tipo venta.cuentaPorCobrar.tipo
+        }
+    }
     
 
 }

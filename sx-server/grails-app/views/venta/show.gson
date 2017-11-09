@@ -22,6 +22,8 @@ json g.render(venta, [excludes:['moneda','partidas','sucursal','envio']]){
             cfdi g.render(venta.cuentaPorCobrar.cfdi)
             saldo venta.cuentaPorCobrar.saldo
             pagos venta.cuentaPorCobrar.pagos
+            documento venta.cuentaPorCobrar.documento
+            tipo venta.cuentaPorCobrar.tipo
         }
     }
     envio g.render(venta.envio, [excludes: ['venta']])

@@ -20,7 +20,6 @@ class VentaService {
       cxc.sucursal = pedido.sucursal
       cxc.cliente = pedido.cliente
       cxc.tipoDocumento = 'VENTA'
-      cxc.documento = pedido.documento
       cxc.importe = pedido.importe
       cxc.impuesto = pedido.impuesto
       cxc.total  = pedido.total
@@ -29,6 +28,7 @@ class VentaService {
       cxc.tipoDeCambio = pedido.tipoDeCambio
       cxc.comentario = pedido.comentario
       cxc.tipo = pedido.cod ? 'COD': pedido.tipo
+      cxc.documento = Folio.nextFolio('FACTURAS',cxc.tipo)
       cxc.fecha = new Date()
       cxc.createUser = pedido.createUser
       cxc.updateUser = pedido.updateUser

@@ -31,7 +31,7 @@ class InstruccionCorte {
 
     static constraints = {
         seleccionCalculo nullable: true
-        tipo inList:['CALCULADO','CRUZ','CARTA','MITAD','1/8','CROQUIS','DOBLE_CARTA','MEDIA_CARTA','OFICIO']
+        tipo nullable: true, maxSize: 50//inList:['CALCULADO','CRUZ','CARTA','MITAD','1/8','CROQUIS','DOBLE_CARTA','MEDIA_CARTA','OFICIO']
         instruccion nullable: true
         instruccionEmpacado nullable: true
     }
