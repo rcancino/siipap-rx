@@ -5,7 +5,7 @@ import groovy.transform.ToString
 import sx.core.Cliente
 import sx.core.Sucursal
 
-@ToString(includes = ["cliente,fecha,sucursal,formaDePago,total"],includeNames=true,includePackage=false)
+@ToString(includes = ["cliente,fecha,sucursal,formaDePago,importe"],includeNames=true,includePackage=false)
 @EqualsAndHashCode(includeFields = true,includes = ['id,fecha,total'])
 class  Cobro {
 
@@ -47,6 +47,14 @@ class  Cobro {
 
     List aplicaciones = []
 
+    BigDecimal aplicado = 0
+
+    BigDecimal disponible = 0
+
+    BigDecimal diferencia = 0.0
+
+    Date diferenciaFecha 
+
     static hasOne = [cheque: CobroCheque, deposito: CobroDeposito, transferencia: CobroTransferencia,tarjeta: CobroTarjeta]
 
     static hasMany =[aplicaciones: AplicacionDeCobro]
@@ -64,6 +72,8 @@ class  Cobro {
         transferencia nullable: true
         tarjeta nullable: true
         primeraAplicacion nullable: true
+        diferenciaFecha nullable: true
+        diferencia nullable: true
     }
 
     static mapping={
@@ -72,6 +82,14 @@ class  Cobro {
         cliente index: 'COBRO_IDX2'
         formaDePago index: 'COBRO_IDX3'
         aplicaciones cascade: "all-delete-orphan"
+        aplicado formula:'(select COALESCE(sum(x.importe),0) from aplicacion_de_cobro x where x.cobro_id=id)'
+        diferenciaFecha type: 'date'
+    }
+
+    static transients = ['disponible']
+
+    BigDecimal getDisponible(){
+        return this.importe - this.aplicado
     }
 
 }

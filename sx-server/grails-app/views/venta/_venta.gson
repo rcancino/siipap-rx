@@ -25,6 +25,7 @@ json g.render(venta, [excludes:['sucursal','cliente','vendedor','moneda','partid
             id venta.cuentaPorCobrar.id
             documento venta.cuentaPorCobrar.documento
             tipo venta.cuentaPorCobrar.tipo
+            saldo venta.cuentaPorCobrar.saldo
         }
     }
     

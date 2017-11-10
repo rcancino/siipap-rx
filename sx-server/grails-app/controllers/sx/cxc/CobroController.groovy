@@ -2,11 +2,16 @@ package sx.cxc
 
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
+import grails.transaction.Transactional
+
+import sx.core.Venta
 
 @Secured("hasRole('ROLE_CXC_USER')")
 class CobroController extends RestfulController{
 
     def cobroService
+
+    def ventaService
 
     static responseFormats = ['json']
 
@@ -38,6 +43,26 @@ class CobroController extends RestfulController{
         return super.saveResource(resource)
     }
 
+    @Transactional
+    def cobroContado(CobroContado res) {
+        if (res == null) {
+            notFound()
+            return
+        }
+        def venta = res.venta
+        if(venta.cuentaPorCobrar == null) {
+            venta = ventaService.generarCuentaPorCobrar(res.venta)
+        }
+        def cxc  = venta.cuentaPorCobrar
+        if(cxc.saldo > 0 )
+            cxc = cobroService.generarCobroDeContado(cxc, res.cobros)
+        respond res.venta
+    }
 
+}
 
+public class CobroContado {
+
+    Venta venta
+    List<Cobro> cobros
 }

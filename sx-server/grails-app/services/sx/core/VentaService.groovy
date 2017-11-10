@@ -32,6 +32,7 @@ class VentaService {
       cxc.fecha = new Date()
       cxc.createUser = pedido.createUser
       cxc.updateUser = pedido.updateUser
+      cxc.comentario = 'GENERACION AUTOMATICA'
       pedido.cuentaPorCobrar = cxc
       cxc.save failOnError: true
       pedido.cuentaPorCobrar = cxc
