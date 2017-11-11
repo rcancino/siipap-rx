@@ -109,7 +109,7 @@ environments:
             dataSource:
                 dbCreate: update
                 #url: jdbc:mysql://localhost/siipapx?autoReconnect=true
-                url: jdbc:mysql://10.10.1.229/siipapx?autoReconnect=false
+                url: jdbc:mysql://10.10.1.229/siipapx_dev?autoReconnect=false
                 password: sys
                 properties:
                   maxActive: 3
