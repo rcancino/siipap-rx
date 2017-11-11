@@ -10,7 +10,7 @@ import sx.core.Sucursal
 import sx.core.Venta
 
 @ToString(excludes = ['id,version,sw2,dateCreated,lastUpdated'],includeNames=true,includePackage=false)
-@EqualsAndHashCode(includeFields = true,includes = ['id,cliente,fecha,total'])
+@EqualsAndHashCode(includeFields = true,includes = ['id'])
 class CuentaPorCobrar {
 
     String	id

@@ -55,7 +55,7 @@ a.id as id
         WHEN o.forma_de_pago='NOTA_DEVOLUCION'  THEN 8
 	   WHEN o.forma_de_pago='NOTA_BONIFICACION'  THEN 9
  ELSE 10 END AS ORDEN_PAGO
-FROM  aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON (C.id=A.cuenta_por_cobrar_id ) JOIN cobro O ON( O.ID= A.cobro_id) join cliente l on (c.cliente_id=l.id)
+FROM  aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON (C.id=A.cuenta_por_cobrar_id ) left JOIN cobro O ON( O.ID= A.cobro_id) join cliente l on (c.cliente_id=l.id)
 WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO') AND  o.forma_de_pago<> 'PAGO_DIF']]></queryString>
 
 	<field name="id" class="java.lang.String"/>

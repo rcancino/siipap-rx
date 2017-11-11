@@ -33,28 +33,28 @@
 ,s.clave AS CVE_SUC,s.nombre as suc
 ,CASE WHEN (SELECT c.date_created FROM CFDI C WHERE v.cfdi_id=C.ID) IS NULL THEN v.FECHA ELSE (SELECT date_created FROM CFDI c WHERE v.cfdi_ID=c.ID) END AS fecha
 ,v.documento as docto,x.clave,x.nombre,v.uuid as nfiscal,v.tipo_de_cambio as cambio
-,case when (ROUND(TO_DAYS('2017/10/25')-TO_DAYS(v.fecha),0)) < 0 then 0 else  (ROUND(TO_DAYS('2017/10/25')-TO_DAYS(v.fecha),0)) end as dias_vencido
-,v.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where v.id=t.cuenta_por_cobrar_id AND T.FECHA<='2017/10/25'),0)as saldo
-,((v.total-ifnull((select sum(t.importe) from aplicacion_de_cobro t where v.id=t.cuenta_por_cobrar_id AND T.FECHA<='2017/10/25'),0))*V.tipo_de_cambio)AS SALDOTOT
-,CASE WHEN v.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where v.id=t.cuenta_por_cobrar_id AND T.FECHA<='2017/10/25'),0)<>V.TOTAL THEN '*'
+,case when (ROUND(TO_DAYS($P{FECHA})-TO_DAYS(v.fecha),0)) < 0 then 0 else  (ROUND(TO_DAYS($P{FECHA})-TO_DAYS(v.fecha),0)) end as dias_vencido
+,v.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where v.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0)as saldo
+,((v.total-ifnull((select sum(t.importe) from aplicacion_de_cobro t where v.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0))*V.tipo_de_cambio)AS SALDOTOT
+,CASE WHEN v.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where v.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0)<>V.TOTAL THEN '*'
  ELSE '' END AS PAGO
  from cuenta_por_cobrar v join sucursal s on (s.id=v.sucursal_id) join cliente x on (x.id=v.cliente_id) join venta n on (n.cuenta_por_cobrar_id=v.id) join condicion_de_envio d on (d.venta_id=n.id)
  where 
-(v.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where v.id=t.cuenta_por_cobrar_id AND T.FECHA<='2017/10/25'),0))>1 and 
-s.ID= '402880fc5e4ec411015e4ec64e70012e'
+(v.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where v.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0))>1 and 
+s.ID= $P{SUCURSAL}
 and v.tipo='COD' 
-and  V.FECHA<='2017/10/25' AND V.TIPO_DOCUMENTO IN ('NOTA_DE_CARGO','VENTA')
+and  V.FECHA<=$P{FECHA} AND V.TIPO_DOCUMENTO IN ('NOTA_DE_CARGO','VENTA')
 union 
 select 'N' AS TIP
 ,S.clave AS CLAVE,s.nombre as suc
 ,CASE WHEN (SELECT date_created FROM CFDI s WHERE a.cfdi_id=s.ID) IS NULL THEN a.FECHA ELSE (SELECT date_created FROM CFDI s WHERE a.cfdi_id=s.ID) END AS fecha
 ,A.folio as FOLIO,l.CLAVE,l.NOMBRE,(SELECT UUID FROM cfdi x where x.id=a.cfdi_id) as numero,a.tc 
 ,NULL as dias_vencido
-,(a.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where a.id=t.nota_de_credito_id AND T.FECHA<='2017/10/25'),0))as saldo
-,(a.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where a.id=t.nota_de_credito_id AND T.FECHA<='2017/10/25'),0))as saldo2
+,(a.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where a.id=t.nota_de_credito_id AND T.FECHA<=$P{FECHA}),0))as saldo
+,(a.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where a.id=t.nota_de_credito_id AND T.FECHA<=$P{FECHA}),0))as saldo2
 ,'' AS PAGO
 FROM nota_de_credito A join cliente l on (a.cliente_id=l.id) JOIN sucursal S  ON (a.sucursal_id=s.id)
-where (a.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where t.nota_de_credito_id=a.id AND T.FECHA<='2017/10/25'),0))>1 and  A.tipo like 'DEVOLUCION'
+where (a.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where t.nota_de_credito_id=a.id AND T.FECHA<=$P{FECHA}),0))>1 and  A.tipo like 'DEVOLUCION'
 AND tipo_de_operacion='COD' and A.fecha >='2011/01/01' AND A.FECHA<=$P{FECHA} AND A.SUCURSAL_ID=$P{SUCURSAL}
 ORDER BY 4]]></queryString>
 

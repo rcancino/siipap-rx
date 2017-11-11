@@ -32,8 +32,7 @@
 	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT
-a.id as id,o.id
-,C.documento AS DOCTO,C.FECHA AS FECHA,L.CLAVE,L.NOMBRE
+C.documento AS DOCTO,C.FECHA AS FECHA,L.CLAVE,L.NOMBRE
 ,C.TOTAL * O.tipo_de_cambio AS VENTA
 ,A.IMPORTE * O.tipo_de_cambio AS COBRADO
 ,O.tipo_de_cambio AS TC
@@ -44,14 +43,13 @@ WHEN o.primera_aplicacion <> a.FECHA  THEN 'SALDO A FAVOR'
 when o.primera_aplicacion = a.FECHA  THEN o.forma_de_pago
 END )AS TIPO
 ,c.total as 'VTA TOTAL'
-,(SELECT IFNULL(b.importe,0) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)='2017/09/04' AND E.cambipo_por_efectivo is true)  AS CHEQUE
-,(SELECT IFNULL(b.importe,0) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)='2017/09/04' AND E.cambipo_por_efectivo is true)  AS EFECTIVO
+,(SELECT IFNULL(b.importe,0) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)='2017/09/04' AND E.cambio_por_efectivo is true)  AS CHEQUE
+,(SELECT IFNULL(b.importe,0) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)='2017/09/04' AND E.cambio_por_efectivo is true)  AS EFECTIVO
 FROM  aplicacion_de_cobro A  JOIN cuenta_por_cobrar  C ON (A.cuenta_por_cobrar_id=C.ID) JOIN cobro O ON (O.ID=A.cobro_id) JOIN cliente L ON (L.ID=C.CLIENTE_ID)
-WHERE A.FECHA='2017/09/04' AND C.TIPO='CON' AND C.sucursal_id='402880fc5e4ec411015e4ec64e70012e'
+WHERE A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.sucursal_id=$P{SUCURSAL}
 and o.forma_de_pago<>'PAGO_DIF'
 UNION
-SELECT e.id as id,o.id
-,e.numero AS DOCTO
+SELECT e.numero AS DOCTO
 ,o.FECHA AS FECHA
 ,L.CLAVE,L.NOMBRE,O.importe * O.tipo_de_cambio AS VENTA
 ,o.IMPORTE * O.tipo_de_cambio AS COBRADO
@@ -62,9 +60,8 @@ SELECT e.id as id,o.id
 ,o.importe as CHEQUE
 ,O.IMPORTE  AS EFECTIVO
 FROM cobro_cheque e join cobro o on (e.cobro_id=o.id) join cliente l on (l.id=o.cliente_id)
-where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambipo_por_efectivo is true]]></queryString>
+where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo is true]]></queryString>
 
-	<field name="id" class="java.lang.String"/>
 	<field name="DOCTO" class="java.lang.Long"/>
 	<field name="FECHA" class="java.sql.Date"/>
 	<field name="CLAVE" class="java.lang.String"/>
