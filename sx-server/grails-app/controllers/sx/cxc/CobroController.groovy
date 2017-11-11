@@ -3,8 +3,12 @@ package sx.cxc
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
+import groovy.transform.ToString
 
 import sx.core.Venta
+import sx.tesoreria.Banco
+import sx.core.Sucursal
+import sx.core.Cliente
 
 @Secured("hasRole('ROLE_CXC_USER')")
 class CobroController extends RestfulController{
@@ -59,10 +63,64 @@ class CobroController extends RestfulController{
         respond res.venta
     }
 
+    @Transactional
+    def cambioDeCheque(CambioDeCheque cambio) {
+        println 'Cambio de cheque : '+ cambio
+        if (cambio == null) {
+            notFound()
+            return
+        }
+        def cobro = new Cobro()
+        cobro.sucursal = cambio.sucursal
+        cobro.cliente = Cliente.where { clave == '1'}.find()
+        cobro.tipo = 'CON'
+        cobro.fecha = new Date()
+        cobro.formaDePago = 'CHEQUE'
+        cobro.importe = cambio.importe
+
+        def cheque = new CobroCheque()
+        cheque.bancoOrigen = cambio.banco
+        cheque.numeroDeCuenta = cambio.cuenta
+        cheque.numero = cambio.numero
+        cheque.emisor = cambio.emisor
+        cheque.nombre = cambio.nombre
+        cheque.cambioPorEfectivo = true
+        cobro.cheque = cheque
+        cobro.save flush:true, failOnError: true
+        respond cobro
+
+    }
+
 }
 
 public class CobroContado {
 
     Venta venta
     List<Cobro> cobros
+}
+
+@ToString(includeNames=true,includePackage=false)
+public class CambioDeCheque {
+
+    Sucursal sucursal
+
+    Date fecha
+
+    BigDecimal importe
+
+    String nombre
+
+    String emisor
+
+    Banco banco
+
+    Long numero
+
+    String cuenta
+
+    String comentario
+
+    static constraints = {
+        comentario nullable: true
+    }
 }

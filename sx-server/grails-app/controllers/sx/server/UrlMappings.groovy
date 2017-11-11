@@ -76,10 +76,13 @@ class UrlMappings {
         
         "/api/tesoreria/solicitudes"(resources:"solicitudDeDeposito")
         "/api/tesoreria/solicitudes/pendientes/$id"( controller: 'solicitudDeDeposito', action: 'pendientes')
+        "/api/tesoreria/corteCobranza"(resources:"corteCobranza")
+
 
         // CXC
         "/api/cxc/cobro"(resources: "cobro")
         "/api/cxc/cobro/cobroContado"(controller: 'cobro', action: 'cobroContado')
+        "/api/cxc/cobro/cambioDeCheque"(controller: 'cobro', action: 'cambioDeCheque')
 
         "/api/notasDeCargo"(resources: "notaDeCargo")
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
