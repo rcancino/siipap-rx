@@ -34,7 +34,6 @@ class Morralla {
   	comentario nullable: true
   	createUser nullable: true
   	updateUser nullable: true
-    fondo nullable: true
   }
 
 	static mapping = {

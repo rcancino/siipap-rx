@@ -15,8 +15,8 @@ class MorrallaController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
-        params.sort = 'corte'
-        params.order = 'asc'
+        params.sort = 'fecha'
+        params.order = 'desc'
         params.max = 100
         def query = Morralla.where {}
         return query.list(params)
@@ -26,6 +26,9 @@ class MorrallaController extends RestfulController {
         def username = getPrincipal().username
         resource.createUser = username
         resource.updateUser = username
+        if (resource.tipo == 'SALIDA'){
+            resource.importe = resource.importe.abs() * -1
+        }
         return super.saveResource(resource)
     }
 
