@@ -30,7 +30,7 @@ class CobroService {
     		cobro.diferenciaFecha = new Date()
     	}
       setComisiones(cobro)
-    	cobro.save()
+    	cobro.save failOnError: true, flush: true
     	saldo = saldo - importe
     }
     
