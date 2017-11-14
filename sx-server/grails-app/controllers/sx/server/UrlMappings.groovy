@@ -85,6 +85,7 @@ class UrlMappings {
         "/api/cxc/cobro"(resources: "cobro")
         "/api/cxc/cobro/cobroContado"(controller: 'cobro', action: 'cobroContado')
         "/api/cxc/cobro/cambioDeCheque"(controller: 'cobro', action: 'cambioDeCheque')
+        "/api/cxc/cobro/buscarDisponibles/$id"(controller: 'cobro', action: 'buscarDisponibles')
 
         "/api/notasDeCargo"(resources: "notaDeCargo")
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')

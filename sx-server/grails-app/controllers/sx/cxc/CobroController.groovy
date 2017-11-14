@@ -65,7 +65,7 @@ class CobroController extends RestfulController{
 
     @Transactional
     def cambioDeCheque(CambioDeCheque cambio) {
-        println 'Cambio de cheque : '+ cambio
+        // println 'Cambio de cheque : '+ cambio
         if (cambio == null) {
             notFound()
             return
@@ -89,6 +89,19 @@ class CobroController extends RestfulController{
         cobro.save flush:true, failOnError: true
         respond cobro
 
+    }
+
+    def buscarDisponibles(Cliente cliente) {
+        if (cliente == null) {
+            notFound()
+            return
+        }
+        params.max = 20
+        params.sort = 'fecha'
+        params.order = 'asc'
+        // def cobros = Cobro.where { cliente == cliente && (importe - aplicado) > 0}.list(params)
+        def cobros = Cobro.findAll(' from Cobro c where c.cliente = ? and c.importe - c.aplicado > 0', cliente)
+        respond cobros
     }
 
 }

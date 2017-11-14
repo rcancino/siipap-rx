@@ -5,8 +5,8 @@ import groovy.transform.ToString
 import sx.core.Cliente
 import sx.core.Sucursal
 
-@ToString(includes = ["cliente,fecha,sucursal,formaDePago,importe"],includeNames=true,includePackage=false)
-@EqualsAndHashCode(includeFields = true,includes = ['id,fecha,total'])
+@ToString(includes = "cliente,fecha,sucursal,formaDePago,importe",includeNames=true,includePackage=false)
+@EqualsAndHashCode(includeFields = true,includes = 'id,fecha,total')
 class  Cobro {
 
     String id
