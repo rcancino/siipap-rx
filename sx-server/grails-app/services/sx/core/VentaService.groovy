@@ -3,8 +3,10 @@ package sx.core
 import grails.transaction.Transactional
 
 import sx.cxc.CuentaPorCobrar
+import lx.cfdi.v33.CfdiUtils
 
 import com.luxsoft.cfdix.v33.CfdiBuilder33
+import com.luxsoft.cfdix.v33.CfdiFacturaBuilder
 
 @Transactional
 class VentaService {
@@ -41,11 +43,15 @@ class VentaService {
     
   }
 
-  def generarCfdi(Venta pedido){
-    CfdiBuilder33  builder = new CfdiBuilder33()
-    // def comprobante = builder.build(venta)
+  def generarCfdi(Venta venta){
+    assert venta.cuentaPorCobrar, " La venta ${venta.documento} no se ha facturado"
+    // CfdiBuilder33  builder = new CfdiBuilder33()
+    println 'Generando cfdi.....'
+    CfdiFacturaBuilder builder = new CfdiFacturaBuilder();
+    def comprobante = builder.build(venta)
     // pedido.save failOnError: true
-    return pedido
+    println CfdiUtils.serialize(comprobante)
+    return comprobante
   }
 
 }

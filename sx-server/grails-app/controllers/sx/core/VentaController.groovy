@@ -148,6 +148,16 @@ class VentaController extends RestfulController{
     // println 'Buscando facturas cobradas: ' + sucursal + ' Found: ' + ventas.size()
     respond ventas
   }
+
+  @Transactional
+  def timbrar(Venta venta) {
+    if(venta == null ){
+      notFound()
+      return
+    }
+    def cfdi = ventaService.generarCfdi(venta)
+    respond cfdi
+  }
 }
 
 @ToString(includeNames=true,includePackage=false)

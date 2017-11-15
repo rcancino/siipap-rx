@@ -70,7 +70,8 @@ class UrlMappings {
         "/api/ventas/mandarFacturar/$id"( controller: 'venta', action: 'mandarFacturar')
         "/api/ventas/facturar/$id"( controller: 'venta', action: 'facturar')
         "/api/ventas/cobradas/$id"( controller: 'venta', action: 'cobradas')
-        
+        "/api/ventas/timbrar/$id"( controller: 'venta', action: 'timbrar')
+
 
         "/api/ventas/listas"(resources: "listaDePreciosVenta")
         
