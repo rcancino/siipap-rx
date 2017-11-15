@@ -17,13 +17,15 @@ class CobroCheque {
 
     String numeroDeCuenta
 
+    String nombre
+
     String emisor
 
     Long numero = 0
 
     Boolean postFechado = false
 
-    Boolean cambipoPorEfectivo = false
+    Boolean cambioPorEfectivo = false
 
     Date vencimiento
 
@@ -46,6 +48,8 @@ class CobroCheque {
         ficha nullable:true
         postFechado nullable: true
         numero nullable: true
+        nombre nullable: true
+        sw2 nullable: true
 
     }
 

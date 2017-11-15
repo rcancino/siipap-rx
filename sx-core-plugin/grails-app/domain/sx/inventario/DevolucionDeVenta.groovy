@@ -42,6 +42,8 @@ class DevolucionDeVenta {
 
     Date fechaInventario
 
+    Date asignado
+
 
     static  hasMany = [partidas:DevolucionDeVentaDet]
 
@@ -55,7 +57,7 @@ class DevolucionDeVenta {
         updateUser nullable: true
         notaDeCredito nullable: true
         fechaInventario nullable: true
-
+        asignado nullable: true
     }
 
     static  mapping ={

@@ -8,6 +8,7 @@ json g.render(venta, [excludes:['sucursal','cliente','vendedor','moneda','partid
     sucursal {
         id venta.sucursal.id
         nombre venta.sucursal.nombre
+        clave venta.sucursal.clave
     }
     cliente {
     	id venta.cliente.id
@@ -18,5 +19,15 @@ json g.render(venta, [excludes:['sucursal','cliente','vendedor','moneda','partid
     	nombre venta.vendedor.nombres
     }
     moneda venta.moneda.currencyCode
+    envio g.render(venta.envio, [excludes: ['venta']])
+    if(venta.cuentaPorCobrar) {
+        cuentaPorCobrar {
+            id venta.cuentaPorCobrar.id
+            documento venta.cuentaPorCobrar.documento
+            tipo venta.cuentaPorCobrar.tipo
+            saldo venta.cuentaPorCobrar.saldo
+        }
+    }
+    
 
 }

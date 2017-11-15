@@ -24,6 +24,8 @@ class Zona {
 
 
     static constraints = {
+        divisionZona nullable:true
+
     }
 
     static mapping = {

@@ -17,8 +17,6 @@ class ExistenciaController extends RestfulController {
     }
 
     def existenciasPorSucursal(ExistenciaFilter filter) {
-        println 'Buscando existencias....' + filter
-        println 'Params: ' + params
         params.max = params.max ?: 20
         def query = Existencia.where { }
         if(filter.sucursal) {
@@ -38,16 +36,16 @@ class ExistenciaController extends RestfulController {
         }
     }
 
+    def existenciaRemota(Sucursal sucursal){
+        def res = Existencia.where{ sucursal}
+    }
+
 
     @Override
     protected List listAllResources(Map params) {
-
-        // println 'Buscando existencias: ' + params
+        
         params.max = params.max ?: 20
-        // ExistenciaFilter filter = new ExistenciaFilter()
-        // bindData(filter, params)
-        // println 'Filtro: ' + filter
-
+        
         def query = Existencia.where {}
         if( params.ejercicio) {
             query = query.where { anio == params.int('ejercicio')}
@@ -71,6 +69,15 @@ class ExistenciaController extends RestfulController {
         }
         return query.list(params)
     }
+
+    def buscarExistencias(BuscarExistenciasCommand command) {
+        def existencias = Existencia.where { 
+            producto == command.producto && 
+            anio == command.year && 
+            mes == command.month}
+            .list()
+        respond existencias
+    }
 }
 
 class ExistenciaFilter {
@@ -93,5 +100,18 @@ class ExistenciaFilter {
 
     String toString(){
         "$sucursal $ejercicio $mes"
+    }
+}
+
+class BuscarExistenciasCommand {
+    
+    
+    Producto producto
+    Integer year
+    Integer month
+
+
+    String toString(){
+        return "$producto $year $month"
     }
 }

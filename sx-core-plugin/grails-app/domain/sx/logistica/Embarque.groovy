@@ -1,6 +1,7 @@
 package sx.logistica
 
-import sx.embarques.Chofer
+
+import sx.core.Sucursal
 
 class Embarque {
 
@@ -23,10 +24,22 @@ class Embarque {
 
     Date	salida
 
-    String	sucursal
+    Sucursal	sucursal
 
     BigDecimal	valor	 = 0
 
+    List partidas = []
+
+    Date dateCreated
+
+    Date lastUpdated
+
+    String createUser
+
+    String updateUser
+
+
+    static hasMany = [partidas : Envio ]
 
     static constraints = {
         cerrado  nullable: true
@@ -35,9 +48,13 @@ class Embarque {
         documento nullable: true
         regreso nullable: true
         salida nullable: true
+        createUser nullable: true
+        updateUser nullable: true
     }
 
     static mapping= {
         id generator: 'uuid'
+        partidas cascade: "all-delete-orphan"
+        fecha type: 'date'
     }
 }

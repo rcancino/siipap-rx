@@ -38,4 +38,6 @@ class ProductoController extends RestfulController{
         return query.list(params)
     }
 
+    
+
 }

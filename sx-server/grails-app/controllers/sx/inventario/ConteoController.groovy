@@ -98,7 +98,7 @@ class ConteoController extends RestfulController {
 
         
         def ejercicio = hoy[Calendar.YEAR]
-        def mes = hoy[Calendar.MONTH] 
+        def mes = hoy[Calendar.MONTH] + 1
         def existencias = Existencia.where {sucursal == sucursal && anio == ejercicio && mes == mes }
         existencias = existencias.where {producto.activo == true && producto.inventariable == true}.list()
         

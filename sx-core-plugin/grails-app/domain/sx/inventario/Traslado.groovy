@@ -2,7 +2,7 @@ package sx.inventario
 
 import sx.core.Inventario
 import sx.core.Sucursal
-import sx.embarques.Chofer
+
 
 class Traslado {
 
@@ -14,8 +14,6 @@ class Traslado {
 
     Sucursal sucursal
 
-    Chofer chofer
-
     String	tipo
 
     Long	Documento = 0
@@ -25,6 +23,8 @@ class Traslado {
     Boolean	porInventario = false
 
     String	clasificacionVale
+
+    BigDecimal  kilos     = 0
 
     String	comentario
 
@@ -44,6 +44,8 @@ class Traslado {
 
     Date fechaInventario
 
+    Date asignado
+
     static hasMany = [partidas:TrasladoDet]
 
     static constraints = {
@@ -60,6 +62,7 @@ class Traslado {
         porInventario nullable: true
         fechaInventario nullable: true
         cfdiId nullable: true
+        asignado nullable: true
     }
 
     static mapping = {

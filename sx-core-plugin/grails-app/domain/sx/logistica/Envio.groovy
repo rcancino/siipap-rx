@@ -6,7 +6,7 @@ class Envio {
 
     String	id
 
-    Embarque	embarque
+    Embarque embarque
 
     Cliente cliente
 
@@ -14,17 +14,13 @@ class Envio {
 
     String	entidad
 
-    BigDecimal	por_cobrar	 = 0
+    BigDecimal	porCobrar	 = 0
 
     Integer	paquetes	 = 0
 
     BigDecimal	kilos	 = 0
 
     Boolean	parcial	 = false
-
-    BigDecimal	comision	 = 0
-
-    BigDecimal	valor	 = 0
 
     Date	arribo
 
@@ -72,18 +68,32 @@ class Envio {
 
     String	reportoPuesto
 
+    List partidas = []
 
+    Date dateCreated
+
+    Date lastUpdated
+
+    static  hasMany= [partidas : EnvioDet]
+
+    static belongsTo = [embarque: Embarque]
 
     static mapping ={
         id generator:'uuid'
+        partidas cascade: 'all-delete-orphan'
     }
 
     static constraints = {
-        area inList:['COMPRAS','ALMACEN','MERCANCIAS','ENCARGADO','DUEÑO','OTRA']
-        formaDePago inList: ['EFECTIVO','CHEQUE']
-        motivo inList: ['CERRADO','SALIO_A_COMER','NO_PAGO','DIRECCION_INCORRECTA','ERROR EN MOSTRADOR']
-        reportoPuesto inList: ['ENCARGADO_EMBARQUES','ENCARGADO_SUCURSAL','MOSTRADOR',]
+        area nullable:true //inList:['COMPRAS','ALMACEN','MERCANCIAS','ENCARGADO','DUEÑO','OTRA']
+        formaPago nullable:true
+        motivo nullable: true //inList: ['CERRADO','SALIO_A_COMER','NO_PAGO','DIRECCION_INCORRECTA','ERROR EN MOSTRADOR']
+        reportoPuesto nullable: true //inList: ['ENCARGADO_EMBARQUES','ENCARGADO_SUCURSAL','MOSTRADOR',]
         reportoNombre nullable: true
+        arribo nullable: true
+        recepcion nullable: true
+        recibio nullable: true
+        comentario nullable: true
+        cliente nullable: true
 
     }
 

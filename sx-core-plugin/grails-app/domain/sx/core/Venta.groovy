@@ -1,124 +1,133 @@
 package sx.core
 
 import groovy.transform.ToString
-import sx.cxc.CuentaPorCobrar
 
+import sx.cxc.CuentaPorCobrar
+import sx.logistica.CondicionDeEnvio
 
 @ToString( includes = "sucursal,documento,fecha,total",includeNames=true,includePackage=false)
 class Venta {
 
+  String id
 
-    String id
+  Cliente cliente
 
-    Cliente	cliente
+  String nombre
 
-    Vendedor	vendedor
+  Vendedor vendedor
 
-    Sucursal sucursal
+  Sucursal sucursal
 
-    Sucursal	sucursalVenta
+  Sucursal sucursalVenta
 
-    String	tipo
+  String tipo
 
-    Long	documento	 = 0
+  Long documento = 0
 
-    BigDecimal	importe	 = 0
+  BigDecimal importe  = 0
 
-    BigDecimal	impuesto	 = 0
+  BigDecimal descuento = 0
 
-    BigDecimal	total	 = 0
+  BigDecimal descuentoImporte = 0
 
-    BigDecimal	descuento	 = 0
+  BigDecimal subtotal = 0
 
-    BigDecimal	descuentoOriginal	 = 0
+  BigDecimal impuesto = 0
 
-    BigDecimal	cargosPorManiobra	 = 0
+  BigDecimal total = 0
 
-    BigDecimal	comisionTarjeta	 = 0
+  BigDecimal descuentoOriginal = 0
 
-    BigDecimal	comisionTarjetaImporte	 = 0
+  BigDecimal cargosPorManiobra = 0
 
-    String	formaDePago
+  BigDecimal comisionTarjeta = 0
 
-    Currency moneda = Currency.getInstance('MXN')
+  BigDecimal comisionTarjetaImporte = 0
 
-    BigDecimal	tipoDeCambio	 = 1
+  BigDecimal corteImporte = 0
 
-    BigDecimal	kilos	 = 0
+  String  formaDePago
 
-    Date	puesto
+  Currency moneda = Currency.getInstance('MXN')
 
-    Date	facturar
+  BigDecimal  tipoDeCambio = 1
 
-    Boolean	vale = false
+  BigDecimal  kilos = 0
 
-    Sucursal	sucursalVale
+  Date puesto
 
-    String	clasificacionVale = 'SIN_VALE'
+  Date facturar
 
-    Date	impreso
+  Boolean vale = false
 
-    String	comprador
+  Sucursal sucursalVale
 
-    String	atencion
+  String  clasificacionVale = 'SIN_VALE'
 
-    Boolean parcial = false
+  Date    impreso
 
-    String	comentario
+  String  comprador
 
-    String	sw2
+  String  atencion
 
-    Date fecha
+  Boolean parcial = false
 
-    Date dateCreated
+  String  comentario
 
-    Date lastUpdated
+  String  sw2
 
-    String createUser
+  Date fecha
 
-    String updateUser
+  Date dateCreated
 
-    CuentaPorCobrar cuentaPorCobrar
+  Date lastUpdated
 
-    List partidas = []
+  String createUser
 
+  String updateUser
 
+  CuentaPorCobrar cuentaPorCobrar
 
+  Boolean cod = false;
 
-    static constraints = {
-        tipo  inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
-        documento maxSize: 20
-        puesto nullable: true
-        tipoDeCambio(scale:6)
-        impreso nullable:true
-        atencion inList:['MOSTRADOR','TELEFONICA','ND']
-        clasificacionVale nullable:true,maxSize:30
-        comentario nullable:true
-        facturar nullable:true
-        comprador nullable:true
-        sw2 nullable:true
-        createUser nullable:true, maxSize: 100
-        updateUser nullable:true, maxSize: 100
-        sucursalVale nullable:true
-        sucursalVenta nullable:true
-        clasificacionVale inList: ['SIN_VALE','ENVIA_SUCURSAL','PASA_CAMIONETA','RECOGE_CLIENTE','EXISTENCIA_VENTA']
-        cuentaPorCobrar nullable: true
-        vale nullable: true
-        updateUser nullable: true
+  String cfdiMail
+  String usoDeCfdi
 
-    }
+  List partidas = []
 
-    static mapping = {
-        partidas cascade: "all-delete-orphan"
-        id generator:'uuid'
-        fecha type:'date' ,index: 'VENTA_IDX1'
-        cliente index: 'VENTA_IDX3'
+  static constraints = {
+    nombre nullable: true
+    tipo  inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
+    documento maxSize: 20
+    puesto nullable: true
+    tipoDeCambio(scale:6)
+    impreso nullable:true
+    atencion inList:['MOSTRADOR','TELEFONICA','ND']
+    clasificacionVale nullable:true,maxSize:30
+    comentario nullable:true
+    facturar nullable:true
+    comprador nullable:true
+    sucursalVenta nullable:true
+    cuentaPorCobrar nullable: true
+    sucursalVale nullable:true
+    clasificacionVale inList: ['SIN_VALE','ENVIA_SUCURSAL','PASA_CAMIONETA','RECOGE_CLIENTE','EXISTENCIA_VENTA']
+    createUser nullable:true, maxSize: 100
+    updateUser nullable:true, maxSize: 100
+    sw2 nullable:true
+    cfdiMail nullable: true
+    usoDeCfdi nullable: true, maxSize:3
+    envio nullable: true
+  }
 
+  static mapping = {
+    partidas cascade: "all-delete-orphan"
+    id generator:'uuid'
+    fecha type:'date' ,index: 'VENTA_IDX1'
+    cliente index: 'VENTA_IDX3'
+  }
 
-    }
+  static hasMany =[partidas:VentaDet]
 
-    static hasMany =[partidas:VentaDet]
-
-
+  static hasOne = [envio: CondicionDeEnvio]
 
 }

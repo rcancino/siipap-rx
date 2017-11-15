@@ -18,4 +18,18 @@ class ReporteService {
         ByteArrayOutputStream pdfStream = jasperService.generateReport(reportDef)
         return pdfStream
     }
+
+    def reporteFechaSucursal(String sucursal,String fecha,String name){
+        def repParams = [:]
+
+        fileFormat: JasperExportFormat.PDF_FORMAT
+
+        repParams['SUCURSAL'] = sucursal
+        repParams['FECHA'] = fecha
+        println 'Ejecutando reporte con parametros: ' + repParams +"---"+name
+        def pdf = run(name, repParams)
+        return pdf
+    }
+
+
 }

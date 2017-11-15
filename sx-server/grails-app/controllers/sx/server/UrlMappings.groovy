@@ -30,6 +30,7 @@ class UrlMappings {
         "/api/contabilidad/polizas"(resources:"poliza")
 
         // Tesoreria
+        "/api/tesoreria/bancos"(resources: "banco")
         "/api/tesoreria/cuentas"(resources: "cuentaDeBanco")
         "/api/tesoreria/requisiciones"(resources:"requisicion"){
             "/partidas"(resources:"requisicionDet")
@@ -63,12 +64,33 @@ class UrlMappings {
         "/api/compras/devolucionCompra"(resources: "devolucionDeCompra")
 
         // Ventas
+        "/api/ventas"(resources:"venta")
+        "/api/ventas/pendientes/$id"( controller: 'venta', action: 'pendientes')
+        "/api/ventas/findManiobra"( controller: 'venta', action: 'findManiobra')
+        "/api/ventas/mandarFacturar/$id"( controller: 'venta', action: 'mandarFacturar')
+        "/api/ventas/facturar/$id"( controller: 'venta', action: 'facturar')
+        "/api/ventas/cobradas/$id"( controller: 'venta', action: 'cobradas')
+        "/api/ventas/timbrar/$id"( controller: 'venta', action: 'timbrar')
+
+
         "/api/ventas/listas"(resources: "listaDePreciosVenta")
-        "/api/core/ventas"(resources:"venta")
+        
+        "/api/tesoreria/solicitudes"(resources:"solicitudDeDeposito")
+        "/api/tesoreria/solicitudes/pendientes/$id"( controller: 'solicitudDeDeposito', action: 'pendientes')
+        "/api/tesoreria/corteCobranza"(resources:"corteCobranza")
+        "/api/tesoreria/fondoFijo"(resources:"fondoFijo")
+        "/api/tesoreria/morralla"(resources:"morralla")
+
 
         // CXC
+        "/api/cxc/cobro"(resources: "cobro")
+        "/api/cxc/cobro/cobroContado"(controller: 'cobro', action: 'cobroContado')
+        "/api/cxc/cobro/cambioDeCheque"(controller: 'cobro', action: 'cambioDeCheque')
+        "/api/cxc/cobro/buscarDisponibles/$id"(controller: 'cobro', action: 'buscarDisponibles')
+
         "/api/notasDeCargo"(resources: "notaDeCargo")
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
+        "/api/cuentasPorCobrar/pendientesCod/$id"( controller: 'cuentaPorCobrar', action: 'pendientesCod')
         "/api/notasDeCredito"(resources: "notaDeCredito")
 
         //Inventario
@@ -77,6 +99,7 @@ class UrlMappings {
                 "/sucursal"(controller: 'existencias', action: 'existenciasPorSucursal', method: 'GET')
             }
         }
+        "/api/existencias/$producto/$year/$month"(controller: 'existencia', action: 'buscarExistencias')
 
         "/api/inventario"(resources: "inventario")
         "/api/inventario/movimientos"(resources: "movimientoDeAlmacen")
@@ -86,9 +109,11 @@ class UrlMappings {
 
         "/api/inventario/devoluciones"(resources: "devolucionDeVenta")
         "/api/inventario/devoluciones/buscarVenta"(controller: 'devolucionDeVenta', action: 'buscarVenta', method: 'GET')
+        
         // Decs
         "/api/inventario/decs"(resources: "devolucionDeCompra")
         "/api/inventario/decs/buscarCom"(controller: 'devolucionDeCompra', action: 'buscarCom', method: 'GET')
+        
         // Sols
         "/api/inventario/sols"(resources: "solicitudDeTraslado")
         "/api/inventario/sols/buscarSolicitudPendiente"(controller: 'solicitudDeTraslado', action: 'buscarSolicitudPendiente', method: 'GET')
@@ -99,14 +124,49 @@ class UrlMappings {
 
         // Sectores
         "/api/inventario/sectores"(resources: "sector")
+        
         // Conteos
         "/api/inventario/conteos"(resources: "conteo")
         "/api/inventario/conteos/generarConteo"(controller: "conteo", action: 'generarConteo', method: 'POST')
         "/api/inventario/conteos/generarExistencias"(controller: "conteo", action: ' generarExistencias', method: 'GET')
         "/api/inventario/conteos/limpiarExistencias"(controller: "conteo", action: ' limpiarExistencias', method: 'GET')
         
+        // Embarques
+        "/api/embarques/facturistas"(resources: 'facturistaDeEmbarque')
+        "/api/embarques/transportes"(resources: 'transporte')
+        "/api/embarques/choferes"(resources: "chofer")
+        "/api/embarques/embarques"(resources: "embarque")
+        "/api/embarques/embarques/buscarDocumento"(controller: 'embarque', action: 'buscarDocumento', method: 'GET')
+        "/api/embarques/embarques/registrarSalida/$id"(controller: 'embarque', action: 'registrarSalida', method: 'PUT')
+        "/api/embarques/embarques/registrarRegreso/$id"(controller: 'embarque', action: 'registrarRegreso', method: 'PUT')
+        "/api/embarques/embarques/print"(controller: "embarque", action: 'print', method: 'GET')
+        "/api/embarques/embarques/reporteDeEntregasPorChofer"(controller: "embarque", action: 'reporteDeEntregasPorChofer', method: 'GET')
+        "/api/embarques/embarques/documentosEnTransito"(controller: "embarque", action: 'documentosEnTransito', method: 'GET')
+        "/api/embarques/embarques/enviosPendientes"(controller: "embarque", action: 'enviosPendientes', method: 'GET')
+        "/api/embarques/embarques/buscarVenta"(controller: 'embarque', action: 'buscarVenta', method: 'GET')
+        "/api/embarques/embarques/buscarPartidasDeVenta"(controller: 'embarque', action: 'buscarPartidasDeVenta', method: 'GET')
+        "/api/embarques/embarques/buscarTrasladosPendientes"(controller: 'embarque', action: 'buscarTrasladosPendientes', method: 'GET')
+        "/api/embarques/embarques/buscarDevolucionesPendientes"(controller: 'embarque', action: 'buscarDevolucionesPendientes', method: 'GET')
+        "/api/embarques/embarques/asignarFacturas"(controller: 'embarque', action: 'asignarFacturas', method: 'PUT')
+
+
+        "/api/embarques/envios"(resources: 'envio')
+        
+        
+
 
         "/api/report"(controller: 'reporte', action: 'run', method: 'GET')
+
+        "/api/report/ventasDiarias"(controller: 'ventas', action: 'ventasDiarias', method: 'GET')
+        "/api/report/cobranzaCod"(controller: 'ventas', action: 'cobranzaCod', method: 'GET')
+        "/api/report/cobranzaEfectivo"(controller: 'ventas', action: 'cobranzaEfectivo', method: 'GET')
+        "/api/report/cobranzaContado"(controller: 'ventas', action: 'cobranzaContado', method: 'GET')
+        "/api/report/facturasCanceladas"(controller: 'ventas', action: 'facturasCanceladas', method: 'GET')
+        "/api/report/aplicacionSaldos"(controller: 'ventas', action: 'aplicacionDeSaldos', method: 'GET')
+        "/api/report/disponiblesSucursal"(controller: 'ventas', action: 'disponiblesSucursal', method: 'GET')
+        "/api/report/facturasPendientesCod"(controller: 'ventas', action: 'facturasPendientesCod', method: 'GET')
+        "/api/report/facturasPendientesCodEmbarques"(controller: 'ventas', action: 'facturasPendientesCodEmbarques', method: 'GET')
+        "/api/report/ventasDiariasCheques"(controller: 'ventas', action: 'ventasDiariasCheques', method: 'GET')
 
         // Security
         "/api/security/users"(resources: "user")

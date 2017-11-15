@@ -4,8 +4,7 @@ model {
     RecepcionDeCompra recepcionDeCompra
 }
 
-json g.render(recepcionDeCompra, [excludes:['sucursal','proveedor','compra','dateCreated', 'lastUpdated'] ]){
-    modificado recepcionDeCompra.lastUpdated.format('yyyy-MM-dd\'T\'HH:mm:ssZ')
+json g.render(recepcionDeCompra, [excludes:['sucursal','proveedor','compra','partidas'] ]){
     proveedor {
         id recepcionDeCompra.proveedor.id
         nombre recepcionDeCompra.proveedor.nombre

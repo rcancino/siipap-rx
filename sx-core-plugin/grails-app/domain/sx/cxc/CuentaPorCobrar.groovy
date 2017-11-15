@@ -10,7 +10,7 @@ import sx.core.Sucursal
 import sx.core.Venta
 
 @ToString(excludes = ['id,version,sw2,dateCreated,lastUpdated'],includeNames=true,includePackage=false)
-@EqualsAndHashCode(includeFields = true,includes = ['id,cliente,fecha,total'])
+@EqualsAndHashCode(includeFields = true,includes = ['id'])
 class CuentaPorCobrar {
 
     String	id
@@ -43,6 +43,8 @@ class CuentaPorCobrar {
 
     String	uuid
 
+    String tipo
+
     Cfdi cfdi
 
     Date fecha
@@ -55,10 +57,13 @@ class CuentaPorCobrar {
 
     String updateUser
 
+    BigDecimal pagos = 0.0
 
+    BigDecimal saldo = 0.0
 
     static constraints = {
         tipoDocumento inList:['VENTA','CHEQUE_DEVUELTO','DEVOLUCION_CLIENTE','NOTA_DE_CARGO']
+        tipo nullable:true, inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
         documento maxSize: 20
         uuid nullable:true, unique:true
         tipoDeCambio(scale:6)
@@ -73,8 +78,17 @@ class CuentaPorCobrar {
         id generator:'uuid'
         fecha type:'date' ,index: 'CXC_IDX1'
         cliente index: 'CXC_IDX3'
+        pagos formula:'(select COALESCE(sum(x.importe),0) from aplicacion_de_cobro x where x.cuenta_por_cobrar_id=id)'
 
     }
+
+    static transients = ['saldo']
+
+    BigDecimal getSaldo() {
+        return total - pagos
+    }
+
+
 
 
 }
