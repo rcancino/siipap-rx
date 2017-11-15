@@ -48,9 +48,10 @@ class CfdiFacturaBuilder {
     this.empresa = Empresa.first()
     // assert empresa, 'La empresa no esta registrada...'
     buildComprobante()
+    .buildFormaDePago()
     //.buildEmisor()
     .buildReceptor()
-    .buildFormaDePago()
+
     
     return comprobante
   }
@@ -110,6 +111,59 @@ class CfdiFacturaBuilder {
       comprobante.condicionesDePago = 'Credito 30 días'
       comprobante.metodoPago = CMetodoPago.PUE
       return this
+  }
+  def buildConceptos(){
+    /** Conceptos ***/
+    this.totalImpuestosTrasladados = 0.0
+    Comprobante.Conceptos conceptos = factory.createComprobanteConceptos()
+    this.venta.partidas.each { det ->
+        
+      Comprobante.Conceptos.Concepto concepto = factory.createComprobanteConceptosConcepto()
+      concepto.with { 
+        assert det.producto.productoSat, 
+        "No hay una claveProdServ definida para el producto ${det.producto} SE REQUIERE PARA EL CFDI 3.3"
+        assert det.producto.unidad.claveUnidadSat, 
+        "No hay una claveUnidadSat definida para el producto ${det.producto} SE REQUIERE PARA EL CFDI 3.3"
+        assert det.producto.unidad.unidadSat, 
+        "No hay una unidadSat definida para el producto ${det.producto} SE REQUIERE PARA EL CFDI 3.3"
+        String desc = det.producto.descripcion
+        if(det.producto.clave == 'SRV0001'){
+            desc+= ' ' + venta.comentario
+        }
+        claveProdServ = det.producto.productoSat.claveProdServ
+        noIdentificacion = det.producto.clave
+        cantidad = MonedaUtils.round(det.cantidad / det.producto.unidad.factor,3)
+        claveUnidad = det.producto.claveUnidadSat
+        unidad = det.producto.unidad.clave
+        descripcion = desc
+        valorUnitario = det.precio
+        importe = det.importe
+        // Impuestos del concepto
+        concepto.impuestos = factory.createComprobanteConceptosConceptoImpuestos()
+        concepto.impuestos.traslados = factory.createComprobanteConceptosConceptoImpuestosTraslados()
+        Comprobante.Conceptos.Concepto.Impuestos.Traslados.Traslado traslado1 
+        traslado1 = factory.createComprobanteConceptosConceptoImpuestosTrasladosTraslado()
+        traslado1.base =  det.importe
+        traslado1.impuesto = '002'
+        traslado1.tipoFactor = CTipoFactor.TASA
+        traslado1.tasaOCuota = '0.160000'
+        traslado1.importe = MonedaUtils.round(det.importe * 0.16)
+        this.totalImpuestosTrasladados += traslado1.importe
+        concepto.impuestos.traslados.traslado.add(traslado1)
+        conceptos.concepto.add(concepto)
+
+        def pedimento=det.embarque?.pedimento
+        if(pedimento){
+            Comprobante.Conceptos.Concepto.InformacionAduanera aduana = 
+                factory.createComprobanteConceptosConceptoInformacionAduanera()
+            aduana.numeroPedimento = pedimento.pedimento
+            concepto.informacionAduanera.add(aduana)
+            descripcion = "${desc} ${pedimento.fecha.text()}"
+        }
+        comprobante.conceptos = conceptos
+      }
+    }
+    return this
   }
 
   

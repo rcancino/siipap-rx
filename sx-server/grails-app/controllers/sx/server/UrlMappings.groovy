@@ -10,6 +10,8 @@ class UrlMappings {
         put "/$controller/$id(.$format)?"(action:"update")
         patch "/$controller/$id(.$format)?"(action:"patch")
 
+        "/api/config"(resource: "appConfig")
+
         // Catalogos principales
         "/api/sucursales"(resources: "sucursal")
         "/api/lineas"(resources: "linea")
