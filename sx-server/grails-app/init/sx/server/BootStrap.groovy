@@ -3,10 +3,13 @@ package sx.server
 import sx.core.AppConfig
 import sx.core.Sucursal
 import sx.security.*
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 
 class BootStrap {
 
-    def init = { servletContext ->
+  def init = { servletContext ->
+
+    java.security.Security.addProvider(new BouncyCastleProvider())
 
     def userRole = Role.findOrSaveWhere(authority:'ROLE_USER')
     def adminRole = Role.findOrSaveWhere(authority:'ROLE_ADMIN')
@@ -23,7 +26,7 @@ class BootStrap {
 
 
     def admin=User.findByUsername('admin')
-    
+
     if(!admin) {
       admin=new User(username:'admin'
         ,password:'admin'

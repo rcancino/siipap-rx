@@ -40,7 +40,6 @@ class VentaController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
-      
       params.sort = 'lastUpdated'
       params.order = 'desc'
       params.max = 100

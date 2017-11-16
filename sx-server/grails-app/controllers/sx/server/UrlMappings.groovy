@@ -42,10 +42,15 @@ class UrlMappings {
         "/api/cxp"(resources: "cuentaPorPagar")
         "/api/cxp/importar"(controller:"cuentaPorPagar", action:"importar")
 
-        //Comprobantes fiscales CFDI's
+        //Comprobantes fiscales de proveedores CFDI's
+        /*
         "/api/cfdis"(resources: "comprobanteFiscal")
         "/api/cfdis/importar"(controller:"comprobanteFiscal", action:"importar")
         "/api/cfdis/mostrarXml/$id?"(controller:"comprobanteFiscal", action:"mostrarXml")
+        */
+        "/api/cfdis"(resources: "cfdi")
+        "/api/cfdis/mostrarXml/$id?"(controller:"cfdi", action:"mostrarXml")
+
 
         // CxP
         "/api/cxc/notas"(resources: "notaDeCredito"){

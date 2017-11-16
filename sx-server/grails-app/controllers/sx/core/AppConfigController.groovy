@@ -14,7 +14,6 @@ class AppConfigController extends RestfulController{
 
     @Override
     Object show() {
-        
-        respond AppConfig.first()
+      respond AppConfig.first()
     }
 }

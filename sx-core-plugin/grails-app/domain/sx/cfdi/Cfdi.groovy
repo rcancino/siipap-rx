@@ -22,9 +22,11 @@ class Cfdi {
     String folio
 
     String emisor
+
     String emisorRfc
 
     String receptor
+
     String receptorRfc
 
     String tipoDeComprobante
@@ -35,7 +37,7 @@ class Cfdi {
 
     BigDecimal total
 
-    String url
+    URL url
 
     String sw2
 
@@ -44,16 +46,16 @@ class Cfdi {
     Date lastUpdated
 
     static constraints = {
-        emisorRfc minSize: 12, maxSize:13
-        receptorRfc minSize: 12, maxSize:13
-        uuid unique:true , nullable: true
-        url nullable: true
-        fileName maxSize:150
-        serie nullable:true,maxSize:30
-        folio nullable:true,maxSize:30
-        tipoDeComprobante inList:['INGRESO','EGRESO','TRASLADO','PAGO','NOMINA']
-        sw2 nullable: true
-        versionCfdi: inList: ['3.2', '3.3']
+      emisorRfc minSize: 12, maxSize:13
+      receptorRfc minSize: 12, maxSize:13
+      uuid unique:true , nullable: true
+      url url:true
+      fileName maxSize:150
+      serie nullable:true,maxSize:30
+      folio nullable:true,maxSize:30
+      tipoDeComprobante inList:['I','E','T','P','N']
+      sw2 nullable: true
+      versionCfdi inList: ['3.2', '3.3']
     }
 
     static  mapping={
