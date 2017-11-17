@@ -205,8 +205,9 @@ class CfdiFacturaBuilder {
   }
 
   def buildTotales(){
-    comprobante.subTotal = venta.subtotal
+    comprobante.subTotal = venta.importe
     comprobante.total = venta.total
+    comprobante.descuento = venta.descuentoImporte
     return this
   }
 

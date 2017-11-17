@@ -1,14 +1,17 @@
 buildscript {
-    repositories {
-        mavenLocal()
-        maven { url "https://repo.grails.org/grails/core" }
-    }
-    dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-        classpath "org.grails.plugins:hibernate5:6.0.7"
-        classpath "org.grails.plugins:views-gradle:1.1.5"
-        classpath 'org.grails.plugins:database-migration:3.0.3'
-    }
+  repositories {
+    mavenLocal()
+    maven { url "https://repo.grails.org/grails/core" }
+    maven { url "https://dl.bintray.com/ctoestreich/grails-plugins" } //Required until grails repo is fixed
+  }
+  dependencies {
+    classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+    classpath "org.grails.plugins:hibernate5:6.0.7"
+    classpath "org.grails.plugins:views-gradle:1.1.5"
+    classpath 'org.grails.plugins:database-migration:3.0.3'
+    // WSDL Support
+    classpath "org.grails.plugins:grails-cxf-client:3.0.3" //This line
+  }
 }
 
 version "1.0.0"
@@ -82,6 +85,10 @@ dependencies {
     compile 'lx.cfdi:v33:1.0.5'
     compile 'org.apache.commons:commons-compress:1.1'
     compile 'net.glxn:qrgen:1.2'
+
+  compile 'org.grails.plugins:grails-cxf-client:3.0.3' //This line
+  compile 'sx.cfdi.providers:cepdi:1.0.0'
+  compile 'sx.cfdi.providers:edicom:1.0.0'
 }
 
 bootRun {

@@ -8,6 +8,8 @@ import groovy.xml.XmlUtil
 @Secured("hasRole('ROLE_POS_USER')")
 class CfdiController extends RestfulController{
 
+  CfdiTimbradoService cfdiTimbradoService
+
   static responseFormats = ['json']
 
   CfdiController(){
@@ -29,6 +31,10 @@ class CfdiController extends RestfulController{
     // println 'Res: ' + res
     // render(text: res, contentType: "text/xml", encoding: "UTF-8")
     render (file: cfdi.getUrl().newInputStream(), contentType: 'text/xml', filename: cfdi.fileName, encoding: "UTF-8")
+  }
+
+  def timbrar(Cfdi cfdi) {
+
   }
 
   private String parse(byte[] xmlData){

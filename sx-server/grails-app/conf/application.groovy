@@ -58,4 +58,26 @@ grails {
 	}
 }
 */
+cxf {
+	client {
+		cerpiService {
+			wsdl="src/wsdl/cepdi.wsdl"
+			wsdlArgs = ['-autoNameResolution', '-validate']
+			namespace="sx.cfdi.providers"
+			clientInterface = sx.cfdi.providers.cepdi.WS
+			serviceEndpointAddress = "https://timbrador.cepdi.mx:8443/WSDemo/WS"
+			receiveTimeout = 120000 //2min
+			connectionTimeout = 120000 //2min
+		}
+    edicomService {
+      wsdl="src/wsdl/edicom.wsdl"
+      wsdlArgs = ['-autoNameResolution', '-validate']
+      namespace="sx.cfdi.providers"
+      clientInterface = sx.cfdi.providers.edicom.CFDi
+      serviceEndpointAddress = "https://cfdiws.sedeb2b.com/EdiwinWS/services/CFDi"
+      receiveTimeout = 120000 //2min
+      connectionTimeout = 120000 //2min
+    }
 
+	}
+}
