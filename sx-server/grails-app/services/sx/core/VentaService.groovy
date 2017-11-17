@@ -2,7 +2,9 @@ package sx.core
 
 import com.luxsoft.cfdix.v33.CfdiSellador33
 import grails.transaction.Transactional
+import sx.cfdi.Cfdi
 import sx.cfdi.CfdiService
+import sx.cfdi.CfdiTimbradoService
 import sx.cxc.CuentaPorCobrar
 import lx.cfdi.v33.CfdiUtils
 
@@ -13,6 +15,7 @@ import com.luxsoft.cfdix.v33.CfdiFacturaBuilder
 class VentaService {
 
   CfdiService cfdiService
+  CfdiTimbradoService cfdiTimbradoService
 
   def facturar(Venta pedido) {
     generarCuentaPorCobrar(pedido)
@@ -56,5 +59,18 @@ class VentaService {
     venta.save flush: true
     return cfdi
   }
+
+  def timbrar(Venta venta){
+    assert venta.cuentaPorCobrar, "La venta ${venta} no se ha facturado"
+    assert !venta.cuentaPorCobrar?.cfdi?.uuid, "La venta ${venta} ya esta timbrada "
+    def cfdi = venta.cuentaPorCobrar.cfdi
+    if (cfdi == null) {
+      cfdi = generarCfdi(venta)
+    }
+    cfdi = cfdiTimbradoService.timbrar(cfdi)
+    return cfdi;
+  }
+
+
 
 }

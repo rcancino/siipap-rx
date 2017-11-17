@@ -10,7 +10,9 @@ class VentaController extends RestfulController{
 
     static responseFormats = ['json']
 
-    def ventaService
+    VentaService ventaService
+
+
 
     VentaController(){
         super(Venta)
@@ -155,7 +157,7 @@ class VentaController extends RestfulController{
       notFound()
       return
     }
-    def cfdi = ventaService.generarCfdi(venta)
+    def cfdi = ventaService.timbrar(venta)
     respond cfdi
   }
 }
