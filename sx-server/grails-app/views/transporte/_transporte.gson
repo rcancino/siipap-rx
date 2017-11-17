@@ -4,4 +4,4 @@ model {
 	transporte Transporte
 }
 
-json g.render(transporte)
+//json g.render(transporte)
