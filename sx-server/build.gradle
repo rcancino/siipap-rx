@@ -87,7 +87,7 @@ dependencies {
     compile 'net.glxn:qrgen:1.2'
 
   compile 'org.grails.plugins:grails-cxf-client:3.0.3' //This line
-  compile 'sx.cfdi.providers:cepdi:1.0.0'
+  // compile 'sx.cfdi.providers:cepdi:1.0.0'
   compile 'sx.cfdi.providers:edicom:1.0.0'
 }
 

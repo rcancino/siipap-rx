@@ -60,6 +60,7 @@ grails {
 */
 cxf {
 	client {
+    /*
 		cerpiService {
 			wsdl="src/wsdl/cepdi.wsdl"
 			wsdlArgs = ['-autoNameResolution', '-validate']
@@ -69,6 +70,7 @@ cxf {
 			receiveTimeout = 120000 //2min
 			connectionTimeout = 120000 //2min
 		}
+		*/
     edicomService {
       wsdl="src/wsdl/edicom.wsdl"
       wsdlArgs = ['-autoNameResolution', '-validate']

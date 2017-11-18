@@ -8,11 +8,11 @@ import org.springframework.context.ApplicationContext
 import com.luxsoft.utils.ZipUtils
 
 import sx.cfdi.providers.edicom.CFDi
-
+/*
 import sx.cfdi.providers.cepdi.DatosExtra
 import sx.cfdi.providers.cepdi.RespuestaTimbrado
 import sx.cfdi.providers.cepdi.WS
-
+*/
 
 /**
  * Prueba de service para timbrado
@@ -20,7 +20,7 @@ import sx.cfdi.providers.cepdi.WS
 @Transactional
 class CfdiTimbradoService {
 
-  WS cerpiService
+  // WS cerpiService
 
   CFDi edicomService
 
@@ -44,7 +44,7 @@ class CfdiTimbradoService {
     cfdi.url = target.toURI().toURL()
     cfdi.save flush: true
   }
-
+  /*
   def timbrarCerpi() {
     File file = FileUtils.toFile(cfdi.url)
     DatosExtra extra = new DatosExtra()
@@ -59,11 +59,8 @@ class CfdiTimbradoService {
 
     }
   }
+  */
 
-  private demos() {
-    ApplicationContext ctx = null
-    ctx.getBeansOfType()
-  }
 
 
 }
