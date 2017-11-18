@@ -4,22 +4,26 @@ import grails.transaction.Transactional
 import org.apache.commons.compress.archivers.zip.ZipUtil
 import org.apache.commons.io.FileUtils
 import org.springframework.context.ApplicationContext
+
+import sx.cfdi.providers.edicom.CFDi
+/*
 import sx.cfdi.providers.cepdi.DatosExtra
 import sx.cfdi.providers.cepdi.RespuestaTimbrado
 import sx.cfdi.providers.cepdi.WS
-import sx.cfdi.providers.edicom.CFDi
 
+*/
+/*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
-
+*/
 /**
  * Prueba de service para timbrado
  */
 @Transactional
 class CfdiTimbradoService {
 
-  WS cerpiService
+  // WS cerpiService
 
   CFDi edicomService
 
@@ -34,6 +38,7 @@ class CfdiTimbradoService {
     println('Timbrado exitoso: ', res)
     // FileUtils.writeByteArrayToFile(file, res)
   }
+  /*
 
   def timbrarCerpi() {
     File file = FileUtils.toFile(cfdi.url)
@@ -49,9 +54,8 @@ class CfdiTimbradoService {
 
     }
   }
+  */
 
-  private demos() {
-    ApplicationContext ctx = null
-    ctx.getBeansOfType()
-  }
+  
+
 }

@@ -58,6 +58,7 @@ grails {
 	}
 }
 */
+/*
 cxf {
 	client {
 		cerpiService {
@@ -81,3 +82,4 @@ cxf {
 
 	}
 }
+*/

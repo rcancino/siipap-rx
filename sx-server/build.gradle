@@ -10,7 +10,7 @@ buildscript {
     classpath "org.grails.plugins:views-gradle:1.1.5"
     classpath 'org.grails.plugins:database-migration:3.0.3'
     // WSDL Support
-    classpath "org.grails.plugins:grails-cxf-client:3.0.3" //This line
+    classpath "org.grails.plugins:cxf-client:3.0.7" //This line
   }
 }
 
@@ -86,9 +86,9 @@ dependencies {
     compile 'org.apache.commons:commons-compress:1.1'
     compile 'net.glxn:qrgen:1.2'
 
-  compile 'org.grails.plugins:grails-cxf-client:3.0.3' //This line
-  compile 'sx.cfdi.providers:cepdi:1.0.0'
-  compile 'sx.cfdi.providers:edicom:1.0.0'
+     compile 'org.grails.plugins:cxf-client:3.0.7' //This line
+    //compile 'sx.cfdi.providers:cepdi:1.0.0'
+    compile 'sx.cfdi.providers:edicom:1.0.0'
 }
 
 bootRun {

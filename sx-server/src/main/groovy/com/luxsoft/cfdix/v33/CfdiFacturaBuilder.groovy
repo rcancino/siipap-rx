@@ -195,7 +195,7 @@ class CfdiFacturaBuilder {
     Comprobante.Impuestos.Traslados.Traslado traslado = factory.createComprobanteImpuestosTrasladosTraslado()
     traslado.impuesto = '002'
     traslado.tipoFactor = CTipoFactor.TASA
-    traslado.tasaOCuota = '0.160000'
+    traslado.tasaOCuota = '0.160000'o
     //traslado.importe = venta.impuestos
     traslado.importe = this.totalImpuestosTrasladados
     traslados.traslado.add(traslado)
