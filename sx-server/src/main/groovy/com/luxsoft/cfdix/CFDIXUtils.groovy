@@ -3,10 +3,9 @@ package com.luxsoft.cfdix
 
 import groovy.xml.*
 import groovy.util.slurpersupport.GPathResult
-import java.text.SimpleDateFormat
-import org.apache.commons.lang.builder.ToStringStyle
-import org.apache.commons.lang.builder.ToStringBuilder
+import sx.cfdi.CfdiTimbre
 
+import java.text.SimpleDateFormat
 
 import sx.cfdi.Cfdi
 

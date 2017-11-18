@@ -7,7 +7,7 @@ import sx.cfdi.Cfdi
 import com.luxsoft.lx.utils.ImporteALetra
 
 import lx.cfdi.v33.Comprobante
-import com.luxsoft.cfdix.CfdiTimbre
+import sx.cfdi.CfdiTimbre
 
 import net.glxn.qrgen.QRCode
 import net.glxn.qrgen.image.ImageType

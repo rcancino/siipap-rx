@@ -37,9 +37,5 @@ class CfdiController extends RestfulController{
 
   }
 
-  private String parse(byte[] xmlData){
-    ByteArrayInputStream is=new ByteArrayInputStream(xmlData)
-    GPathResult xmlResult = new XmlSlurper().parse(is)
-    return XmlUtil.serialize(xmlResult)
-  }
+
 }

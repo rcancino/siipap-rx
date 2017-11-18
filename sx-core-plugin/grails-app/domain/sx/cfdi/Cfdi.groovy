@@ -10,56 +10,62 @@ import grails.validation.Validateable
 @ToString(includeNames=true,includePackage=false, excludes = ['dateCreated', 'lastUpdated'])
 @EqualsAndHashCode(includeFields = true, includes = ['serie', 'folio', 'uuid', 'id'])
 class Cfdi {
-    
-    String id
 
-    String versionCfdi = '3.3'
+  String id
 
-    Date fecha
+  String versionCfdi = '3.3'
 
-    String serie
+  Date fecha
 
-    String folio
+  String serie
 
-    String emisor
+  String folio
 
-    String emisorRfc
+  String emisor
 
-    String receptor
+  String emisorRfc
 
-    String receptorRfc
+  String receptor
 
-    String tipoDeComprobante
+  String receptorRfc
 
-    String fileName
+  String tipoDeComprobante
 
-    String uuid
+  String fileName
 
-    BigDecimal total
+  String uuid
 
-    URL url
+  BigDecimal total
 
-    String sw2
+  URL url
 
-    Date dateCreated
+  String sw2
 
-    Date lastUpdated
+  Date dateCreated
 
-    static constraints = {
-      emisorRfc minSize: 12, maxSize:13
-      receptorRfc minSize: 12, maxSize:13
-      uuid unique:true , nullable: true
-      url url:true
-      fileName maxSize:150
-      serie nullable:true,maxSize:30
-      folio nullable:true,maxSize:30
-      tipoDeComprobante inList:['I','E','T','P','N']
-      sw2 nullable: true
-      versionCfdi inList: ['3.2', '3.3']
-    }
+  Date lastUpdated
 
-    static  mapping={
-        id generator:'uuid'
-    }
+  CfdiTimbre timbre
+
+  static constraints = {
+    emisorRfc minSize: 12, maxSize:13
+    receptorRfc minSize: 12, maxSize:13
+    uuid unique:true , nullable: true
+    url url:true
+    fileName maxSize:150
+    serie nullable:true,maxSize:30
+    folio nullable:true,maxSize:30
+    tipoDeComprobante inList:['I','E','T','P','N']
+    sw2 nullable: true
+    versionCfdi inList: ['3.2', '3.3']
+  }
+
+  static  mapping={
+      id generator:'uuid'
+  }
+
+  static transients = ['timbre']
+
+
 }
 
