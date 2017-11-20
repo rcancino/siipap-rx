@@ -8,6 +8,9 @@ import org.springframework.context.ApplicationContext
 import com.luxsoft.utils.ZipUtils
 
 import sx.cfdi.providers.edicom.CFDi
+import sx.cfdi.providers.edicom.CancelaResponse
+import sx.core.Empresa
+
 /*
 import sx.cfdi.providers.cepdi.DatosExtra
 import sx.cfdi.providers.cepdi.RespuestaTimbrado
@@ -16,6 +19,7 @@ import sx.cfdi.providers.cepdi.WS
 
 /**
  * Prueba de service para timbrado
+ * 
  */
 @Transactional
 class CfdiTimbradoService {
@@ -29,6 +33,12 @@ class CfdiTimbradoService {
     return cfdi
   }
 
+  /**
+  * Web Service SAOP (wsdl) para los diversos servicios de timbado proporcionados por EDICOM. Actualmente 
+  * se requiere habilitar un certificado inadecuado 
+  * Utilizando (en Mac o unix): sudo keytool -importcert -alias edicom -file ~/dumps/certificados/caedicom01.cer -keystore cacerts;
+  *
+  */
   def timbrarEdicom(Cfdi cfdi) {
     File file = FileUtils.toFile(cfdi.url)
     println 'Timbrando archivo: ' + file.getPath()
@@ -61,6 +71,18 @@ class CfdiTimbradoService {
   }
   */
 
+  def cancelar(Cfdi cfdi){
+    Empresa empresa = Empresa.first()
 
+  }
+
+  def cancelarEdicom(Cfdi cfdi, Empresa empresa) {
+    CancelaResponse response = edicomService.cancelaCFDi(
+            empresa.usuarioPac,
+            empresa.passwordPac,
+            [cfdi.uuid],
+            empresa.certificadoDigitalPfx,
+            empresa.passwordPfx)
+  }
 
 }

@@ -12,33 +12,9 @@ class VentaController extends RestfulController{
 
     VentaService ventaService
 
-
-
     VentaController(){
         super(Venta)
     }
-
-
-    // def index(VentasFiltro filtro) {
-    //     params.max = params.registros ?:10
-    //     params.sort = params.sort ?:'lastUpdated'
-    //     params.order = params.order ?:'desc'
-
-    //     def query = Venta.where {}
-
-    //     if(filtro.fechaInicial){
-    //         Date inicio = filtro.fechaInicial
-    //         Date fin = filtro.fechaFinal ?: inicio
-    //         query = query.where {fecha >= inicio && fecha <= fin}
-    //     }
-    //     if (filtro.sucursal) {
-    //         query = query.where { sucursal == filtro.sucursal}
-    //     }
-    //     if (filtro.cliente ) {
-    //         query = query.where { cliente == filtro.cliente}
-    //     }
-    //     respond query.list(params)
-    // }
 
     @Override
     protected List listAllResources(Map params) {
@@ -53,6 +29,8 @@ class VentaController extends RestfulController{
         query = query.where {facturar !=  null  && cuentaPorCobrar == null}
         if(params.facturables == 'CRE'){
           query = query.where {tipo == params.facturables}
+        } else {
+          query = query.where {tipo != 'CRE'}
         }
       }
       if (params.facturados) {
@@ -79,9 +57,7 @@ class VentaController extends RestfulController{
     }
 
   protected Venta saveResource(Venta resource) {
-    // println 'Salvando venta' + resource
     resource.partidas.each {
-        // println 'Partida con corte: ' + it.corte
         if(it.corte)
             it.corte.ventaDet = it;
     }
@@ -147,7 +123,6 @@ class VentaController extends RestfulController{
     params.order = params.order ?:'desc'
     
     def ventas = Venta.where{ sucursal == sucursal && cuentaPorCobrar != null}.list(params)
-    // println 'Buscando facturas cobradas: ' + sucursal + ' Found: ' + ventas.size()
     respond ventas
   }
 

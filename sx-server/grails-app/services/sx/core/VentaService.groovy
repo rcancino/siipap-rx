@@ -18,8 +18,9 @@ class VentaService {
   CfdiTimbradoService cfdiTimbradoService
 
   def facturar(Venta pedido) {
-    generarCuentaPorCobrar(pedido)
+    pedido = generarCuentaPorCobrar(pedido)
     generarCfdi(pedido)
+    return pedido
   }
 
   def generarCuentaPorCobrar(Venta pedido) {

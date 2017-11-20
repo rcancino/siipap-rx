@@ -50,6 +50,7 @@ class UrlMappings {
         */
         "/api/cfdis"(resources: "cfdi")
         "/api/cfdis/mostrarXml/$id?"(controller:"cfdi", action:"mostrarXml")
+        "/api/cfdis/print/$id"(controller: "cfdi", action: 'print', method: 'GET')
 
 
         // CxP

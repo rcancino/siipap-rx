@@ -47,6 +47,8 @@ class Cfdi {
 
   CfdiTimbre timbre
 
+  String origen = 'VENTA'
+
   static constraints = {
     emisorRfc minSize: 12, maxSize:13
     receptorRfc minSize: 12, maxSize:13
@@ -58,6 +60,7 @@ class Cfdi {
     tipoDeComprobante inList:['I','E','T','P','N']
     sw2 nullable: true
     versionCfdi inList: ['3.2', '3.3']
+    origen inList:['VENTA','NOTA_CARGO','NOTA_CREDITO','TRASLADO']
   }
 
   static  mapping={

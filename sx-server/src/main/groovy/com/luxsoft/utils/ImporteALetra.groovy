@@ -1,4 +1,4 @@
-package com.luxsoft.lx.utils
+package com.luxsoft.utils
 
 import java.math.BigDecimal;
 import java.text.MessageFormat;

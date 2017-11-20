@@ -19,15 +19,9 @@ import sx.utils.MonedaUtils
 class V33CfdiUtils {
 
 	static Comprobante toComprobante(Cfdi cfdi){
-    if(cfdi.url) {
-      File file = FileUtils.toFile(cfdi.url)
-      JAXBContext context = JAXBContext.newInstance(Comprobante.class)
-      def unmarshaller = context.createUnmarshaller()
-      Comprobante comprobante = (Comprobante)unmarshaller
-              .unmarshal(new ByteArrayInputStream(file.bytes))
-      return comprobante
-    }
-    return null
+    File file = FileUtils.toFile(cfdi.url)
+    Comprobante comprobante = CfdiUtils.read(file.bytes)
+    return comprobante
 	}
 
   static String parse(byte[] xmlData){

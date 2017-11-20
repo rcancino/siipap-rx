@@ -1,10 +1,15 @@
 package com.luxsoft.cfdix.v33
 
+import lx.cfdi.v33.CfdiUtils
+import org.apache.commons.io.FileUtils
+import org.aspectj.util.FileUtil
+import sx.core.Venta
+
 import java.text.SimpleDateFormat
 import java.text.MessageFormat
 
 import sx.cfdi.Cfdi
-import com.luxsoft.lx.utils.ImporteALetra
+import com.luxsoft.utils.ImporteALetra
 
 import lx.cfdi.v33.Comprobante
 import sx.cfdi.CfdiTimbre
@@ -19,22 +24,28 @@ class V33PdfGenerator {
 
 	static getReportData(Cfdi cfdi){
 
-		Comprobante comprobante = V33CfdiUtils.toComprobante(cfdi)
-		
-		def conceptos = comprobante.conceptos.concepto
+		File xmlFile = FileUtils.toFile(cfdi.url)
+		Comprobante comprobante = CfdiUtils.read(xmlFile)
 
+		def conceptos = comprobante.conceptos.concepto
+    def venta
+
+    if(cfdi.origen == 'VENTA') {
+      venta = Venta.where {cuentaPorCobrar.cfdi == cfdi}.find()
+    }
+    def index = 0
 		def modelData=conceptos.collect { cc ->
 			def traslado = cc.impuestos.traslados.traslado[0]
 			def res=[
 				'cantidad' : cc.getCantidad(),
-		        'NoIdentificacion' : cc.noIdentificacion,
+				'NoIdentificacion' : cc.noIdentificacion,
 				'descripcion' : cc.descripcion,
 				'unidad': cc.unidad,
 				'ValorUnitario':cc.valorUnitario,
 				'Importe':cc.importe,
 				'ClaveProdServ': cc.claveProdServ,
 				'ClaveUnidad': cc.claveUnidad,
-				'Descuento': cc.descuento?: '0.0',
+				'Descuento': cc.descuento.toString()?: '0.0',
 				'Impuesto': traslado.impuesto.toString(),
 				'TasaOCuota': traslado.tasaOCuota.toString(),
 				'TipoFactor': traslado.tipoFactor.value().toString(),
@@ -49,9 +60,19 @@ class V33PdfGenerator {
 				def data = cc.informacionAduanera.collect {it.numeroPedimento}.join(',')
 				res.PEDIMENTO = data
 			}
+      if (venta) {
+        def partida = venta.partidas.get(index++)
+        if (partida) {
+          if (partida.corte) {
+            res['InstruccionDeCorte'] = partida.corte.instruccion
+          }
+          res['COMENTARIO'] = partida.comentario
+        }
+      }
+
 			return res
 		}
-		def params = getParametros(cfdi, comprobante)
+		def params = getParametros(cfdi, comprobante, xmlFile)
 
 		def data = [:]
 		data['CONCEPTOS'] = modelData
@@ -59,8 +80,9 @@ class V33PdfGenerator {
 		return data
 	}
 
-	static getParametros(Cfdi cfdi, Comprobante comprobante){
-		
+	static getParametros(Cfdi cfdi, Comprobante comprobante, File xmlFile){
+
+
 		def params=[:]
 		params["VERSION"] = comprobante.version
 		params["SERIE"] = comprobante.getSerie()
@@ -94,7 +116,6 @@ class V33PdfGenerator {
 		
 		params["EMISOR_DIRECCION"] = ' '
 		params["REGIMEN"] = comprobante.emisor.regimenFiscal
-		//params["EXPEDIDO_DIRECCION"] = comprobante.lugarExpedicion
 		params["LUGAR_EXPEDICION"] = comprobante.lugarExpedicion
 
 		def relacionados = comprobante.cfdiRelacionados
@@ -105,7 +126,7 @@ class V33PdfGenerator {
 		if(cfdi.uuid!=null){
 			def img = generarQR(cfdi)
 			params.put("QR_CODE",img);
-			CfdiTimbre timbre = new CfdiTimbre(cfdi)
+			CfdiTimbre timbre = new CfdiTimbre(xmlFile.bytes)
 			params.put("FECHA_TIMBRADO", timbre.fechaTimbrado);
 			params.put("FOLIO_FISCAL", timbre.uuid);
 			params.put("SELLO_DIGITAL_SAT", timbre.selloSAT);
@@ -114,6 +135,9 @@ class V33PdfGenerator {
 			params.put("RfcProvCertif", timbre.rfcProvCertif)
 		}
 		params.FECHA = comprobante.fecha
+    cargarParametrosAdicionales(cfdi, params)
+
+
 		return params;
 	}
 
@@ -125,10 +149,45 @@ class V33PdfGenerator {
 
 	public static  generarQR(Cfdi cfdi) {
 		String pattern="?re=${0}&rr={1}&tt={2,number,##########.######}&id,{3}"
-		String qq=MessageFormat.format(pattern, cfdi.rfc,cfdi.receptorRfc,cfdi.total,cfdi.uuid)
+		String qq=MessageFormat.format(pattern, cfdi.emisorRfc,cfdi.receptorRfc,cfdi.total,cfdi.uuid)
 		File file=QRCode.from(qq).to(ImageType.GIF).withSize(250, 250).file()
 		return file.toURI().toURL()
 		
 	}
+
+  public static cargarParametrosAdicionales(Cfdi cfdi, Map parametros){
+    switch (cfdi.origen) {
+      case 'VENTA':
+        parametrosAdicionalesVenta(cfdi, parametros)
+        break
+    }
+  }
+
+  public static parametrosAdicionalesVenta(Cfdi cfdi, Map parametros) {
+    Venta venta = Venta.where {cuentaPorCobrar.cfdi == cfdi}.find()
+    if(venta.impreso == null) {
+      venta.impreso = new Date()
+      venta = venta.save flush:true
+    }
+    assert venta, 'No existe la venta origen del CFDI: ' + cfdi.id
+    parametros.CLAVCTE = venta.cliente.clave
+    parametros.KILOS = venta.kilos.toDouble()
+    String tipo = 'CONTADO'
+    switch (venta.tipo){
+      case 'CRE':
+        tipo = 'CONTADO'
+        break
+      case 'COD':
+        tipo = 'COD'
+        break
+    }
+    parametros.TIPO = tipo
+    parametros.PEDIDO = venta.documento
+    parametros.COMENTARIO = venta.comentario
+    parametros.PUESTO = venta.puesto ? 'PUESTO' : null
+    parametros.ELAB_FAC = venta.cuentaPorCobrar.updateUser ?: 'ND'
+    parametros.ELAB_VTA = venta.updateUser ?: 'ND'
+    parametros.IMPRESO = venta.impreso
+  }
 
 }
