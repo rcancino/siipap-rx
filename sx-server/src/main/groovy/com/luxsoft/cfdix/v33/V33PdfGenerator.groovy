@@ -188,6 +188,11 @@ class V33PdfGenerator {
     parametros.ELAB_FAC = venta.cuentaPorCobrar.updateUser ?: 'ND'
     parametros.ELAB_VTA = venta.updateUser ?: 'ND'
     parametros.IMPRESO = venta.impreso
+
+		if (venta.envio) {
+      parametros.ENVIO = venta.envio.direccion.toLabel()
+      parametros.DIR_ENTREGA = venta.envio.direccion.toLabel()
+    }
   }
 
 }

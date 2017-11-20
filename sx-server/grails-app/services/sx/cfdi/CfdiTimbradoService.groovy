@@ -41,7 +41,7 @@ class CfdiTimbradoService {
   */
   def timbrarEdicom(Cfdi cfdi) {
     File file = FileUtils.toFile(cfdi.url)
-    println 'Timbrando archivo: ' + file.getPath()
+    // log.debug 'Timbrando archivo: ' + file.getPath()
     byte[] res = edicomService.getCfdiTest('PAP830101CR3','yqjvqfofb', file.bytes)
 
     Map map = ZipUtils.descomprimir(res)
