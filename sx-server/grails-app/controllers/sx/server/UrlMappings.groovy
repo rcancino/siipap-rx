@@ -22,6 +22,8 @@ class UrlMappings {
             "/productos"(resources:'proveedorProducto')
         }
         "/api/clientes"(resources: "cliente")
+        "/api/clientes/actualizarCfdiMail/$id"(controller: "cliente", action: 'actualizarCfdiMail', method: 'PUT')
+        
 
         //Contabilidad y finanzas
         "/api/sat/bancos"(resources: "SatBanco")
@@ -79,7 +81,7 @@ class UrlMappings {
         "/api/ventas/facturar/$id"( controller: 'venta', action: 'facturar')
         "/api/ventas/cobradas/$id"( controller: 'venta', action: 'cobradas')
         "/api/ventas/timbrar/$id"( controller: 'venta', action: 'timbrar')
-
+        "/api/ventas/print/$id"(controller: "venta", action: 'print', method: 'GET')
 
         "/api/ventas/listas"(resources: "listaDePreciosVenta")
         

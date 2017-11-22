@@ -26,7 +26,7 @@
 	<parameter name="COMPANY" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
-	<parameter name="PEDIDO" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="IMP_CON_LETRA" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[select C.CLAVE AS CLAVCTE,C.NOMBRE,CONCAT(C.direccion_calle,' ',C.direccion_numero_exterior,' ',C.direccion_numero_interior) AS CALLE,CONCAT(C.direccion_colonia,',     CP : ',C.direccion_codigo_postal) AS COLONIA,C.direccion_municipio AS DELMPO,C.direccion_estado AS ESTADO,C.direccion_pais AS PAIS,C.RFC
 ,V.TIPO,V.FECHA,V.ID,V.DOCUMENTO AS DOCTO,S.NOMBRE AS SUCURSAL,P.CLAVE,P.DESCRIPCION,P.KILOS AS KXMLL,P.GRAMOS,P.UNIDAD,I.CANTIDAD,I.PRECIO,P.KILOS*(CASE WHEN P.UNIDAD='MIL' THEN I.CANTIDAD/1000 ELSE I.CANTIDAD END) AS KILOS,I.IMPORTE AS IMPORTED
@@ -48,7 +48,7 @@ JOIN venta V ON(I.venta_id=V.id)
 JOIN cliente C ON(V.cliente_id=C.id)
 JOIN sucursal S ON(S.id=V.sucursal_id)  
 LEFT JOIN producto P ON(P.id=I.producto_id)
-where V.id='8a8a81d45f9e755b015f9e7723a00000'
+where V.id=$P{ID}
 order by i.partidas_idx]]></queryString>
 
 	<field name="CLAVCTE" class="java.lang.String"/>

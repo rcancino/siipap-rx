@@ -1,5 +1,10 @@
 package sx.core
 
+import groovy.transform.ToString
+import groovy.transform.EqualsAndHashCode
+
+@ToString(includes = 'tipo,descripcion, comentario, activo, cfdi',includeNames=true,includePackage=false)
+@EqualsAndHashCode(includes='id, tipo, descripcion,comentario')
 class ComunicacionEmpresa {
 
     String	id
@@ -30,5 +35,7 @@ class ComunicacionEmpresa {
     static  mapping={
         id generator:'uuid'
     }
+
+    static belongsTo = [cliente: Cliente]
 
 }

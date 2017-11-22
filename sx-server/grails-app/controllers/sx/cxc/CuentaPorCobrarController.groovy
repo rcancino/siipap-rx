@@ -4,6 +4,7 @@ import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
 
 import sx.core.Sucursal
+import sx.core.Venta
 
 @Secured("hasRole('ROLE_POS_USER')")
 class CuentaPorCobrarController extends RestfulController{
@@ -41,10 +42,10 @@ class CuentaPorCobrarController extends RestfulController{
             notFound()
             return
         }
-        params.max = 10
+        params.max = 100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
-        def rows = CuentaPorCobrar.findAll("from CuentaPorCobrar c where c.total-c.pagos > 0 and c.tipo = ? order by dateCreated desc ", ['COD'])
+        def rows = Venta.findAll("from Venta c  where c.cuentaPorCobrar.total - c.cuentaPorCobrar.pagos > 0 and c.cuentaPorCobrar.tipo = ? order by c.dateCreated desc ", ['COD'])
         respond rows
     }
 

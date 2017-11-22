@@ -5,12 +5,17 @@ import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
 
+import sx.ReporteService
+
 @Secured("hasRole('ROLE_POS_USER')")
 class VentaController extends RestfulController{
 
     static responseFormats = ['json']
 
     VentaService ventaService
+
+     ReporteService reporteService
+
 
     VentaController(){
         super(Venta)
@@ -134,6 +139,11 @@ class VentaController extends RestfulController{
     }
     def cfdi = ventaService.timbrar(venta)
     respond cfdi
+  }
+
+  def print( Venta pedido) {
+    params.ID = pedido.id
+    return reporteService.run('Pedido.jrxml', params)
   }
 }
 
