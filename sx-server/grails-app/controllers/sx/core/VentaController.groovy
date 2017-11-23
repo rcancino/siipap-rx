@@ -5,6 +5,7 @@ import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
 
+import sx.inventario.SolicitudDeTrasladoService
 import sx.ReporteService
 
 @Secured("hasRole('ROLE_POS_USER')")
@@ -14,8 +15,9 @@ class VentaController extends RestfulController{
 
     VentaService ventaService
 
-     ReporteService reporteService
+    ReporteService reporteService
 
+    SolicitudDeTrasladoService solicitudDeTrasladoService
 
     VentaController(){
         super(Venta)
@@ -143,7 +145,19 @@ class VentaController extends RestfulController{
 
   def print( Venta pedido) {
     params.ID = pedido.id
-    return reporteService.run('Pedido.jrxml', params)
+    def pdf =  reporteService.run('Pedido.jrxml', params)
+    render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pedido.pdf')
+
+  }
+
+  @Transactional
+  def generarSolicitudAutomatica(Venta venta) {
+    if (venta == null) {
+      notFound()
+      return
+    }
+    solicitudDeTrasladoService.generarSolicitudAutomatica(venta)
+    respond venta
   }
 }
 

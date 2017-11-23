@@ -15,6 +15,8 @@ class Sucursal {
 
 	String clave
 
+    Boolean almacen = true
+
     Direccion direccion
 
 	Long sw2
