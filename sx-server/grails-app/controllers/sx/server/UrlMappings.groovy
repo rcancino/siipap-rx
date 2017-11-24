@@ -10,8 +10,11 @@ class UrlMappings {
         put "/$controller/$id(.$format)?"(action:"update")
         patch "/$controller/$id(.$format)?"(action:"patch")
 
+        "/api/config"(resource: "appConfig")
+
         // Catalogos principales
         "/api/sucursales"(resources: "sucursal")
+        "/api/sucursales/otrosAlmacenes"(controller: "sucursal", action: 'otrosAlmacenes', method: 'GET')
         "/api/lineas"(resources: "linea")
         "/api/marcas"(resources: "marca")
         "/api/clases"(resources: "clase")
@@ -20,6 +23,8 @@ class UrlMappings {
             "/productos"(resources:'proveedorProducto')
         }
         "/api/clientes"(resources: "cliente")
+        "/api/clientes/actualizarCfdiMail/$id"(controller: "cliente", action: 'actualizarCfdiMail', method: 'PUT')
+        
 
         //Contabilidad y finanzas
         "/api/sat/bancos"(resources: "SatBanco")
@@ -40,10 +45,16 @@ class UrlMappings {
         "/api/cxp"(resources: "cuentaPorPagar")
         "/api/cxp/importar"(controller:"cuentaPorPagar", action:"importar")
 
-        //Comprobantes fiscales CFDI's
+        //Comprobantes fiscales de proveedores CFDI's
+        /*
         "/api/cfdis"(resources: "comprobanteFiscal")
         "/api/cfdis/importar"(controller:"comprobanteFiscal", action:"importar")
         "/api/cfdis/mostrarXml/$id?"(controller:"comprobanteFiscal", action:"mostrarXml")
+        */
+        "/api/cfdis"(resources: "cfdi")
+        "/api/cfdis/mostrarXml/$id?"(controller:"cfdi", action:"mostrarXml")
+        "/api/cfdis/print/$id"(controller: "cfdi", action: 'print', method: 'GET')
+
 
         // CxP
         "/api/cxc/notas"(resources: "notaDeCredito"){
@@ -68,10 +79,11 @@ class UrlMappings {
         "/api/ventas/pendientes/$id"( controller: 'venta', action: 'pendientes')
         "/api/ventas/findManiobra"( controller: 'venta', action: 'findManiobra')
         "/api/ventas/mandarFacturar/$id"( controller: 'venta', action: 'mandarFacturar')
+        "/api/ventas/generarSolicitudAutomatica/$id"( controller: 'venta', action: 'generarSolicitudAutomatica')
         "/api/ventas/facturar/$id"( controller: 'venta', action: 'facturar')
         "/api/ventas/cobradas/$id"( controller: 'venta', action: 'cobradas')
         "/api/ventas/timbrar/$id"( controller: 'venta', action: 'timbrar')
-
+        "/api/ventas/print/$id"(controller: "venta", action: 'print', method: 'GET')
 
         "/api/ventas/listas"(resources: "listaDePreciosVenta")
         

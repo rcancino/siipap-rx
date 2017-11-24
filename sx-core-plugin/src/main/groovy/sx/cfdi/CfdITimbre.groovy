@@ -1,11 +1,8 @@
-package com.luxsoft.cfdix
+package sx.cfdi
 
-import groovy.xml.*
 import java.text.MessageFormat
 import org.apache.commons.lang.builder.ToStringBuilder
 import org.apache.commons.lang.builder.ToStringStyle
-
-import sx.cfdi.Cfdi
 
 
 class CfdiTimbre {
@@ -18,17 +15,17 @@ class CfdiTimbre {
 	String noCertificadoSAT
 	String rfcProvCertif
 	
-	CfdiTimbre(Cfdi cfdi){
-		build(cfdi)
+	CfdiTimbre(byte[] xml){
+		build(xml)
 	}
 
-	def build(Cfdi cfdi){
+	def build(byte[] data){
 
-	    ByteArrayInputStream is=new ByteArrayInputStream(cfdi.xml)
+		ByteArrayInputStream is=new ByteArrayInputStream(data)
 		def xml = new XmlSlurper().parse(is)
 		def timbre=xml.breadthFirst().find { it.name() == 'TimbreFiscalDigital'}
 		
-	    this.version = timbre.attributes()['Version']
+		this.version = timbre.attributes()['Version']
 		this.uuid = timbre.attributes()['UUID']
 		this.fechaTimbrado = timbre.attributes()['FechaTimbrado']
 		this.selloCFD = timbre.attributes()['SelloCFD']

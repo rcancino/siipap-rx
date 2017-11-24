@@ -39,6 +39,8 @@ class Empresa {
 
     boolean timbradoDePrueba=true
 
+    String regimenClaveSat
+
     String usuarioPac
 
     String passwordPac
@@ -58,18 +60,19 @@ class Empresa {
 
 
     static constraints = {
-        clave size:3..15,unique:true
-        nombre(blank:false,maxSize:255,unique:true)
-        rfc(blank:false,minSize:12,maxSize:13)
-        direccion(nullable:false)
-        regimen (blank:false,maxSize:300)
-        numeroDeCertificado(nullable:true,minSize:1,maxSize:20)
-        certificadoDigital(nullable:true,maxSize:1024*1024*5)
-        certificadoDigitalPfx(nullable:true,maxSize:1024*1024*2)
-        llavePrivada(nullable:true,maxSize:1024*1024*5)
-        passwordPfx nullable:true
-        usuarioPac nullable:true
-        passwordPac nullable:true
+      clave size:3..15,unique:true
+      nombre(blank:false,maxSize:255,unique:true)
+      rfc(blank:false,minSize:12,maxSize:13)
+      direccion(nullable:false)
+      regimen (blank:false,maxSize:300)
+      numeroDeCertificado(nullable:true,minSize:1,maxSize:20)
+      certificadoDigital(nullable:true,maxSize:1024*1024*5)
+      certificadoDigitalPfx(nullable:true,maxSize:1024*1024*2)
+      llavePrivada(nullable:true,maxSize:1024*1024*5)
+      passwordPfx nullable:true
+      usuarioPac nullable:true
+      passwordPac nullable:true
+      regimenClaveSat nullable: true
 
     }
 

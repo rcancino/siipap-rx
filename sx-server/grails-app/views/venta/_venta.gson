@@ -13,6 +13,7 @@ json g.render(venta, [excludes:['sucursal','cliente','vendedor','moneda','partid
     cliente {
     	id venta.cliente.id
     	nombre venta.cliente.nombre
+        telefonos venta.cliente.telefonos
     }
     vendedor {
     	id venta.vendedor.id
@@ -25,7 +26,9 @@ json g.render(venta, [excludes:['sucursal','cliente','vendedor','moneda','partid
             id venta.cuentaPorCobrar.id
             documento venta.cuentaPorCobrar.documento
             tipo venta.cuentaPorCobrar.tipo
+            pagos venta.cuentaPorCobrar.pagos
             saldo venta.cuentaPorCobrar.saldo
+            cfdi g.render(venta.cuentaPorCobrar.cfdi)
         }
     }
     

@@ -617,6 +617,7 @@
 	],
 	"file_history":
 	[
+		"/Users/rcancino/play/siipap-rx/sx-server/grails-app/services/sx/cfdi/CfdiTimbradoService.groovy",
 		"/Users/rcancino/play/siipap-rx/sx-server/grails-app/conf/logback.groovy",
 		"/Users/rcancino/play/siipap-rx/sx-server/grails-app/controllers/sx/compras/CompraController.groovy",
 		"/Users/rcancino/play/siipap-rx/sx-server/grails-app/conf/application.groovy",
@@ -743,12 +744,11 @@
 		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/compras/compras.run.js",
 		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/index.config.js",
 		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/index.run.js",
-		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/listaDePreciosPorProveedor/components/agregar-precio.component.js",
-		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/ventas/listaDePreciosPorProveedor/lpventa-det-edit.html"
+		"/Users/rcancino/Projects2/siipapx-ui/sx-compras/src/app/listaDePreciosPorProveedor/components/agregar-precio.component.js"
 	],
 	"find":
 	{
-		"height": 35.0
+		"height": 25.0
 	},
 	"find_in_files":
 	{
@@ -924,7 +924,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 23.0
+		"height": 25.0
 	},
 	"input":
 	{
@@ -961,7 +961,7 @@
 	"project": "sx-server.sublime-project",
 	"replace":
 	{
-		"height": 42.0
+		"height": 46.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -970,6 +970,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"cfditi",
+				"Services/sx/cfdi/CfdiTimbradoService.groovy"
+			],
 			[
 				"app",
 				"Configuration/application.yml"
@@ -1477,10 +1481,6 @@
 			[
 				"compra-list.co",
 				"src/app/app/compras/compra-list.controller.js"
-			],
-			[
-				"cxp-list",
-				"src/app/app/cxp/cxp-list.controller.js"
 			]
 		],
 		"width": 0.0

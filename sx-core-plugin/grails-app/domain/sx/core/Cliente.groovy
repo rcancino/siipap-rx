@@ -3,7 +3,7 @@ package sx.core
 import groovy.transform.ToString
 import groovy.transform.EqualsAndHashCode
 
-@ToString(excludes = 'version,dateCreated,lastUpdated,id',includeNames=true,includePackage=false)
+@ToString(includes = 'nombre,clave',includeNames=true,includePackage=false)
 @EqualsAndHashCode(includes='nombre,rfc')
 class Cliente {
 
@@ -47,6 +47,8 @@ class Cliente {
 
   String updateUser
 
+  Set<ComunicacionEmpresa> medios = []
+
 
 	static constraints = {
 		rfc maxSize:13
@@ -64,9 +66,31 @@ class Cliente {
 
 	static hasOne = [credito: ClienteCredito]
 
+  static hasMany =[medios:ComunicacionEmpresa]
+
   static embedded = ['direccion']
 
 	static mapping={
 		id generator:'uuid'
+    medios cascade: "all-delete-orphan"
 	}
+
+  static transients = ['telefonos','fax','cfdiMail']
+
+  String toString() {
+    "${nombre} (${clave})"
+  }
+
+  def getTelefonos() {
+    return medios.findAll{ it.tipo == 'TEL'}.collect {it.descripcion}
+  }
+
+  def getFax() {
+    return medios.find{ it.tipo == 'FAX'}.collect {it.descripcion}
+  }
+
+  def getCfdiMail() {
+    return medios.find{ it.tipo == 'MAIL' && it.cfdi}?.descripcion
+  }
+
 }

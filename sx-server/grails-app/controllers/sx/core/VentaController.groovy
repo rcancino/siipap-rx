@@ -5,38 +5,23 @@ import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
 
+import sx.inventario.SolicitudDeTrasladoService
+import sx.ReporteService
+
 @Secured("hasRole('ROLE_POS_USER')")
 class VentaController extends RestfulController{
 
     static responseFormats = ['json']
 
-    def ventaService
+    VentaService ventaService
+
+    ReporteService reporteService
+
+    SolicitudDeTrasladoService solicitudDeTrasladoService
 
     VentaController(){
         super(Venta)
     }
-
-
-    // def index(VentasFiltro filtro) {
-    //     params.max = params.registros ?:10
-    //     params.sort = params.sort ?:'lastUpdated'
-    //     params.order = params.order ?:'desc'
-
-    //     def query = Venta.where {}
-
-    //     if(filtro.fechaInicial){
-    //         Date inicio = filtro.fechaInicial
-    //         Date fin = filtro.fechaFinal ?: inicio
-    //         query = query.where {fecha >= inicio && fecha <= fin}
-    //     }
-    //     if (filtro.sucursal) {
-    //         query = query.where { sucursal == filtro.sucursal}
-    //     }
-    //     if (filtro.cliente ) {
-    //         query = query.where { cliente == filtro.cliente}
-    //     }
-    //     respond query.list(params)
-    // }
 
     @Override
     protected List listAllResources(Map params) {
@@ -51,6 +36,8 @@ class VentaController extends RestfulController{
         query = query.where {facturar !=  null  && cuentaPorCobrar == null}
         if(params.facturables == 'CRE'){
           query = query.where {tipo == params.facturables}
+        } else {
+          query = query.where {tipo != 'CRE'}
         }
       }
       if (params.facturados) {
@@ -77,9 +64,7 @@ class VentaController extends RestfulController{
     }
 
   protected Venta saveResource(Venta resource) {
-    // println 'Salvando venta' + resource
     resource.partidas.each {
-        // println 'Partida con corte: ' + it.corte
         if(it.corte)
             it.corte.ventaDet = it;
     }
@@ -145,7 +130,6 @@ class VentaController extends RestfulController{
     params.order = params.order ?:'desc'
     
     def ventas = Venta.where{ sucursal == sucursal && cuentaPorCobrar != null}.list(params)
-    // println 'Buscando facturas cobradas: ' + sucursal + ' Found: ' + ventas.size()
     respond ventas
   }
 
@@ -155,8 +139,25 @@ class VentaController extends RestfulController{
       notFound()
       return
     }
-    def cfdi = ventaService.generarCfdi(venta)
+    def cfdi = ventaService.timbrar(venta)
     respond cfdi
+  }
+
+  def print( Venta pedido) {
+    params.ID = pedido.id
+    def pdf =  reporteService.run('Pedido.jrxml', params)
+    render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pedido.pdf')
+
+  }
+
+  @Transactional
+  def generarSolicitudAutomatica(Venta venta) {
+    if (venta == null) {
+      notFound()
+      return
+    }
+    solicitudDeTrasladoService.generarSolicitudAutomatica(venta)
+    respond venta
   }
 }
 

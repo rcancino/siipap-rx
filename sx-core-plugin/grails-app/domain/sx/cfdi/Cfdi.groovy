@@ -10,54 +10,65 @@ import grails.validation.Validateable
 @ToString(includeNames=true,includePackage=false, excludes = ['dateCreated', 'lastUpdated'])
 @EqualsAndHashCode(includeFields = true, includes = ['serie', 'folio', 'uuid', 'id'])
 class Cfdi {
-    
-    String id
 
-    String versionCfdi = '3.3'
+  String id
 
-    Date fecha
+  String versionCfdi = '3.3'
 
-    String serie
+  Date fecha
 
-    String folio
+  String serie
 
-    String emisor
-    String emisorRfc
+  String folio
 
-    String receptor
-    String receptorRfc
+  String emisor
 
-    String tipoDeComprobante
+  String emisorRfc
 
-    String fileName
+  String receptor
 
-    String uuid
+  String receptorRfc
 
-    BigDecimal total
+  String tipoDeComprobante
 
-    String url
+  String fileName
 
-    String sw2
+  String uuid
 
-    Date dateCreated
+  BigDecimal total
 
-    Date lastUpdated
+  URL url
 
-    static constraints = {
-        emisorRfc minSize: 12, maxSize:13
-        receptorRfc minSize: 12, maxSize:13
-        uuid unique:true , nullable: true
-        url nullable: true
-        fileName maxSize:150
-        serie nullable:true,maxSize:30
-        folio nullable:true,maxSize:30
-        tipoDeComprobante inList:['INGRESO','EGRESO','TRASLADO','PAGO','NOMINA']
-        sw2 nullable: true
-        versionCfdi: inList: ['3.2', '3.3']
-    }
+  String sw2
 
-    static  mapping={
-        id generator:'uuid'
-    }
+  Date dateCreated
+
+  Date lastUpdated
+
+  CfdiTimbre timbre
+
+  String origen = 'VENTA'
+
+  static constraints = {
+    emisorRfc minSize: 12, maxSize:13
+    receptorRfc minSize: 12, maxSize:13
+    uuid unique:true , nullable: true
+    url url:true
+    fileName maxSize:150
+    serie nullable:true,maxSize:30
+    folio nullable:true,maxSize:30
+    tipoDeComprobante inList:['I','E','T','P','N']
+    sw2 nullable: true
+    versionCfdi inList: ['3.2', '3.3']
+    origen inList:['VENTA','NOTA_CARGO','NOTA_CREDITO','TRASLADO']
+  }
+
+  static  mapping={
+      id generator:'uuid'
+  }
+
+  static transients = ['timbre']
+
+
 }
 

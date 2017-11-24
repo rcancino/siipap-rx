@@ -5,8 +5,10 @@ model {
 }
 
 json g.render(venta, [excludes:['moneda','partidas','sucursal','envio']]){
-    cliente g.render(venta.cliente, [excludes:['credito','cuentaPorCobrar']]){
+    cliente g.render(venta.cliente, [excludes:['credito','cuentaPorCobrar','medios']]){
         credito g.render(venta.cliente.credito)
+        telefonos venta.cliente.telefonos
+        cfdiMail venta.cliente.cfdiMail
     }
     sucursal {
         id venta.sucursal.id

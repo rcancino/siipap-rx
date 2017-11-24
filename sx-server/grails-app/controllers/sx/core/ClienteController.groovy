@@ -54,6 +54,30 @@ class ClienteController extends RestfulController{
         return super.saveResource(resource)
     }
 
+    def actualizarCfdiMail(Cliente cliente) {
+        if (cliente == null) {
+            notFound()
+            return
+        }
+        String email = params.email
+        def medio = cliente.medios.find {it.tipo =='MAIL' && it.cfdi}
+        println 'Medio localizado: ' + medio
+        if(!medio) {
+            medio = new ComunicacionEmpresa()
+            medio.tipo = 'MAIL'
+            medio.activo = true
+            medio.cfdi = true
+            medio.comentario = 'email para envio de CFDIs'
+            medio.cliente = cliente
+            cliente.addToMedios(medio)
+        }
+        println 'Email a asignar: '+email 
+        medio.descripcion = email
+        cliente.save failOnError: true, flush:true
+        respond cliente
+
+    }
+
 
 
 
