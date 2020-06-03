@@ -2,7 +2,6 @@ package sx.server.integracion.exportacion
 
 import groovy.sql.Sql
 import sx.core.Cliente
-import sx.replica.AuditLog
 
 import java.sql.ResultSetMetaData
 

@@ -47,7 +47,9 @@ class ImportadorDeProductos implements Importador{
 
     def importarProductosValidos(){
         logger.info('Importando productos Validos' + new Date().format('dd/MM/yyyy HH:mm:ss'))
-        String select="SELECT producto_id   FROM producto_integracion"
+        //String select="SELECT producto_id   FROM producto_integracion"
+
+        String select="""SELECT producto_id FROM sx_productos where producto_id in (8488,8489,8490,8491,8492,8493,8494,8495,8496,8498,8499,8502,8503,8505,8518,8519,8520,8521,8522)"""
         leerRegistros(select,[]).each { row ->
 
                 println "--------------------"+row.producto_id
